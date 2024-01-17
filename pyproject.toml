@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "danmaku"
+version = "0.1.0"
+description = ""
+authors = ["Vlad <89295404+Virashu@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+vgame = {git = "https://github.com/virashu/pygametest.git"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
