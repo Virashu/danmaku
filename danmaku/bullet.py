@@ -13,7 +13,7 @@ class Bullet:
         self.dm = dm
         self.direction = ""
 
-    def draw(self, graphics: vgame.Graphics):
+    def draw(self, graphics: vgame.graphics.Graphics):
         graphics.circle((self.x, self.y), self.r, self.color)
 
     def update(self, delta):
