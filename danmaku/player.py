@@ -5,7 +5,7 @@ from danmaku.bullet import Bullet
 
 class Player(GameObject):
     def draw(self, graphics):
-        graphics.rectangle((self.x, self.y, self.width, self.height), self.color)
+        graphics.rectangle((self.x, self.y), (self.width, self.height), self.color)
 
     def shoot(self, bullets):
         b = Bullet(

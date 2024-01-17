@@ -7,6 +7,7 @@ class GameObject(Sprite):
     """
 
     def __init__(self, color, x_y, width_height, vx_vy, hp, dm, endurance):
+        super().__init__()
         self.color = color
         self.x, self.y = x_y
         self.vx, self.vy = vx_vy
