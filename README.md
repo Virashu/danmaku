@@ -1,6 +1,9 @@
 # 弾幕 (Danmaku)
 
 
+## Goal
+To create a bullet hell game similar to TouHou Project, Undertale, etc.
+
 ## Refactoring
 - [ ] main.py
 - [ ] bullet.py

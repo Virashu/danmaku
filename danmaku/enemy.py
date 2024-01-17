@@ -1,6 +1,7 @@
-import vgame
+from vgame.graphics import Graphics
 from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
+import pygame
 
 
 class Enemy(GameObject):
@@ -12,7 +13,7 @@ class Enemy(GameObject):
         self.shoot_v = shoot_v
         self.last_shoot = 0
 
-    def draw(self, graphics: vgame.Graphics):
+    def draw(self, graphics: Graphics):
         graphics.polygon(
             [
                 (self.x, self.y),

@@ -1,15 +1,15 @@
-from danmaku.utils import *
-from danmaku.enemy import Enemy
-from danmaku.player import Player
-
 import vgame
 from vgame import Keys
+
+from danmaku.utils import not_in_border
+from danmaku.enemy import Enemy
+from danmaku.player import Player
 
 
 WIDTH, HEIGHT = 300, 500
 
 
-# pylint: disable=attribute-defined-outside-init
+# pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Game(vgame.Game):
     def load(self):
         self.bullets = []
@@ -43,7 +43,6 @@ class Game(vgame.Game):
         for enemy in self.enemies:
             enemy.shoot(self.bullets)
             enemy.update(self.delta)
-            enemy.draw(self.graphics.surface)
             if not not_in_border(enemy.x, enemy.y, "down", WIDTH, HEIGHT):
                 self.enemies.pop(self.enemies.index(enemy))
 
@@ -64,8 +63,8 @@ class Game(vgame.Game):
                     dell.append(bullet)
                     if enemy.hp <= 0:
                         self.enemies.pop(self.enemies.index(enemy))
-            bullet.move()
-            bullet.draw(self.graphics.surface)
+            bullet.update(self.delta)
+            bullet.draw(self.graphics)
             if not not_in_border(
                 bullet.x, bullet.y, "down", WIDTH, HEIGHT
             ) or not not_in_border(bullet.x, bullet.y, "up", WIDTH, HEIGHT):
@@ -77,7 +76,10 @@ class Game(vgame.Game):
             quit()
 
     def draw(self):
-        self.player.draw(self.graphics.surface)
+        self.player.draw(self.graphics)
+
+        for enemy in self.enemies:
+            enemy.draw(self.graphics)
 
     def exit(self):
         ...
