@@ -1,11 +1,12 @@
 import pygame
+import vgame
 from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
 
 
 class Player(GameObject):
-    def draw(self, graphics):
-        graphics.rectangle((self.x, self.y, self.width, self.height), self.color)
+    def draw(self, graphics: vgame.graphics.Graphics):
+        graphics.rectangle((self.x, self.y), (self.width, self.height), self.color)
 
     def shoot(self, bullets):
         b = Bullet(

@@ -1,11 +1,11 @@
-def not_in_border(x, y, direction, width, height):
-    if direction == "up" and y <= 0:
+def not_in_border(x, y, vx, vy, width, height):
+    if vy < 0 and y <= 0:
         return False
-    elif direction == "down" and y >= height:
+    elif vy > 0 and y >= height:
         return False
-    elif direction == "left" and x <= 0:
+    elif vx > 0 and x <= 0:
         return False
-    elif direction == "right" and x >= width:
+    elif vx < 0 and x >= width:
         return False
     else:
         return True

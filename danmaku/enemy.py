@@ -5,11 +5,8 @@ import pygame
 
 
 class Enemy(GameObject):
-    def __init__(
-        self, color, x_y, width_height, direction, vx_vy, shoot_v, hp, dm, endurance
-    ):
-        super().__init__(color, x_y, width_height, vx_vy, hp, dm, endurance)
-        self.direction = direction
+    def __init__(self, color, xy, width_height, speed, shoot_v, hp, dm, endurance):
+        super().__init__(color, xy, width_height, speed, hp, dm, endurance)
         self.shoot_v = shoot_v
         self.last_shoot = 0
 
