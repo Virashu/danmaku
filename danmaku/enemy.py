@@ -20,10 +20,18 @@ class Enemy(GameObject):
             self.color,
         )
 
-    def shoot(self, bullets):
+    def shoot(self, bullets: list[Bullet]):
         t = pygame.time.get_ticks()
         if t - self.last_shoot >= self.shoot_v:
-            b = Bullet(True, (225, 125, 3), (self.x, self.y), 10, (150, 150), self.dm)
+            b = Bullet(
+                True,
+                (225, 125, 3),
+                (self.x, self.y),
+                10,
+                150,
+                (0, 1),
+                self.damage,
+            )
             b.direction = "down"
             bullets.append(b)
             self.last_shoot = t

@@ -7,23 +7,32 @@ class GameObject(Sprite):
     A base game entity object.
     """
 
-    def __init__(self, color, xy, width_height, speed, hp, dm, endurance):
+    def __init__(
+        self,
+        color: tuple[int, int, int],
+        xy: tuple[int | float, int | float],
+        width_height: tuple[int | float, int | float],
+        speed: int | float,
+        hp: int | float,
+        damage: int | float,
+        endurance: int | float,
+    ):
         super().__init__()
         self.color = color
         self.x, self.y = xy
         self.speed = speed
         self.width, self.height = width_height
         self.hp = hp
-        self.dm = dm
+        self.damage = damage
         self.endurance = endurance
-        self.vx = self.vy = 0
+        self.vx, self.vy = (0, 1)
 
     def update(self, delta):
         self.x += self.vx * delta * self.speed
         self.y += self.vy * delta * self.speed
 
-    def get_damage(self, dm):
-        self.hp -= dm * self.endurance
+    def get_damage(self, damage: int | float):
+        self.hp -= damage * self.endurance
 
     @abstractmethod
     def shoot(self, other):

@@ -33,6 +33,7 @@ class Game(vgame.Game):
             self.player.shoot(self.bullets)
         self.player.vx, self.player.vy = vx, vy
 
+        # TODO: Check separately x and y
         if not_in_border(
             self.player.x, self.player.y, self.player.vx, self.player.vy, WIDTH, HEIGHT
         ):
