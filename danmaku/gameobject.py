@@ -27,7 +27,7 @@ class GameObject(Sprite):
         self.endurance = endurance
         self.vx, self.vy = (0, 1)
 
-    def update(self, delta):
+    def update(self, delta: int | float):
         self.x += self.vx * delta * self.speed
         self.y += self.vy * delta * self.speed
 

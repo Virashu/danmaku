@@ -4,6 +4,7 @@ from vgame import Keys
 from danmaku.utils import not_in_border
 from danmaku.enemy import Enemy
 from danmaku.player import Player
+from danmaku.bullet import Bullet
 
 
 WIDTH, HEIGHT = 300, 500
@@ -12,8 +13,8 @@ WIDTH, HEIGHT = 300, 500
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Game(vgame.Game):
     def load(self):
-        self.bullets = []
-        self.enemies = [
+        self.bullets: list[Bullet] = []
+        self.enemies: list[Enemy] = [
             Enemy((255, 0, 0), (100, 0), (50, 25), 30, 1500, 30, 50, 0.1),
             Enemy((255, 0, 0), (200, 100), (50, 25), 30, 1500, 30, 50, 0.1),
         ]
@@ -48,11 +49,11 @@ class Game(vgame.Game):
         dell = []
         for bullet in self.bullets:
             if self.player.collision(bullet):
-                self.player.get_damage(bullet.dm)
+                self.player.get_damage(bullet.damage)
                 dell.append(bullet)
             for enemy in self.enemies:
                 if enemy.collision(bullet):
-                    enemy.get_damage(bullet.dm)
+                    enemy.get_damage(bullet.damege)
                     dell.append(bullet)
                     if enemy.hp <= 0:
                         self.enemies.remove(enemy)
