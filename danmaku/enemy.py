@@ -5,11 +5,8 @@ import pygame
 
 
 class Enemy(GameObject):
-    def __init__(
-        self, color, x_y, width_height, direction, vx_vy, shoot_v, hp, dm, endurance
-    ):
-        super().__init__(color, x_y, width_height, vx_vy, hp, dm, endurance)
-        self.direction = direction
+    def __init__(self, color, xy, width_height, speed, shoot_v, hp, dm, endurance):
+        super().__init__(color, xy, width_height, speed, hp, dm, endurance)
         self.shoot_v = shoot_v
         self.last_shoot = 0
 
@@ -23,10 +20,18 @@ class Enemy(GameObject):
             self.color,
         )
 
-    def shoot(self, bullets):
+    def shoot(self, bullets: list[Bullet]):
         t = pygame.time.get_ticks()
         if t - self.last_shoot >= self.shoot_v:
-            b = Bullet(True, (225, 125, 3), (self.x, self.y), 10, (150, 150), self.dm)
+            b = Bullet(
+                True,
+                (225, 125, 3),
+                (self.x, self.y),
+                10,
+                150,
+                (0, 1),
+                self.damage,
+            )
             b.direction = "down"
             bullets.append(b)
             self.last_shoot = t
