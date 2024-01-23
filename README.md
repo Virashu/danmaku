@@ -5,10 +5,10 @@
 To create a bullet hell game similar to TouHou Project, Undertale, etc.
 
 ## Refactoring
-- [ ] main.py
+- [x] main.py
 - [ ] bullet.py
-- [ ] enemy.py
-- [ ] gameobject.py
+- [x] enemy.py
+- [x] gameobject.py
 - [ ] player.py
 - [x] utils.py
 
@@ -17,9 +17,12 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 - [ ] Levels
 - [ ] Sounds
 - [ ] Graphics
-  - [ ] Images
+  - [x] Images
   - [ ] Effects (particles)
 - [ ] Bullets
   - [ ] Trajectories
-- [ ] Enemies
+- [x] Enemies
 - [ ] Controls
+
+## Bugs
+- Fix player bullet-beam
