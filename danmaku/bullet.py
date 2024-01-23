@@ -1,6 +1,3 @@
-import vgame
-
-
 from danmaku.gameobject import GameObject
 
 
@@ -20,9 +17,15 @@ class Bullet(GameObject):
         self.vx, self.vy = vx_vy
         self.r = r
 
-    def draw(self, graphics: vgame.graphics.Graphics):
-        graphics.circle((self.x, self.y), self.r, self.color)
+        self.texture_file = "bullet.png"
+        self.texture_size = (2 * r, 2 * r)
 
-    def update(self, delta):
+    def update(self, delta: int | float):
         self.x += self.vx * delta * self.speed
         self.y += self.vy * delta * self.speed
+        self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
+            self.x - self.r,
+            self.y - self.r,
+            self.width,
+            self.height,
+        )
