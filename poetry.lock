@@ -82,7 +82,7 @@ pygame = "^2.5.2"
 type = "git"
 url = "https://github.com/virashu/pygametest.git"
 reference = "HEAD"
-resolved_reference = "2d5cf8abdb5453208140528b351f263f9cff6e51"
+resolved_reference = "a2eca2e69d31ae081ddc06bca0a164c00a90b67b"
 
 [metadata]
 lock-version = "2.0"

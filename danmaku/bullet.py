@@ -15,14 +15,10 @@ class Bullet(GameObject):
         vx_vy: tuple[int | float, int | float],
         damage: int | float,
     ):
-        super().__init__(color, xy, (2 * r, 2 * r), 0, 0, damage, 1)
+        super().__init__(color, xy, (2 * r, 2 * r), speed, 0, damage, 1)
         self.enemy = enemy
-        self.color = color
-        self.x, self.y = xy
         self.vx, self.vy = vx_vy
         self.r = r
-        self.damage = damage
-        self.direction = ""
 
     def draw(self, graphics: vgame.graphics.Graphics):
         graphics.circle((self.x, self.y), self.r, self.color)

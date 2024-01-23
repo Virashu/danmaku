@@ -77,6 +77,9 @@ class Game(vgame.Game):
         for enemy in self.enemies:
             enemy.draw(self.graphics)
 
+        for bullet in self.bullets:
+            bullet.draw(self.graphics)
+
     def exit(self):
         ...
 
