@@ -1,4 +1,4 @@
-from danmaku.gameobject import GameObject
+from gameobject import GameObject
 
 
 class Bullet(GameObject):
