@@ -5,22 +5,40 @@ from utils import not_in_border
 from enemy import Enemy
 from player import Player
 from bullet import Bullet
-
+from danmaku.database import get_enemy_type
 
 WIDTH, HEIGHT = 300, 500
 PATH = __file__.replace("\\", "/").rsplit("/", 1)[0]
-
+LEVEL1 = [Enemy((25, 150, 0), (150, 15), get_enemy_type("basic enemy"))]
+LEVEL2 = [
+            Enemy((25, 150, 0), (50, 25), get_enemy_type("basic enemy")),
+            Enemy((25, 150, 0), (200, 10), get_enemy_type("basic enemy"))
+            ]
+LEVEL3 = [Enemy((25, 150, 0), (110, 5), get_enemy_type("strong enemy"))]
+LEVEL4 = [
+            Enemy((25, 150, 0), (50, 25), get_enemy_type("strong enemy")),
+            Enemy((25, 150, 0), (200, 10), get_enemy_type("strong enemy"))
+            ]
+LEVEL5 = [
+            Enemy((25, 150, 0), (50, 15), get_enemy_type("basic enemy")),
+            Enemy((25, 150, 0), (200, 10), get_enemy_type("basic enemy")),
+            Enemy((25, 150, 0), (110, 5), get_enemy_type("strong enemy"))
+            ]
+LEVEL6 = [
+            Enemy((25, 150, 0), (50, 15), get_enemy_type("strong enemy")),
+            Enemy((25, 150, 0), (200, 10), get_enemy_type("basic enemy")),
+            Enemy((25, 150, 0), (110, 5), get_enemy_type("strong enemy"))
+            ]
+LEVELS = [LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Game(vgame.Game):
     def load(self):
         self.graphics.library.path = PATH + "/resources/textures"
 
+        self.cur_level = 0
         self.bullets: list[Bullet] = []
-        self.enemies: list[Enemy] = [
-            Enemy((255, 0, 0), (100, 0), (50, 25), 30, 1500, 30, 50, 0.1),
-            Enemy((255, 0, 0), (200, 100), (50, 25), 30, 1500, 30, 50, 0.1),
-        ]
+        self.enemies: list[Enemy] = LEVELS[self.cur_level]
         self.player = Player((0, 125, 255), (100, 460), (50, 30), 500, 300, 100, 1)
 
         self.graphics.library.load(self.player)
@@ -41,7 +59,10 @@ class Game(vgame.Game):
 
         # TODO: Check separately x and y
         if not_in_border(
-            self.player.x, self.player.y, self.player.vx, self.player.vy, WIDTH, HEIGHT
+                self.player.x, self.player.y, self.player.vx, self.player.vy, WIDTH, HEIGHT
+        ) and not_in_border(
+            self.player.x + self.player.width, self.player.y + self.player.height,
+            self.player.vx, self.player.vy, WIDTH, HEIGHT
         ):
             self.player.update(self.delta)
 
@@ -71,7 +92,13 @@ class Game(vgame.Game):
             ):
                 dell.append(bullet)
         for i in dell:
-            self.bullets.remove(i)
+            if i in self.bullets:
+                self.bullets.remove(i)
+
+        if len(self.enemies) == 0:
+            self.cur_level += 1
+            if len(LEVELS) > self.cur_level:
+                self.enemies = LEVELS[self.cur_level]
 
         if self.player.hp <= 0:
             quit()
@@ -80,7 +107,7 @@ class Game(vgame.Game):
         self.graphics.draw_sprite(self.player)
 
         for enemy in self.enemies:
-            enemy.draw(self.graphics)
+            self.graphics.draw_sprite(enemy)
 
         for bullet in self.bullets:
             self.graphics.draw_sprite(bullet)

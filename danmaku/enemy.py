@@ -5,20 +5,12 @@ import pygame
 
 
 class Enemy(GameObject):
-    def __init__(self, color, xy, width_height, speed, shoot_v, hp, dm, endurance):
-        super().__init__(color, xy, width_height, speed, hp, dm, endurance)
-        self.shoot_v = shoot_v
+    def __init__(self, color, xy, args):
+        super().__init__(color, xy, args[1], args[2], args[4], args[5], args[6])
+        self.shoot_v = args[3]
         self.last_shoot = 0
-
-    def draw(self, graphics: Graphics):
-        graphics.polygon(
-            [
-                (self.x, self.y),
-                (self.x + (self.width // 2), self.y - self.height * 2),
-                (self.x - (self.width // 2), self.y - self.height * 2),
-            ],
-            self.color,
-        )
+        self.texture_file = args[0]
+        self.texture_size = args[1]
 
     def shoot(self, bullets: list[Bullet]):
         t = pygame.time.get_ticks()
@@ -26,7 +18,7 @@ class Enemy(GameObject):
             b = Bullet(
                 True,
                 (225, 125, 3),
-                (self.x, self.y),
+                (self.x + self.width // 2, self.y),
                 10,
                 150,
                 (0, 1),
