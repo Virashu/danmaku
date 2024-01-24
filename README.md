@@ -15,6 +15,11 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 
 ## TODO
 - [x] Levels
+- [ ] Boss HP bar
+- [ ] Player HP/Bomb info
+- [ ] Player points info
+- [ ] Main menu
+- [ ] Leaderboard
 - [ ] Sounds
 - [ ] Music
 - [x] Graphics
