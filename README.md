@@ -16,10 +16,13 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 ## TODO
 - [x] Levels
 - [ ] Sounds
+- [ ] Music
 - [x] Graphics
   - [x] Images
+  - [ ] Level background
   - [ ] Effects (particles)
 - [x] Bullets
   - [ ] Trajectories
 - [x] Enemies
 - [x] Controls
+- [ ] Settings
