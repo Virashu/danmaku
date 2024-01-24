@@ -11,25 +11,26 @@ WIDTH, HEIGHT = 300, 500
 PATH = __file__.replace("\\", "/").rsplit("/", 1)[0]
 LEVEL1 = [Enemy((25, 150, 0), (150, 15), get_enemy_type("basic enemy"))]
 LEVEL2 = [
-            Enemy((25, 150, 0), (50, 25), get_enemy_type("basic enemy")),
-            Enemy((25, 150, 0), (200, 10), get_enemy_type("basic enemy"))
-            ]
+    Enemy((25, 150, 0), (50, 25), get_enemy_type("basic enemy")),
+    Enemy((25, 150, 0), (200, 10), get_enemy_type("basic enemy")),
+]
 LEVEL3 = [Enemy((25, 150, 0), (110, 5), get_enemy_type("strong enemy"))]
 LEVEL4 = [
-            Enemy((25, 150, 0), (50, 25), get_enemy_type("strong enemy")),
-            Enemy((25, 150, 0), (200, 10), get_enemy_type("strong enemy"))
-            ]
+    Enemy((25, 150, 0), (50, 25), get_enemy_type("strong enemy")),
+    Enemy((25, 150, 0), (200, 10), get_enemy_type("strong enemy")),
+]
 LEVEL5 = [
-            Enemy((25, 150, 0), (50, 15), get_enemy_type("basic enemy")),
-            Enemy((25, 150, 0), (200, 10), get_enemy_type("basic enemy")),
-            Enemy((25, 150, 0), (110, 5), get_enemy_type("strong enemy"))
-            ]
+    Enemy((25, 150, 0), (50, 15), get_enemy_type("basic enemy")),
+    Enemy((25, 150, 0), (200, 10), get_enemy_type("basic enemy")),
+    Enemy((25, 150, 0), (110, 5), get_enemy_type("strong enemy")),
+]
 LEVEL6 = [
-            Enemy((25, 150, 0), (50, 15), get_enemy_type("strong enemy")),
-            Enemy((25, 150, 0), (200, 10), get_enemy_type("basic enemy")),
-            Enemy((25, 150, 0), (110, 5), get_enemy_type("strong enemy"))
-            ]
+    Enemy((25, 150, 0), (50, 15), get_enemy_type("strong enemy")),
+    Enemy((25, 150, 0), (200, 10), get_enemy_type("basic enemy")),
+    Enemy((25, 150, 0), (110, 5), get_enemy_type("strong enemy")),
+]
 LEVELS = [LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]
+
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Game(vgame.Game):
@@ -55,14 +56,22 @@ class Game(vgame.Game):
             vy += 1
         if Keys.SPACE in self.pressed_keys:
             self.player.shoot(self.bullets)
+        if Keys.LEFT_SHIFT in self.pressed_keys:
+            self.player.speed = 250
+        else:
+            self.player.speed = 500
         self.player.vx, self.player.vy = vx, vy
 
         # TODO: Check separately x and y
         if not_in_border(
-                self.player.x, self.player.y, self.player.vx, self.player.vy, WIDTH, HEIGHT
+            self.player.x, self.player.y, self.player.vx, self.player.vy, WIDTH, HEIGHT
         ) and not_in_border(
-            self.player.x + self.player.width, self.player.y + self.player.height,
-            self.player.vx, self.player.vy, WIDTH, HEIGHT
+            self.player.x + self.player.width,
+            self.player.y + self.player.height,
+            self.player.vx,
+            self.player.vy,
+            WIDTH,
+            HEIGHT,
         ):
             self.player.update(self.delta)
 

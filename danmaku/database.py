@@ -1,7 +1,8 @@
 from peewee import *
 
-
-db = SqliteDatabase('DataBase.db')
+PATH = __file__.replace("\\", "/").rsplit("/", 1)[0]
+# look for database file in the same folder, not folder of execution
+db = SqliteDatabase(PATH + "/DataBase.db")
 
 
 class BaseModel(Model):
@@ -30,7 +31,7 @@ class Saved(BaseModel):
 db.connect()
 
 
-#db.create_tables([EnemyTypes])
+# db.create_tables([EnemyTypes])
 
 
 """
@@ -49,4 +50,12 @@ strong_enemy.save()
 
 def get_enemy_type(name):
     a = EnemyTypes.get(EnemyTypes.name == name)
-    return a.texture_file, (a.texture_size_width, a.texture_size_height), a.speed, a.shoot_v, a.hp, a.dm, a.endurance
+    return (
+        a.texture_file,
+        (a.texture_size_width, a.texture_size_height),
+        a.speed,
+        a.shoot_v,
+        a.hp,
+        a.dm,
+        a.endurance,
+    )
