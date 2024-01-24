@@ -8,17 +8,22 @@ from danmaku.bullet import Bullet
 
 
 WIDTH, HEIGHT = 300, 500
+PATH = __file__.replace("\\", "/").rsplit("/", 1)[0]
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Game(vgame.Game):
     def load(self):
+        self.graphics.library.path = PATH + "/resources/textures"
+
         self.bullets: list[Bullet] = []
         self.enemies: list[Enemy] = [
             Enemy((255, 0, 0), (100, 0), (50, 25), 30, 1500, 30, 50, 0.1),
             Enemy((255, 0, 0), (200, 100), (50, 25), 30, 1500, 30, 50, 0.1),
         ]
         self.player = Player((0, 125, 255), (100, 460), (50, 30), 500, 300, 100, 1)
+
+        self.graphics.library.load(self.player)
 
     def update(self):
         vx = vy = 0
@@ -53,7 +58,7 @@ class Game(vgame.Game):
                 dell.append(bullet)
             for enemy in self.enemies:
                 if enemy.collision(bullet):
-                    enemy.get_damage(bullet.damege)
+                    enemy.get_damage(bullet.damage)
                     dell.append(bullet)
                     if enemy.hp <= 0:
                         self.enemies.remove(enemy)
@@ -72,13 +77,13 @@ class Game(vgame.Game):
             quit()
 
     def draw(self):
-        self.player.draw(self.graphics)
+        self.graphics.draw_sprite(self.player)
 
         for enemy in self.enemies:
             enemy.draw(self.graphics)
 
         for bullet in self.bullets:
-            bullet.draw(self.graphics)
+            self.graphics.draw_sprite(bullet)
 
     def exit(self):
         ...

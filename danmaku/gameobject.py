@@ -30,6 +30,12 @@ class GameObject(Sprite):
     def update(self, delta: int | float):
         self.x += self.vx * delta * self.speed
         self.y += self.vy * delta * self.speed
+        self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
+            self.x,
+            self.y,
+            self.width,
+            self.height,
+        )
 
     def get_damage(self, damage: int | float):
         self.hp -= damage * self.endurance
