@@ -6,6 +6,7 @@ from enemy import Enemy
 from player import Player
 from bullet import Bullet
 from danmaku.database import get_enemy_type
+from menu import Menu
 
 WIDTH, HEIGHT = 300, 500
 PATH = __file__.replace("\\", "/").rsplit("/", 1)[0]
@@ -37,12 +38,18 @@ class Game(vgame.Game):
     def load(self):
         self.graphics.library.path = PATH + "/resources/textures"
 
-        self.cur_level = 0
-        self.bullets: list[Bullet] = []
-        self.enemies: list[Enemy] = LEVELS[self.cur_level]
-        self.player = Player((0, 125, 255), (100, 460), (50, 30), 500, 300, 100, 1)
+        menu = Menu(WIDTH, HEIGHT)
+        menu.load()
 
-        self.graphics.library.load(self.player)
+        if menu.new_game:
+            self.cur_level = 0
+            self.bullets: list[Bullet] = []
+            self.enemies: list[Enemy] = LEVELS[self.cur_level]
+            self.player = Player((0, 125, 255), (100, 460), (50, 30), 500, 300, 100, 1)
+
+            self.graphics.library.load(self.player)
+        if menu.last_game:
+            pass
 
     def update(self):
         vx = vy = 0
