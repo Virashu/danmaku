@@ -38,86 +38,97 @@ class Game(vgame.Game):
     def load(self):
         self.graphics.library.path = PATH + "/resources/textures"
 
-        menu = Menu(WIDTH, HEIGHT)
+        self.pause = False
+
+        menu = Menu("main", WIDTH, HEIGHT)
         menu.load()
 
         if menu.new_game:
             self.cur_level = 0
             self.bullets: list[Bullet] = []
-            self.enemies: list[Enemy] = LEVELS[self.cur_level]
+            self.enemies: list[Enemy] = LEVELS[self.cur_level].copy()
             self.player = Player((0, 125, 255), (100, 460), (50, 30), 500, 300, 100, 1)
 
-            self.graphics.library.load(self.player)
         if menu.last_game:
             pass
-
+        self.graphics.library.load(self.player)
     def update(self):
-        vx = vy = 0
-        if Keys.RIGHT in self.pressed_keys:
-            vx += 1
-        if Keys.LEFT in self.pressed_keys:
-            vx -= 1
-        if Keys.UP in self.pressed_keys:
-            vy -= 1
-        if Keys.DOWN in self.pressed_keys:
-            vy += 1
-        if Keys.SPACE in self.pressed_keys:
-            self.player.shoot(self.bullets)
-        if Keys.LEFT_SHIFT in self.pressed_keys:
-            self.player.speed = 250
-        else:
-            self.player.speed = 500
-        self.player.vx, self.player.vy = vx, vy
+        if Keys.P in self.pressed_keys:
+            self.pressed_keys.remove(Keys.P)
+            self.pause = True
+            pause_menu = Menu("pause", WIDTH, HEIGHT)
+            pause_menu.load()
+            if pause_menu.start:  # It doesn't work properly
+                self.pause = False
+            if pause_menu.to_menu:
+                pass
+        if not self.pause:
+            vx = vy = 0
+            if Keys.RIGHT in self.pressed_keys:
+                vx += 1
+            if Keys.LEFT in self.pressed_keys:
+                vx -= 1
+            if Keys.UP in self.pressed_keys:
+                vy -= 1
+            if Keys.DOWN in self.pressed_keys:
+                vy += 1
+            if Keys.SPACE in self.pressed_keys:
+                self.player.shoot(self.bullets)
+            if Keys.LEFT_SHIFT in self.pressed_keys:
+                self.player.speed = 250
+            else:
+                self.player.speed = 500
+            self.player.vx, self.player.vy = vx, vy
 
-        # TODO: Check separately x and y
-        if not_in_border(
-            self.player.x, self.player.y, self.player.vx, self.player.vy, WIDTH, HEIGHT
-        ) and not_in_border(
-            self.player.x + self.player.width,
-            self.player.y + self.player.height,
-            self.player.vx,
-            self.player.vy,
-            WIDTH,
-            HEIGHT,
-        ):
-            self.player.update(self.delta)
-
-        for enemy in self.enemies:
-            enemy.shoot(self.bullets)
-            enemy.update(self.delta)
-            if not not_in_border(enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT):
-                self.enemies.remove(enemy)
-
-        dell = []
-        for bullet in self.bullets:
-            if self.player.collision(bullet):
-                self.player.get_damage(bullet.damage)
-                dell.append(bullet)
-            for enemy in self.enemies:
-                if enemy.collision(bullet):
-                    enemy.get_damage(bullet.damage)
-                    dell.append(bullet)
-                    if enemy.hp <= 0:
-                        self.enemies.remove(enemy)
-            bullet.update(self.delta)
-            bullet.draw(self.graphics)
-            if not not_in_border(
-                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
-            ) or not not_in_border(
-                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
+            # TODO: Check separately x and y
+            if not_in_border(
+                self.player.x, self.player.y, self.player.vx, self.player.vy, WIDTH, HEIGHT
+            ) and not_in_border(
+                self.player.x + self.player.width,
+                self.player.y + self.player.height,
+                self.player.vx,
+                self.player.vy,
+                WIDTH,
+                HEIGHT,
             ):
-                dell.append(bullet)
-        for i in dell:
-            if i in self.bullets:
-                self.bullets.remove(i)
+                self.player.update(self.delta)
 
-        if len(self.enemies) == 0:
-            self.cur_level += 1
-            if len(LEVELS) > self.cur_level:
-                self.enemies = LEVELS[self.cur_level]
+            for enemy in self.enemies:
+                enemy.shoot(self.bullets)
+                enemy.update(self.delta)
+                if not not_in_border(enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT):
+                    self.enemies.remove(enemy)
 
-        if self.player.hp <= 0:
-            quit()
+            dell = []
+            for bullet in self.bullets:
+                if self.player.collision(bullet):
+                    self.player.get_damage(bullet.damage)
+                    dell.append(bullet)
+                for enemy in self.enemies:
+                    if enemy.collision(bullet):
+                        enemy.get_damage(bullet.damage)
+                        dell.append(bullet)
+                        if enemy.hp <= 0:
+                            self.enemies.remove(enemy)
+                bullet.update(self.delta)
+                bullet.draw(self.graphics)
+                if not not_in_border(
+                    bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
+                ) or not not_in_border(
+                    bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
+                ):
+                    dell.append(bullet)
+            for i in dell:
+                if i in self.bullets:
+                    self.bullets.remove(i)
+
+            if len(self.enemies) == 0:
+                self.cur_level += 1
+                if len(LEVELS) > self.cur_level:
+                    self.enemies = LEVELS[self.cur_level]
+
+            if self.player.hp <= 0:
+                quit()
 
     def draw(self):
         self.graphics.draw_sprite(self.player)
