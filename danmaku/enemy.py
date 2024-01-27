@@ -1,16 +1,19 @@
 from vgame.graphics import Graphics
 from gameobject import GameObject
 from bullet import Bullet
+from database import get_bullet_type, get_enemy_type
 import pygame
 
 
 class Enemy(GameObject):
-    def __init__(self, color, xy, args):
+    def __init__(self, color, xy, type):
+        args = get_enemy_type(type)
         super().__init__(color, xy, args[1], args[2], args[4], args[5], args[6])
         self.shoot_v = args[3]
         self.last_shoot = 0
         self.texture_file = args[0]
         self.texture_size = args[1]
+        self.my_type = type
 
     def shoot(self, bullets: list[Bullet]):
         t = pygame.time.get_ticks()
@@ -19,10 +22,9 @@ class Enemy(GameObject):
                 True,
                 (225, 125, 3),
                 (self.x + self.width // 2, self.y),
-                10,
                 150,
-                (0, 1),
                 self.damage,
+                "basic enemy bullet"
             )
             b.direction = "down"
             bullets.append(b)

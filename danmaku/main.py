@@ -5,32 +5,33 @@ from utils import not_in_border
 from enemy import Enemy
 from player import Player
 from bullet import Bullet
-from danmaku.database import get_enemy_type
+from danmaku.database import get_saved_objects, get_saved_game, set_saved_objects, set_saved_game, delete_saved_objects
 from menu import Menu
 
 WIDTH, HEIGHT = 300, 500
 PATH = __file__.replace("\\", "/").rsplit("/", 1)[0]
-LEVEL1 = [Enemy((25, 150, 0), (150, 15), get_enemy_type("basic enemy"))]
+LEVEL1 = [Enemy((25, 150, 0), (150, 15), "basic enemy")]
 LEVEL2 = [
-    Enemy((25, 150, 0), (50, 25), get_enemy_type("basic enemy")),
-    Enemy((25, 150, 0), (200, 10), get_enemy_type("basic enemy")),
+    Enemy((25, 150, 0), (50, 25), "basic enemy"),
+    Enemy((25, 150, 0), (200, 10), "basic enemy"),
 ]
-LEVEL3 = [Enemy((25, 150, 0), (110, 5), get_enemy_type("strong enemy"))]
+LEVEL3 = [Enemy((25, 150, 0), (110, 5), "strong enemy")]
 LEVEL4 = [
-    Enemy((25, 150, 0), (50, 25), get_enemy_type("strong enemy")),
-    Enemy((25, 150, 0), (200, 10), get_enemy_type("strong enemy")),
+    Enemy((25, 150, 0), (50, 25), "strong enemy"),
+    Enemy((25, 150, 0), (200, 10), "strong enemy"),
 ]
 LEVEL5 = [
-    Enemy((25, 150, 0), (50, 15), get_enemy_type("basic enemy")),
-    Enemy((25, 150, 0), (200, 10), get_enemy_type("basic enemy")),
-    Enemy((25, 150, 0), (110, 5), get_enemy_type("strong enemy")),
+    Enemy((25, 150, 0), (50, 15), "basic enemy"),
+    Enemy((25, 150, 0), (200, 10), "basic enemy"),
+    Enemy((25, 150, 0), (110, 5), "strong enemy"),
 ]
 LEVEL6 = [
-    Enemy((25, 150, 0), (50, 15), get_enemy_type("strong enemy")),
-    Enemy((25, 150, 0), (200, 10), get_enemy_type("basic enemy")),
-    Enemy((25, 150, 0), (110, 5), get_enemy_type("strong enemy")),
+    Enemy((25, 150, 0), (50, 15), "strong enemy"),
+    Enemy((25, 150, 0), (200, 10), "basic enemy"),
+    Enemy((25, 150, 0), (110, 5), "strong enemy"),
 ]
-LEVELS = [LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]
+FINAL = [Enemy((25, 150, 0), (150, 15), "boss")]
+LEVELS = [LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6, FINAL]
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
@@ -50,8 +51,24 @@ class Game(vgame.Game):
             self.player = Player((0, 125, 255), (100, 460), (50, 30), 500, 300, 100, 1)
 
         if menu.last_game:
-            pass
+            self.enemies: list[Enemy] = []
+            self.bullets: list[Bullet] = []
+            objects = get_saved_objects()
+            for el in objects:
+                if el[0] == "enemy":
+                    self.enemies.append(Enemy((25, 150, 0), el[2], el[1]))
+                if el[0] == "bullet":
+                    if "enemy" in el[1]:
+                        self.bullets.append(Bullet(True, (25, 150, 0), el[2], 150, el[3], el[1]))
+                    elif "player" in el[1]:
+                        self.bullets.append(Bullet(False, (25, 150, 0), el[2], 150, el[3], el[1]))
+
+            saved_game = get_saved_game()
+            self.cur_level = saved_game[3]
+            self.player = Player((0, 125, 255), (saved_game[0], saved_game[1]), (50, 30), 500, saved_game[2], 100, 1)
+            delete_saved_objects()
         self.graphics.library.load(self.player)
+
     def update(self):
         if Keys.P in self.pressed_keys:
             self.pressed_keys.remove(Keys.P)
@@ -62,6 +79,12 @@ class Game(vgame.Game):
                 self.pause = False
             if pause_menu.to_menu:
                 pass
+            if pause_menu.save:
+                delete_saved_objects()
+                set_saved_objects("enemy", self.enemies)
+                set_saved_objects("bullet", self.bullets)
+                set_saved_game(self.cur_level, self.player)
+                quit()
         if not self.pause:
             vx = vy = 0
             if Keys.RIGHT in self.pressed_keys:

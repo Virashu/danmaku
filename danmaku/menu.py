@@ -14,8 +14,8 @@ class Menu:
         if self.name == "pause":
             self.start = False
             self.to_menu = False
-            self.status = self.start or self.to_menu
-
+            self.save = False
+            self.status = self.start or self.to_menu or self.save
 
     def load(self):
         pygame.init()
@@ -33,6 +33,8 @@ class Menu:
                                      "Continue", (0, 0, 255), 42)
             self.to_menu_button = Button((self.width // 4, self.height // 3 + 50), (255, 0, 0),
                                      "New game", (0, 0, 255), 42)
+            self.save_button = Button((self.width // 5, self.height // 3 + 100), (255, 0, 0),
+                                         "Save and exit", (0, 0, 255), 42)
 
         while not self.status:
             for event in pygame.event.get():
@@ -53,7 +55,9 @@ class Menu:
                             self.start = True
                         if self.to_menu_button.is_clicked(pygame.mouse.get_pos()):
                             self.to_menu = True
-                        self.status = self.start or self.to_menu
+                        if self.save_button.is_clicked(pygame.mouse.get_pos()):
+                            self.save = True
+                        self.status = self.start or self.to_menu or self.save
             SCREEN.fill((0, 0, 0))
             if self.name == "main":
                 self.new_game_button.draw(SCREEN)
@@ -62,4 +66,5 @@ class Menu:
             if self.name == "pause":
                 self.start_button.draw(SCREEN)
                 self.to_menu_button.draw(SCREEN)
+                self.save_button.draw(SCREEN)
             pygame.display.flip()

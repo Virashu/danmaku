@@ -2,6 +2,7 @@ import pygame
 import vgame
 from gameobject import GameObject
 from bullet import Bullet
+from database import get_bullet_type
 
 
 class Player(GameObject):
@@ -36,10 +37,9 @@ class Player(GameObject):
             False,
             (125, 125, 3),
             (self.x + (self.width // 2), self.y + (self.height // 2)),
-            10,
             150,
-            (0, -1),
             self.damage,
+            "basic player bullet"
         )
         bullets.append(b)
 

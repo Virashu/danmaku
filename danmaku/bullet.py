@@ -1,4 +1,5 @@
 from gameobject import GameObject
+from database import get_bullet_type
 
 
 class Bullet(GameObject):
@@ -7,18 +8,19 @@ class Bullet(GameObject):
         enemy: bool,
         color: tuple[int, int, int],
         xy: tuple[int | float, int | float],
-        r: int | float,
         speed: int | float,
-        vx_vy: tuple[int | float, int | float],
         damage: int | float,
+        type
     ):
-        super().__init__(color, xy, (2 * r, 2 * r), speed, 0, damage, 1)
+        args = get_bullet_type(type)
+        super().__init__(color, xy, (2 * args[1], 2 * args[1]), speed, 0, damage, 1)
         self.enemy = enemy
-        self.vx, self.vy = vx_vy
-        self.r = r
+        self.vx, self.vy = args[2]
+        self.r = args[1]
 
-        self.texture_file = "bullet.png"
-        self.texture_size = (2 * r, 2 * r)
+        self.texture_file = args[0]
+        self.texture_size = (2 * self.r, 2 * self.r)
+        self.my_type = type
 
     def update(self, delta: int | float):
         self.x += self.vx * delta * self.speed
