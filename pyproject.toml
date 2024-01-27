@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"
-vgame = {git = "https://github.com/virashu/pygametest", rev = "0.1.0"}
+vgame = {git = "https://github.com/virashu/pygametest"}
 peewee = "^3.17.0"
 
 
