@@ -33,3 +33,5 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
   - [x] Change controls to classic (shift, z, x)
 - [ ] Settings
 - [ ] Make player hitbox smaller
+- [ ] Replace enemies strings with enum
+- [ ] Replace resource path strings with constants from db
