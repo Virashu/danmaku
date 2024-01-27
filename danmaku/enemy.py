@@ -1,6 +1,6 @@
 from vgame.graphics import Graphics
-from gameobject import GameObject
-from bullet import Bullet
+from danmaku.gameobject import GameObject
+from danmaku.bullet import Bullet
 import pygame
 
 

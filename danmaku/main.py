@@ -2,14 +2,13 @@ import vgame
 from vgame import Keys
 import pygame
 
-from utils import not_in_border
-from enemy import Enemy
-from player import Player
-from bullet import Bullet
+from danmaku.utils import not_in_border, resource_path
+from danmaku.enemy import Enemy
+from danmaku.player import Player
+from danmaku.bullet import Bullet
 from danmaku.database import get_enemy_type
 
 WIDTH, HEIGHT = 300, 500
-PATH = __file__.replace("\\", "/").rsplit("/", 1)[0]
 LEVEL1 = [Enemy((25, 150, 0), (150, 15), get_enemy_type("basic enemy"))]
 LEVEL2 = [
     Enemy((25, 150, 0), (50, 25), get_enemy_type("basic enemy")),
@@ -36,7 +35,7 @@ LEVELS = [LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Game(vgame.Game):
     def load(self):
-        self.graphics.library.path = PATH + "/resources/textures"
+        self.graphics.library.path = resource_path("./resources/textures")
 
         self.cur_level = 0
         self.bullets: list[Bullet] = []
@@ -111,7 +110,7 @@ class Game(vgame.Game):
                 self.enemies = LEVELS[self.cur_level]
 
         if self.player.hp <= 0:
-            pygame.mixer.music.load(PATH + "/resources/sounds/death.wav")
+            pygame.mixer.music.load(resource_path("./resources/sounds/death.wav"))
             pygame.mixer.music.play()
 
     def draw(self):
@@ -127,7 +126,12 @@ class Game(vgame.Game):
         ...
 
 
+import os
+
+print(os.listdir(resource_path("./resources/")))
+
 pygame.mixer.init()
-pygame.mixer.music.load(PATH + "/resources/sounds/bgm.wav")
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.load(resource_path("./resources/sounds/bgm.wav"))
 pygame.mixer.music.play(loops=-1)
 vgame.Run(Game(framerate=60, width=WIDTH, height=HEIGHT))

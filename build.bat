@@ -1,0 +1,1 @@
+pyinstaller danmaku.spec
