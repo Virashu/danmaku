@@ -126,7 +126,12 @@ class Game(vgame.Game):
         ...
 
 
+import os
+
+print(os.listdir(resource_path("./resources/")))
+
 pygame.mixer.init()
+pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.load(resource_path("./resources/sounds/bgm.wav"))
 pygame.mixer.music.play(loops=-1)
 vgame.Run(Game(framerate=60, width=WIDTH, height=HEIGHT))

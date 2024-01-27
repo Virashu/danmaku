@@ -3,7 +3,6 @@ from danmaku.utils import resource_path
 
 # look for database file in the same folder, not folder of execution
 db = SqliteDatabase(resource_path("./resources/DataBase.db"))
-print(resource_path("./resources/DataBase.db"))
 
 
 class BaseModel(Model):
