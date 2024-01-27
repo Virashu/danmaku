@@ -1,5 +1,6 @@
 import vgame
 from vgame import Keys
+import pygame
 
 from utils import not_in_border
 from enemy import Enemy
@@ -110,7 +111,8 @@ class Game(vgame.Game):
                 self.enemies = LEVELS[self.cur_level]
 
         if self.player.hp <= 0:
-            quit()
+            pygame.mixer.music.load(PATH + "/resources/sounds/death.wav")
+            pygame.mixer.music.play()
 
     def draw(self):
         self.graphics.draw_sprite(self.player)
@@ -125,4 +127,7 @@ class Game(vgame.Game):
         ...
 
 
+pygame.mixer.init()
+pygame.mixer.music.load(PATH + "/resources/sounds/bgm.wav")
+pygame.mixer.music.play(loops=-1)
 vgame.Run(Game(framerate=60, width=WIDTH, height=HEIGHT))
