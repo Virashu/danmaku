@@ -54,7 +54,7 @@ class Game(vgame.Game):
             vy -= 1
         if Keys.DOWN in self.pressed_keys:
             vy += 1
-        if Keys.SPACE in self.pressed_keys:
+        if Keys.SPACE in self.pressed_keys or Keys.Z in self.pressed_keys:
             self.player.shoot(self.bullets)
         if Keys.LEFT_SHIFT in self.pressed_keys:
             self.player.speed = 250
