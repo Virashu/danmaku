@@ -20,8 +20,8 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 - [ ] Player points info
 - [ ] Main menu
 - [ ] Leaderboard
-- [ ] Sounds
-- [ ] Music
+- [x] Sounds
+- [x] Music
 - [x] Graphics
   - [x] Images
   - [ ] Level background

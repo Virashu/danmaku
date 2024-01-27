@@ -1,4 +1,4 @@
-from gameobject import GameObject
+from danmaku.gameobject import GameObject
 from database import get_bullet_type
 
 

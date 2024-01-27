@@ -1,3 +1,8 @@
+import sys
+import os
+from pathlib import Path
+
+
 def not_in_border(
     x: int | float,
     y: int | float,
@@ -16,3 +21,14 @@ def not_in_border(
         return False
     else:
         return True
+
+
+def resource_path(relative_path) -> str:
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = Path(sys._MEIPASS)
+    except AttributeError:
+        base_path = Path(__file__).parent
+
+    return str(base_path / relative_path)
