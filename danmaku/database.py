@@ -98,7 +98,7 @@ class SavedGame(BaseModel):
 # basic_player_bullet.save()
 
 
-def get_enemy_type(name):
+def get_enemy_type(name: str):
     a = EnemyTypes.get(EnemyTypes.name == name)
     return (
         a.texture_file,
@@ -111,13 +111,17 @@ def get_enemy_type(name):
     )
 
 
-def get_bullet_type(name):
+def get_bullet_type(name: str) -> tuple[str, int, tuple[int, int]]:
+    """
+    Get bullet parameters by name
+    Returns tuple: (texture_file, radius, (vx, vy))
+    """
     a = BulletTypes.get(BulletTypes.name == name)
     return (a.texture_file, a.radius, (a.vx, a.vy))
 
 
 def get_saved_objects():
-    objects = list()
+    objects = []
     for el in SavedObjects.select():
         objects.append(
             [
