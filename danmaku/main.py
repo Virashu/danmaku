@@ -1,5 +1,6 @@
 import vgame
 from vgame import Keys
+import pygame
 
 from utils import not_in_border
 from enemy import Enemy
