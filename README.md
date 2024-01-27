@@ -32,3 +32,4 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 - [x] Controls
   - [x] Change controls to classic (shift, z, x)
 - [ ] Settings
+- [ ] Make player hitbox smaller
