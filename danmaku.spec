@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['danmaku\\main.py'],
+    ['danmaku/main.py'],
     pathex=[],
     binaries=[],
     datas=[
@@ -33,7 +33,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['danmaku\\resources\\icon.ico'],
+    icon=['danmaku/resources/icon.ico'],
 )
 coll = COLLECT(
     exe,
