@@ -1,7 +1,7 @@
 import pygame
 import vgame
-from gameobject import GameObject
-from bullet import Bullet
+from danmaku.gameobject import GameObject
+from danmaku.bullet import Bullet
 
 
 class Player(GameObject):

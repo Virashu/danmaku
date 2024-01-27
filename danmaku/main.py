@@ -2,10 +2,10 @@ import vgame
 from vgame import Keys
 import pygame
 
-from utils import not_in_border
-from enemy import Enemy
-from player import Player
-from bullet import Bullet
+from danmaku.utils import not_in_border
+from danmaku.enemy import Enemy
+from danmaku.player import Player
+from danmaku.bullet import Bullet
 from danmaku.database import get_enemy_type
 
 WIDTH, HEIGHT = 300, 500

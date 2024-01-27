@@ -2,7 +2,7 @@ from peewee import *
 
 PATH = __file__.replace("\\", "/").rsplit("/", 1)[0]
 # look for database file in the same folder, not folder of execution
-db = SqliteDatabase(PATH + "/DataBase.db")
+db = SqliteDatabase(PATH + "/resources/DataBase.db")
 
 
 class BaseModel(Model):
