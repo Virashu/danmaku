@@ -41,7 +41,7 @@ LEVELS = [LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6, FINAL]
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
-class Game(vgame.Game):
+class Game(vgame.Scene):
     def load(self):
         self.graphics.library.path = resource_path("./resources/textures")
 
@@ -196,4 +196,6 @@ pygame.mixer.init()
 pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.load(resource_path("./resources/sounds/bgm.wav"))
 pygame.mixer.music.play(loops=-1)
-vgame.Run(Game(framerate=60, width=WIDTH, height=HEIGHT))
+
+runner = vgame.Runner()
+runner.run(Game(framerate=60, width=WIDTH, height=HEIGHT))
