@@ -1,2 +1,2 @@
-pyinstaller --onefile --clean --name danmaku --icon ./danmaku/resources/icon.ico ./danmaku/main.py
-cp -r ./danmaku/resources ./dist/resources
+pyinstaller --onefile --clean --name danmaku --icon .\danmaku\resources\icon.ico .\danmaku\main.py
+xcopy /s /mir .\danmaku\resources .\dist\resources
