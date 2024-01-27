@@ -1,5 +1,5 @@
 from vgame.graphics import Graphics
-from database import get_enemy_type
+from danmaku.database import get_enemy_type
 from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
 import pygame

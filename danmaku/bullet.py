@@ -1,5 +1,5 @@
 from danmaku.gameobject import GameObject
-from database import get_bullet_type
+from danmaku.database import get_bullet_type
 
 
 class Bullet(GameObject):

@@ -2,7 +2,7 @@ import pygame
 import vgame
 from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
-from database import get_bullet_type
+from danmaku.database import get_bullet_type
 
 
 class Player(GameObject):

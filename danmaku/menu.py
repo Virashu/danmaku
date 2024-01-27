@@ -1,5 +1,5 @@
 import pygame
-from button import Button
+from danmaku.button import Button
 
 
 class Menu:
@@ -21,20 +21,50 @@ class Menu:
         pygame.init()
         SCREEN = pygame.display.set_mode((self.width, self.height))
         if self.name == "main":
-            self.new_game_button = Button((self.width // 4, self.height // 3), (255, 0, 0),
-                                     "New game", (0, 0, 255), 42)
-            self.continue_button = Button((self.width // 4 + 10, self.height // 3 + 50), (255, 0, 0),
-                                     "Continue", (0, 0, 255), 42)
-            self.settings_button = Button((self.width // 4 + 13, self.height // 3 + 100), (255, 0, 0),
-                                     "Settings", (0, 0, 255), 42)
+            self.new_game_button = Button(
+                (self.width // 4, self.height // 3),
+                (255, 0, 0),
+                "New game",
+                (0, 0, 255),
+                42,
+            )
+            self.continue_button = Button(
+                (self.width // 4 + 10, self.height // 3 + 50),
+                (255, 0, 0),
+                "Continue",
+                (0, 0, 255),
+                42,
+            )
+            self.settings_button = Button(
+                (self.width // 4 + 13, self.height // 3 + 100),
+                (255, 0, 0),
+                "Settings",
+                (0, 0, 255),
+                42,
+            )
 
         if self.name == "pause":
-            self.start_button = Button((self.width // 4, self.height // 3), (255, 0, 0),
-                                     "Continue", (0, 0, 255), 42)
-            self.to_menu_button = Button((self.width // 4, self.height // 3 + 50), (255, 0, 0),
-                                     "New game", (0, 0, 255), 42)
-            self.save_button = Button((self.width // 5, self.height // 3 + 100), (255, 0, 0),
-                                         "Save and exit", (0, 0, 255), 42)
+            self.start_button = Button(
+                (self.width // 4, self.height // 3),
+                (255, 0, 0),
+                "Continue",
+                (0, 0, 255),
+                42,
+            )
+            self.to_menu_button = Button(
+                (self.width // 4, self.height // 3 + 50),
+                (255, 0, 0),
+                "New game",
+                (0, 0, 255),
+                42,
+            )
+            self.save_button = Button(
+                (self.width // 5, self.height // 3 + 100),
+                (255, 0, 0),
+                "Save and exit",
+                (0, 0, 255),
+                42,
+            )
 
         while not self.status:
             for event in pygame.event.get():

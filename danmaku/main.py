@@ -6,8 +6,14 @@ from danmaku.utils import not_in_border, resource_path
 from danmaku.enemy import Enemy
 from danmaku.player import Player
 from danmaku.bullet import Bullet
-from danmaku.database import get_saved_objects, get_saved_game, set_saved_objects, set_saved_game, delete_saved_objects
-from menu import Menu
+from danmaku.database import (
+    get_saved_objects,
+    get_saved_game,
+    set_saved_objects,
+    set_saved_game,
+    delete_saved_objects,
+)
+from danmaku.menu import Menu
 
 WIDTH, HEIGHT = 300, 500
 LEVEL1 = [Enemy((25, 150, 0), (150, 15), "basic enemy")]
@@ -59,13 +65,25 @@ class Game(vgame.Game):
                     self.enemies.append(Enemy((25, 150, 0), el[2], el[1]))
                 if el[0] == "bullet":
                     if "enemy" in el[1]:
-                        self.bullets.append(Bullet(True, (25, 150, 0), el[2], 150, el[3], el[1]))
+                        self.bullets.append(
+                            Bullet(True, (25, 150, 0), el[2], 150, el[3], el[1])
+                        )
                     elif "player" in el[1]:
-                        self.bullets.append(Bullet(False, (25, 150, 0), el[2], 150, el[3], el[1]))
+                        self.bullets.append(
+                            Bullet(False, (25, 150, 0), el[2], 150, el[3], el[1])
+                        )
 
             saved_game = get_saved_game()
             self.cur_level = saved_game[3]
-            self.player = Player((0, 125, 255), (saved_game[0], saved_game[1]), (50, 30), 500, saved_game[2], 100, 1)
+            self.player = Player(
+                (0, 125, 255),
+                (saved_game[0], saved_game[1]),
+                (50, 30),
+                500,
+                saved_game[2],
+                100,
+                1,
+            )
             delete_saved_objects()
         self.graphics.library.load(self.player)
 
@@ -105,7 +123,12 @@ class Game(vgame.Game):
 
             # TODO: Check separately x and y
             if not_in_border(
-                self.player.x, self.player.y, self.player.vx, self.player.vy, WIDTH, HEIGHT
+                self.player.x,
+                self.player.y,
+                self.player.vx,
+                self.player.vy,
+                WIDTH,
+                HEIGHT,
             ) and not_in_border(
                 self.player.x + self.player.width,
                 self.player.y + self.player.height,
@@ -119,7 +142,9 @@ class Game(vgame.Game):
             for enemy in self.enemies:
                 enemy.shoot(self.bullets)
                 enemy.update(self.delta)
-                if not not_in_border(enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT):
+                if not not_in_border(
+                    enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT
+                ):
                     self.enemies.remove(enemy)
 
             dell = []
