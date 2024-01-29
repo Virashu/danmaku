@@ -2,42 +2,39 @@ import pygame
 import vgame
 from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
-from database import get_bullet_type
+from database import get_player_type
 
 
 class Player(GameObject):
     def __init__(
         self,
-        color: tuple[int, int, int],
         xy: tuple[int | float, int | float],
-        width_height: tuple[int | float, int | float],
-        speed: int | float,
-        hp: int | float,
-        damage: int | float,
-        endurance: int | float,
+        type, updated_hp=0
     ):
+        args = get_player_type(type)
+        if updated_hp == 0:
+            hp = args["hp"]
+        else:
+            hp = updated_hp
         super().__init__(
-            color,
             xy,
-            width_height,
-            speed,
+            args["texture_size"],
+            args["speed"],
             hp,
-            damage,
-            endurance,
+            args["dm"],
+            args["endurance"],
         )
 
-        self.texture_file = "player.png"
-        self.texture_size = width_height
+        self.texture_file = args["texture_file"]
+        self.texture_size = args["texture_size"]
+        self.my_type = type
 
-    def draw(self, graphics: vgame.graphics.Graphics):
-        graphics.rectangle((self.x, self.y), (self.width, self.height), self.color)
+    """def draw(self, graphics: vgame.graphics.Graphics):
+        graphics.rectangle((self.x, self.y), (self.width, self.height), self.color)"""
 
     def shoot(self, bullets: list[Bullet]):
         b = Bullet(
-            False,
-            (125, 125, 3),
             (self.x + (self.width // 2), self.y + (self.height // 2)),
-            150,
             self.damage,
             "basic player bullet"
         )

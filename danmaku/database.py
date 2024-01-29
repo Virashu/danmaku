@@ -24,17 +24,32 @@ class EnemyTypes(BaseModel):
 
 class BulletTypes(BaseModel):
     name = CharField(unique=True)
+    enemy = BooleanField()
     texture_file = CharField()
     radius = IntegerField()
+    speed = IntegerField()
     vx = IntegerField()
     vy = IntegerField()
+
+
+class PlayerTypes(BaseModel):
+    name = CharField(unique=True)
+    texture_file = CharField()
+    texture_size_width = IntegerField()
+    texture_size_height = IntegerField()
+    speed = IntegerField()
+    shoot_v = IntegerField()
+    hp = IntegerField()
+    dm = IntegerField()
+    endurance = FloatField()
 
 
 class SavedObjects(BaseModel):
     object = CharField()
     object_type = CharField()
     object_position = CharField()
-    obj_damage = IntegerField()
+    object_hp = IntegerField()
+    object_damage = IntegerField()
 
 
 class SavedGame(BaseModel):
@@ -45,7 +60,8 @@ class SavedGame(BaseModel):
 
 
 #db.connect()
-#db.create_tables([SavedGame])
+#db.drop_tables([SavedObjects])
+#db.create_tables([SavedObjects])
 
 
 """
@@ -64,55 +80,84 @@ boss = EnemyTypes.create(name="boss", texture_file="strong_enemy.png", texture_s
 boss.save()
 
 
-basic_bullet = BulletTypes.create(name="basic enemy bullet", texture_file="bullet.png", radius=10, vx=0, vy=1)
-basic_bullet.save()
+basic_enemy_bullet = BulletTypes.create(name="basic enemy bullet", enemy=True, texture_file="bullet.png", radius=10,
+                                        speed=150, vx=0, vy=1)
+basic_enemy_bullet.save()
 
-basic_player_bullet = BulletTypes.create(name="basic player bullet", texture_file="bullet.png", radius=10, vx=0, vy=-1)
+basic_player_bullet = BulletTypes.create(name="basic player bullet", enemy=False, texture_file="bullet.png", radius=10,
+                                         speed=150, vx=0, vy=-1)
 basic_player_bullet.save()
-"""
+
+basic_enemy = PlayerTypes.create(name="player", texture_file="player.png",
+                                 texture_size_width=50, texture_size_height=30,
+                                 speed=500, shoot_v=10, hp=300, dm=100, endurance=1)
+basic_enemy.save()"""
 
 
 def get_enemy_type(name):
     a = EnemyTypes.get(EnemyTypes.name == name)
-    return (
-        a.texture_file,
-        (a.texture_size_width, a.texture_size_height),
-        a.speed,
-        a.shoot_v,
-        a.hp,
-        a.dm,
-        a.endurance,
-    )
+    return {
+        "texture_file": a.texture_file,
+        "texture_size": (a.texture_size_width, a.texture_size_height),
+        "speed": a.speed,
+        "shoot_v": a.shoot_v,
+        "hp":  a.hp,
+        "dm": a.dm,
+        "endurance": a.endurance,
+    }
+
+
+def get_player_type(name):
+    a = PlayerTypes.get(PlayerTypes.name == name)
+    return {
+        "texture_file": a.texture_file,
+        "texture_size": (a.texture_size_width, a.texture_size_height),
+        "speed": a.speed,
+        "shoot_v": a.shoot_v,
+        "hp":  a.hp,
+        "dm": a.dm,
+        "endurance": a.endurance,
+    }
 
 
 def get_bullet_type(name):
     a = BulletTypes.get(BulletTypes.name == name)
-    return (
-        a.texture_file,
-        a.radius,
-        (a.vx,
-        a.vy)
-    )
+    return {
+        "texture_file": a.texture_file,
+        "radius": a.radius,
+        "vx_vy": (a.vx, a.vy),
+        "speed": a.speed,
+        "enemy": a.enemy
+    }
 
 
 def get_saved_objects():
     objects = list()
     for el in SavedObjects.select():
-        objects.append([el.object, el.object_type, (float(el.object_position.split(", ")[0]),
-                        float(el.object_position.split(", ")[1])), el.obj_damage])
+        objects.append({"object": el.object,
+                        "object_type": el.object_type,
+                        "object_position": (float(el.object_position.split(", ")[0]),
+                                            float(el.object_position.split(", ")[1])),
+                        "object_hp": el.object_hp,
+                        "object_damage": el.object_damage
+                        })
     return objects
 
 
 def get_saved_game():
     for el in SavedGame.select():
-        objects = [el.player_x, el.player_y, el.player_hp , el.level]
+        objects = {"player_x": el.player_x,
+                   "player_y": el.player_y,
+                   "player_hp": el.player_hp,
+                   "level": el.level}
     return objects
 
 
 def set_saved_objects(name, objects):
     for e in objects:
         n = SavedObjects.create(object=name, object_type=e.my_type,
-                                object_position=str(e.x) + ", " + str(e.y), obj_damage=e.damage)
+                                object_position=str(e.x) + ", " + str(e.y),
+                                object_hp=e.hp, object_damage=e.damage)
         n.save()
 
 

@@ -6,23 +6,24 @@ import pygame
 
 
 class Enemy(GameObject):
-    def __init__(self, color, xy, type):
+    def __init__(self, xy, type, updated_hp=0):
         args = get_enemy_type(type)
-        super().__init__(color, xy, args[1], args[2], args[4], args[5], args[6])
-        self.shoot_v = args[3]
+        if updated_hp == 0:
+            hp = args["hp"]
+        else:
+            hp = updated_hp
+        super().__init__(xy, args["texture_size"], args["speed"], hp, args["dm"], args["endurance"])
+        self.shoot_v = args["shoot_v"]
         self.last_shoot = 0
-        self.texture_file = args[0]
-        self.texture_size = args[1]
+        self.texture_file = args["texture_file"]
+        self.texture_size = args["texture_size"]
         self.my_type = type
 
     def shoot(self, bullets: list[Bullet]):
         t = pygame.time.get_ticks()
         if t - self.last_shoot >= self.shoot_v:
             b = Bullet(
-                True,
-                (225, 125, 3),
                 (self.x + self.width // 2, self.y),
-                150,
                 self.damage,
                 "basic enemy bullet"
             )
