@@ -6,7 +6,7 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        ("./danmaku/resources", "resources")
+        ("./assets", "assets")
     ],
     hiddenimports=[],
     hookspath=[],
@@ -33,7 +33,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['danmaku/resources/icon.ico'],
+    icon=['./assets/icon.ico'],
 )
 coll = COLLECT(
     exe,

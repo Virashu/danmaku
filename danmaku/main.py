@@ -43,7 +43,7 @@ LEVELS = [LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6, FINAL]
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Game(vgame.Scene):
     def load(self):
-        self.graphics.library.path = resource_path("./resources/textures")
+        self.graphics.library.path = resource_path("textures")
 
         self.pause = False
 
@@ -176,7 +176,7 @@ class Game(vgame.Scene):
                     self.enemies = LEVELS[self.cur_level]
 
         if self.player.hp <= 0:
-            pygame.mixer.music.load(resource_path("./resources/sounds/death.wav"))
+            pygame.mixer.music.load(resource_path("sounds/death.wav"))
             pygame.mixer.music.play()
 
     def draw(self):
@@ -194,7 +194,7 @@ class Game(vgame.Scene):
 
 pygame.mixer.init()
 pygame.mixer.music.set_volume(0.5)
-pygame.mixer.music.load(resource_path("./resources/sounds/bgm.wav"))
+pygame.mixer.music.load(resource_path("sounds/bgm.wav"))
 pygame.mixer.music.play(loops=-1)
 
 runner = vgame.Runner()

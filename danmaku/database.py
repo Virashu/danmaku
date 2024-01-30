@@ -2,7 +2,7 @@ from peewee import SqliteDatabase, Model, CharField, IntegerField, FloatField
 from danmaku.utils import resource_path
 
 # look for database file in the same folder, not folder of execution
-db = SqliteDatabase(resource_path("./resources/DataBase.db"))
+db = SqliteDatabase(resource_path("DataBase.db"))
 
 
 class BaseModel(Model):
