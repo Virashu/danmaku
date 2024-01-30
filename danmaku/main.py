@@ -49,7 +49,7 @@ class Game(vgame.Game):
             self.bullets: list[Bullet] = []
             self.enemies: list[Enemy] = LEVELS[self.cur_level].copy()
             #self.player = Player((100, 460), (50, 30), 500, 300, 100, 1)
-            self.player = Player((100, 460), "player")
+            self.player = Player((100, 450), "player")
 
         if menu.last_game:
             self.enemies: list[Enemy] = []
@@ -100,9 +100,9 @@ class Game(vgame.Game):
             if Keys.SPACE in self.pressed_keys or Keys.Z in self.pressed_keys:
                 self.player.shoot(self.bullets)
             if Keys.LEFT_SHIFT in self.pressed_keys:
-                self.player.speed = 250
+                self.player.speed = 100
             else:
-                self.player.speed = 500
+                self.player.speed = 150
             self.player.vx, self.player.vy = vx, vy
 
             # TODO: Check separately x and y
@@ -117,6 +117,8 @@ class Game(vgame.Game):
                 HEIGHT,
             ):
                 self.player.update(self.delta)
+                #if self.pressed_keys:
+                self.player.animation()
 
             for enemy in self.enemies:
                 enemy.shoot(self.bullets)

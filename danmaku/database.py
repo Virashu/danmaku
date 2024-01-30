@@ -60,8 +60,8 @@ class SavedGame(BaseModel):
 
 
 #db.connect()
-#db.drop_tables([SavedObjects])
-#db.create_tables([SavedObjects])
+#db.drop_tables([PlayerTypes])
+#db.create_tables([PlayerTypes])
 
 
 """
@@ -88,10 +88,20 @@ basic_player_bullet = BulletTypes.create(name="basic player bullet", enemy=False
                                          speed=150, vx=0, vy=-1)
 basic_player_bullet.save()
 
-basic_enemy = PlayerTypes.create(name="player", texture_file="player.png",
-                                 texture_size_width=50, texture_size_height=30,
-                                 speed=500, shoot_v=10, hp=300, dm=100, endurance=1)
-basic_enemy.save()"""
+player = PlayerTypes.create(name="player",
+                            texture_file="player_idle_left.png;player_left_1.png;player_left_2.png;player_left_3.png;"
+                                         "player_idle_left.png;player_left_4.png;player_left_5.png;player_left_6.png;"
+                                         "player_idle_right.png;player_right_1.png;player_right_2.png;"
+                                         "player_right_3.png;player_idle_right.png;player_right_4.png;"
+                                         "player_right_5.png;player_right_6.png;player_idle_up.png;player_up_1.png;"
+                                         "player_up_2.png;player_up_3.png;player_idle_up.png;player_up_4.png;"
+                                         "player_up_5.png;player_up_6.png;player_idle_down.png;player_down_1.png;"
+                                         "player_down_2.png;player_down_3.png;player_idle_down.png;player_down_4.png;"
+                                         "player_down_5.png;player_down_6.png;player_shoot_1.png;player_shoot_2.png;"
+                                         "player_shoot_3.png;player_shoot_4.png;player_idle_right.png",
+                                 texture_size_width=50, texture_size_height=50,
+                                 speed=150, shoot_v=250, hp=1300, dm=500, endurance=1)
+player.save()"""
 
 
 def get_enemy_type(name):
