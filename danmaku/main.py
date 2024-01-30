@@ -191,6 +191,8 @@ class Game(vgame.Scene):
         for bullet in self.bullets:
             self.graphics.draw_sprite(bullet)
 
+        self.graphics.text(f"HP: {self.player.hp}", (0, 0))
+
     def exit(self):
         ...
 
