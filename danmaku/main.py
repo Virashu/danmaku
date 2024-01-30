@@ -176,8 +176,11 @@ class Game(vgame.Scene):
                     self.enemies = LEVELS[self.cur_level]
 
         if self.player.hp <= 0:
-            pygame.mixer.music.load(resource_path("sounds/death.wav"))
-            pygame.mixer.music.play()
+            death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
+            channel = death_sfx.play()
+            while channel.get_busy():
+                pygame.time.wait(10)
+            self.stop()
 
     def draw(self):
         self.graphics.draw_sprite(self.player)
