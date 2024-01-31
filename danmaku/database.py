@@ -60,23 +60,30 @@ class SavedGame(BaseModel):
 
 
 #db.connect()
-#db.drop_tables([PlayerTypes])
-#db.create_tables([PlayerTypes])
-
-
+#db.drop_tables([EnemyTypes])
+#db.create_tables([EnemyTypes])
 """
-basic_enemy = EnemyTypes.create(name="basic enemy", texture_file="basic_enemy.png", texture_size_width=50,
-                                texture_size_height=25, speed=30, shoot_v=1500, hp=250, dm=50, endurance=0.1)
+
+basic_enemy = EnemyTypes.create(name="basic enemy",
+                                texture_file="basic_enemy_2.png;basic_enemy_1.png;"
+                                             "basic_enemy_2.png;basic_enemy_3.png",
+                                texture_size_width=50, texture_size_height=65,
+                                speed=30, shoot_v=1500, hp=250, dm=50, endurance=0.1)
 basic_enemy.save()
 
-strong_enemy = EnemyTypes.create(name="strong enemy", texture_file="strong_enemy.png", texture_size_width=60,
-                                texture_size_height=35, speed=20,
-                                shoot_v=1000, hp=250, dm=50, endurance=0.1)
+strong_enemy = EnemyTypes.create(name="strong enemy",
+                                 texture_file="strong_enemy_2.png;strong_enemy_1.png;"
+                                              "strong_enemy_2.png;strong_enemy_3.png",
+                                 texture_size_width=50,
+                                 texture_size_height=65, speed=20,
+                                 shoot_v=1000, hp=250, dm=50, endurance=0.1)
 strong_enemy.save()
 
-boss = EnemyTypes.create(name="boss", texture_file="strong_enemy.png", texture_size_width=90,
-                                texture_size_height=90, speed=10,
-                                shoot_v=500, hp=550, dm=70, endurance=0.3)
+boss = EnemyTypes.create(name="boss",
+                         texture_file="strong_enemy_2.png;strong_enemy_1.png;"
+                                      "strong_enemy_2.png;strong_enemy_3.png",
+                         texture_size_width=60, texture_size_height=85, speed=10,
+                         shoot_v=500, hp=550, dm=70, endurance=0.3)
 boss.save()
 
 

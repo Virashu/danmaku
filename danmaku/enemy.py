@@ -12,10 +12,16 @@ class Enemy(GameObject):
             hp = args["hp"]
         else:
             hp = updated_hp
+        self.textures = []
+        for i in args["texture_file"].split(";"):
+            self.textures.append(f"/enemy/{i}")
         super().__init__(xy, args["texture_size"], args["speed"], hp, args["dm"], args["endurance"])
         self.shoot_v = args["shoot_v"]
         self.last_shoot = 0
-        self.texture_file = args["texture_file"]
+        self.last_animation = 0
+        self.animation_v = 100
+        self.last_animation_time = 0
+        self.texture_file = self.textures[self.last_animation]
         self.texture_size = args["texture_size"]
         self.my_type = type
 
@@ -30,6 +36,15 @@ class Enemy(GameObject):
             b.direction = "down"
             bullets.append(b)
             self.last_shoot = t
+
+    def animation(self):
+        t = pygame.time.get_ticks()
+        if t - self.last_animation_time >= self.animation_v:
+            self.last_animation += 1
+            if self.last_animation >= len(self.textures):
+                self.last_animation = 0
+            self.texture_file = self.textures[self.last_animation]
+            self.last_animation_time = t
 
     def collision(self, other):
         if not other.enemy:

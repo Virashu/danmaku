@@ -122,6 +122,7 @@ class Game(vgame.Game):
 
             for enemy in self.enemies:
                 enemy.shoot(self.bullets)
+                enemy.animation()
                 enemy.update(self.delta)
                 if not not_in_border(enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT):
                     self.enemies.remove(enemy)
