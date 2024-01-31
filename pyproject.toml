@@ -6,7 +6,7 @@ authors = ["Vlad <89295404+Virashu@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.11,<3.13"
+python = ">=3.10,<3.13"
 vgame = {git = "https://github.com/virashu/pygametest"}
 peewee = "^3.17.0"
 
