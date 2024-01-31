@@ -13,7 +13,6 @@ from danmaku.database import (
     set_saved_game,
     delete_saved_objects,
 )
-from danmaku.menu import Menu
 
 WIDTH, HEIGHT = 300, 500
 LEVEL1 = [Enemy((150, 15), "basic enemy")]
@@ -45,74 +44,79 @@ class Game(vgame.Scene):
     def load(self):
         self.graphics.library.path = resource_path("textures")
 
+        pygame.mixer.init()
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.load(resource_path("sounds/bgm.wav"))
+        pygame.mixer.music.play(loops=-1)
+
         self.pause = False
 
-        menu = Menu("main", WIDTH, HEIGHT)
-        menu.load()
+        # menu = Menu("main", WIDTH, HEIGHT)
+        # menu.load()
 
-        if menu.new_game:
-            self.cur_level = 0
-            self.bullets: list[Bullet] = []
-            self.enemies: list[Enemy] = LEVELS[self.cur_level].copy()
-            self.player = Player((100, 450), "player")
+        # if menu.new_game:
+        self.cur_level = 0
+        self.bullets: list[Bullet] = []
+        self.enemies: list[Enemy] = LEVELS[self.cur_level].copy()
+        self.player = Player((100, 450), "player")
 
-        if menu.last_game:
-            self.enemies: list[Enemy] = []
-            self.bullets: list[Bullet] = []
-            objects = get_saved_objects()
-            for el in objects:
-                if el["object"] == "enemy":
-                    self.enemies.append(
-                        Enemy(
-                            el["object_position"],
-                            el["object_type"],
-                            updated_hp=el["object_hp"],
-                        )
-                    )
-                elif el["object"] == "bullet":
-                    self.bullets.append(
-                        Bullet(
-                            el["object_position"],
-                            el["object_damage"],
-                            el["object_type"],
-                        )
-                    )
-                elif el["object"] == "player":
-                    self.player = Player(
-                        el["object_position"],
-                        el["object_type"],
-                        updated_hp=el["object_hp"],
-                    )
+        # if menu.last_game:
+        #     self.enemies: list[Enemy] = []
+        #     self.bullets: list[Bullet] = []
+        #     objects = get_saved_objects()
+        #     for el in objects:
+        #         if el["object"] == "enemy":
+        #             self.enemies.append(
+        #                 Enemy(
+        #                     el["object_position"],
+        #                     el["object_type"],
+        #                     updated_hp=el["object_hp"],
+        #                 )
+        #             )
+        #         elif el["object"] == "bullet":
+        #             self.bullets.append(
+        #                 Bullet(
+        #                     el["object_position"],
+        #                     el["object_damage"],
+        #                     el["object_type"],
+        #                 )
+        #             )
+        #         elif el["object"] == "player":
+        #             self.player = Player(
+        #                 el["object_position"],
+        #                 el["object_type"],
+        #                 updated_hp=el["object_hp"],
+        #             )
 
-            saved_game = get_saved_game()
-            self.cur_level = saved_game["level"]
-            # self.player = Player(
-            #     (saved_game["player_x"], saved_game["player_y"]),
-            #     (50, 30),
-            #     500,
-            #     saved_game["player_hp"],
-            #     100,
-            #     1,
-            # )
-            delete_saved_objects()
+        #     saved_game = get_saved_game()
+        #     self.cur_level = saved_game["level"]
+        # self.player = Player(
+        #     (saved_game["player_x"], saved_game["player_y"]),
+        #     (50, 30),
+        #     500,
+        #     saved_game["player_hp"],
+        #     100,
+        #     1,
+        # )
+        # delete_saved_objects()
 
     def update(self):
         if Keys.P in self.pressed_keys:
             self.pressed_keys.remove(Keys.P)
-            self.pause = True
-            pause_menu = Menu("pause", WIDTH, HEIGHT)
-            pause_menu.load()
-            if pause_menu.start:  # It doesn't work properly
-                self.pause = False
-            if pause_menu.to_menu:
-                pass
-            if pause_menu.save:
-                delete_saved_objects()
-                set_saved_objects("enemy", self.enemies)
-                set_saved_objects("bullet", self.bullets)
-                set_saved_objects("player", [self.player])
-                set_saved_game(self.cur_level, self.player)
-                self.stop()
+            self.pause = False
+            # pause_menu = Menu("pause", WIDTH, HEIGHT)
+            # pause_menu.load()
+            # if pause_menu.start:  # It doesn't work properly
+            #     self.pause = False
+            # if pause_menu.to_menu:
+            #     pass
+            # if pause_menu.save:
+            #     delete_saved_objects()
+            #     set_saved_objects("enemy", self.enemies)
+            #     set_saved_objects("bullet", self.bullets)
+            #     set_saved_objects("player", [self.player])
+            #     set_saved_game(self.cur_level, self.player)
+            #     self.stop()
         if not self.pause:
             vx = vy = 0
             if Keys.RIGHT in self.pressed_keys:
@@ -212,10 +216,8 @@ class Game(vgame.Scene):
         ...
 
 
-pygame.mixer.init()
-pygame.mixer.music.set_volume(0.5)
-pygame.mixer.music.load(resource_path("sounds/bgm.wav"))
-pygame.mixer.music.play(loops=-1)
+from danmaku.menu import Menu
 
 runner = vgame.Runner()
-runner.run(Game(framerate=60, width=WIDTH, height=HEIGHT))
+runner.run(Menu(width=WIDTH, height=HEIGHT, title="Danmaku | Menu"))
+runner.run(Game(width=WIDTH, height=HEIGHT, title="Danmaku"))

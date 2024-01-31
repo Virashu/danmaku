@@ -1,100 +1,66 @@
 import pygame
 from danmaku.button import Button
+import vgame
 
 
-class Menu:
-    def __init__(self, name, WIDTH, HEIGHT):
-        self.name = name
-        self.width = WIDTH
-        self.height = HEIGHT
-        if self.name == "main":
-            self.new_game = False
-            self.last_game = False
-            self.status = self.new_game or self.last_game
-        if self.name == "pause":
-            self.start = False
-            self.to_menu = False
-            self.save = False
-            self.status = self.start or self.to_menu or self.save
-
+# pylint: disable=attribute-defined-outside-init, missing-class-docstring
+class Menu(vgame.Scene):
     def load(self):
-        pygame.init()
-        SCREEN = pygame.display.set_mode((self.width, self.height))
-        if self.name == "main":
-            self.new_game_button = Button(
+        self.selection_index = 0
+        self.new_game = False
+        self.last_game = False
+        self.status = self.new_game or self.last_game
+
+        self.buttons = [
+            Button(
                 (self.width // 4, self.height // 3),
+                200,
+                40,
                 (255, 0, 0),
                 "New game",
                 (0, 0, 255),
                 42,
-            )
-            self.continue_button = Button(
+            ),
+            Button(
                 (self.width // 4 + 10, self.height // 3 + 50),
+                200,
+                40,
                 (255, 0, 0),
                 "Continue",
                 (0, 0, 255),
                 42,
-            )
-            self.settings_button = Button(
+            ),
+            Button(
                 (self.width // 4 + 13, self.height // 3 + 100),
+                200,
+                40,
                 (255, 0, 0),
                 "Settings",
                 (0, 0, 255),
                 42,
-            )
+            ),
+        ]
 
-        if self.name == "pause":
-            self.start_button = Button(
-                (self.width // 4, self.height // 3),
-                (255, 0, 0),
-                "Continue",
-                (0, 0, 255),
-                42,
-            )
-            self.to_menu_button = Button(
-                (self.width // 4, self.height // 3 + 50),
-                (255, 0, 0),
-                "New game",
-                (0, 0, 255),
-                42,
-            )
-            self.save_button = Button(
-                (self.width // 5, self.height // 3 + 100),
-                (255, 0, 0),
-                "Save and exit",
-                (0, 0, 255),
-                42,
-            )
+    def update(self):
+        if vgame.Keys.UP in self.pressed_keys:
+            self.pressed_keys.discard(vgame.Keys.UP)
+            self.selection_index = (self.selection_index - 1) % len(self.buttons)
+        if vgame.Keys.DOWN in self.pressed_keys:
+            self.pressed_keys.discard(vgame.Keys.DOWN)
+            self.selection_index = (self.selection_index + 1) % len(self.buttons)
+        if vgame.Keys.RETURN in self.pressed_keys or vgame.Keys.Z in self.pressed_keys:
+            if self.selection_index == 0:
+                self.new_game = True
+                # Delete game from db & go to game scene
+            if self.selection_index == 1:
+                self.last_game = True
+                self.stop()
+                # just go to game scene
+            if self.selection_index == 2:
+                pass
+            self.status = self.new_game or self.last_game
+        print(self.selection_index)
 
-        while not self.status:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.name == "main":
-                        if self.new_game_button.is_clicked(pygame.mouse.get_pos()):
-                            self.new_game = True
-                        if self.continue_button.is_clicked(pygame.mouse.get_pos()):
-                            self.last_game = True
-                        if self.settings_button.is_clicked(pygame.mouse.get_pos()):
-                            pass
-                        self.status = self.new_game or self.last_game
-                    if self.name == "pause":
-                        if self.start_button.is_clicked(pygame.mouse.get_pos()):
-                            self.start = True
-                        if self.to_menu_button.is_clicked(pygame.mouse.get_pos()):
-                            self.to_menu = True
-                        if self.save_button.is_clicked(pygame.mouse.get_pos()):
-                            self.save = True
-                        self.status = self.start or self.to_menu or self.save
-            SCREEN.fill((0, 0, 0))
-            if self.name == "main":
-                self.new_game_button.draw(SCREEN)
-                self.continue_button.draw(SCREEN)
-                self.settings_button.draw(SCREEN)
-            if self.name == "pause":
-                self.start_button.draw(SCREEN)
-                self.to_menu_button.draw(SCREEN)
-                self.save_button.draw(SCREEN)
-            pygame.display.flip()
+    def draw(self):
+        for button in self.buttons:
+            button.draw(self.graphics)
