@@ -16,27 +16,27 @@ from danmaku.database import (
 from danmaku.menu import Menu
 
 WIDTH, HEIGHT = 300, 500
-LEVEL1 = [Enemy((25, 150, 0), (150, 15), "basic enemy")]
+LEVEL1 = [Enemy((150, 15), "basic enemy")]
 LEVEL2 = [
-    Enemy((25, 150, 0), (50, 25), "basic enemy"),
-    Enemy((25, 150, 0), (200, 10), "basic enemy"),
+    Enemy((50, 25), "basic enemy"),
+    Enemy((200, 10), "basic enemy"),
 ]
-LEVEL3 = [Enemy((25, 150, 0), (110, 5), "strong enemy")]
+LEVEL3 = [Enemy((110, 5), "strong enemy")]
 LEVEL4 = [
-    Enemy((25, 150, 0), (50, 25), "strong enemy"),
-    Enemy((25, 150, 0), (200, 10), "strong enemy"),
+    Enemy((50, 25), "strong enemy"),
+    Enemy((200, 10), "strong enemy"),
 ]
 LEVEL5 = [
-    Enemy((25, 150, 0), (50, 15), "basic enemy"),
-    Enemy((25, 150, 0), (200, 10), "basic enemy"),
-    Enemy((25, 150, 0), (110, 5), "strong enemy"),
+    Enemy((50, 15), "basic enemy"),
+    Enemy((200, 10), "basic enemy"),
+    Enemy((110, 5), "strong enemy"),
 ]
 LEVEL6 = [
-    Enemy((25, 150, 0), (50, 15), "strong enemy"),
-    Enemy((25, 150, 0), (200, 10), "basic enemy"),
-    Enemy((25, 150, 0), (110, 5), "strong enemy"),
+    Enemy((50, 15), "strong enemy"),
+    Enemy((200, 10), "basic enemy"),
+    Enemy((110, 5), "strong enemy"),
 ]
-FINAL = [Enemy((25, 150, 0), (150, 15), "boss")]
+FINAL = [Enemy((150, 15), "boss")]
 LEVELS = [LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6, FINAL]
 
 
@@ -54,36 +54,25 @@ class Game(vgame.Scene):
             self.cur_level = 0
             self.bullets: list[Bullet] = []
             self.enemies: list[Enemy] = LEVELS[self.cur_level].copy()
-            self.player = Player((0, 125, 255), (100, 460), (50, 30), 500, 300, 100, 1)
+            #self.player = Player((100, 460), (50, 30), 500, 300, 100, 1)
+            self.player = Player((100, 450), "player")
 
         if menu.last_game:
             self.enemies: list[Enemy] = []
             self.bullets: list[Bullet] = []
             objects = get_saved_objects()
             for el in objects:
-                if el[0] == "enemy":
-                    self.enemies.append(Enemy((25, 150, 0), el[2], el[1]))
-                if el[0] == "bullet":
-                    if "enemy" in el[1]:
-                        self.bullets.append(
-                            Bullet(True, (25, 150, 0), el[2], 150, el[3], el[1])
-                        )
-                    elif "player" in el[1]:
-                        self.bullets.append(
-                            Bullet(False, (25, 150, 0), el[2], 150, el[3], el[1])
-                        )
+                if el["object"] == "enemy":
+                    self.enemies.append(Enemy(el["object_position"], el["object_type"], updated_hp=el["object_hp"]))
+                if el["object"] == "bullet":
+                    self.bullets.append(Bullet(el["object_position"], el["object_damage"],
+                                               el["object_type"]))
+                if el["object"] == "player":
+                    self.player = Player(el["object_position"], el["object_type"], updated_hp=el["object_hp"])
 
             saved_game = get_saved_game()
-            self.cur_level = saved_game[3]
-            self.player = Player(
-                (0, 125, 255),
-                (saved_game[0], saved_game[1]),
-                (50, 30),
-                500,
-                saved_game[2],
-                100,
-                1,
-            )
+            self.cur_level = saved_game["level"]
+            #self.player = Player((saved_game["player_x"], saved_game["player_y"]), (50, 30), 500, saved_game["player_hp"], 100, 1)
             delete_saved_objects()
         self.graphics.library.load(self.player)
 
@@ -101,6 +90,7 @@ class Game(vgame.Scene):
                 delete_saved_objects()
                 set_saved_objects("enemy", self.enemies)
                 set_saved_objects("bullet", self.bullets)
+                set_saved_objects("player", [self.player])
                 set_saved_game(self.cur_level, self.player)
                 quit()
         if not self.pause:
@@ -116,9 +106,9 @@ class Game(vgame.Scene):
             if Keys.SPACE in self.pressed_keys or Keys.Z in self.pressed_keys:
                 self.player.shoot(self.bullets)
             if Keys.LEFT_SHIFT in self.pressed_keys:
-                self.player.speed = 250
+                self.player.speed = 100
             else:
-                self.player.speed = 500
+                self.player.speed = 150
             self.player.vx, self.player.vy = vx, vy
 
             # TODO: Check separately x and y
@@ -138,9 +128,12 @@ class Game(vgame.Scene):
                 HEIGHT,
             ):
                 self.player.update(self.delta)
+                #if self.pressed_keys:
+                self.player.animation()
 
             for enemy in self.enemies:
                 enemy.shoot(self.bullets)
+                enemy.animation()
                 enemy.update(self.delta)
                 if not not_in_border(
                     enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT
