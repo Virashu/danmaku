@@ -86,7 +86,14 @@ class Game(vgame.Scene):
 
             saved_game = get_saved_game()
             self.cur_level = saved_game["level"]
-            # self.player = Player((saved_game["player_x"], saved_game["player_y"]), (50, 30), 500, saved_game["player_hp"], 100, 1)
+            # self.player = Player(
+            #     (saved_game["player_x"], saved_game["player_y"]),
+            #     (50, 30),
+            #     500,
+            #     saved_game["player_hp"],
+            #     100,
+            #     1,
+            # )
             delete_saved_objects()
 
     def update(self):

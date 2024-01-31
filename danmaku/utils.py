@@ -26,7 +26,7 @@ def resource_path(relative_path) -> str:
     """Get absolute path to resource, works for dev and for PyInstaller"""
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = Path(sys._MEIPASS)
+        base_path = Path(sys._MEIPASS)  # pylint: disable=protected-access
     except AttributeError:
         base_path = Path(__file__).parent.parent
 
