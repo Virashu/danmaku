@@ -1,4 +1,11 @@
-from peewee import SqliteDatabase, Model, CharField, IntegerField, FloatField
+from peewee import (
+    SqliteDatabase,
+    Model,
+    CharField,
+    IntegerField,
+    FloatField,
+    BooleanField,
+)
 from danmaku.utils import resource_path
 
 # look for database file in the same folder, not folder of execution
@@ -59,9 +66,9 @@ class SavedGame(BaseModel):
     level = IntegerField()
 
 
-#db.connect()
-#db.drop_tables([EnemyTypes])
-#db.create_tables([EnemyTypes])
+# db.connect()
+# db.drop_tables([EnemyTypes])
+# db.create_tables([EnemyTypes])
 """
 
 basic_enemy = EnemyTypes.create(name="basic enemy",
@@ -118,7 +125,7 @@ def get_enemy_type(name):
         "texture_size": (a.texture_size_width, a.texture_size_height),
         "speed": a.speed,
         "shoot_v": a.shoot_v,
-        "hp":  a.hp,
+        "hp": a.hp,
         "dm": a.dm,
         "endurance": a.endurance,
     }
@@ -131,7 +138,7 @@ def get_player_type(name):
         "texture_size": (a.texture_size_width, a.texture_size_height),
         "speed": a.speed,
         "shoot_v": a.shoot_v,
-        "hp":  a.hp,
+        "hp": a.hp,
         "dm": a.dm,
         "endurance": a.endurance,
     }
@@ -148,37 +155,48 @@ def get_bullet_type(name: str) -> tuple[str, int, tuple[int, int]]:
         "radius": a.radius,
         "vx_vy": (a.vx, a.vy),
         "speed": a.speed,
-        "enemy": a.enemy
+        "enemy": a.enemy,
     }
 
 
 def get_saved_objects():
     objects = []
     for el in SavedObjects.select():
-        objects.append({"object": el.object,
-                        "object_type": el.object_type,
-                        "object_position": (float(el.object_position.split(", ")[0]),
-                                            float(el.object_position.split(", ")[1])),
-                        "object_hp": el.object_hp,
-                        "object_damage": el.object_damage
-                        })
+        objects.append(
+            {
+                "object": el.object,
+                "object_type": el.object_type,
+                "object_position": (
+                    float(el.object_position.split(", ")[0]),
+                    float(el.object_position.split(", ")[1]),
+                ),
+                "object_hp": el.object_hp,
+                "object_damage": el.object_damage,
+            }
+        )
     return objects
 
 
 def get_saved_game():
     for el in SavedGame.select():
-        objects = {"player_x": el.player_x,
-                   "player_y": el.player_y,
-                   "player_hp": el.player_hp,
-                   "level": el.level}
+        objects = {
+            "player_x": el.player_x,
+            "player_y": el.player_y,
+            "player_hp": el.player_hp,
+            "level": el.level,
+        }
     return objects
 
 
 def set_saved_objects(name, objects):
     for e in objects:
-        n = SavedObjects.create(object=name, object_type=e.my_type,
-                                object_position=str(e.x) + ", " + str(e.y),
-                                object_hp=e.hp, object_damage=e.damage)
+        n = SavedObjects.create(
+            object=name,
+            object_type=e.my_type,
+            object_position=str(e.x) + ", " + str(e.y),
+            object_hp=e.hp,
+            object_damage=e.damage,
+        )
         n.save()
 
 

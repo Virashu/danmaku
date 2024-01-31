@@ -2,16 +2,12 @@ import pygame
 import vgame
 from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
-from danmaku.database import get_bullet_type
-from utils import resource_path
+from danmaku.database import get_bullet_type, get_player_type
+from danmaku.utils import resource_path
 
 
 class Player(GameObject):
-    def __init__(
-        self,
-        xy: tuple[int | float, int | float],
-        type, updated_hp=0
-    ):
+    def __init__(self, xy: tuple[int | float, int | float], type, updated_hp=0):
         args = get_player_type(type)
         if updated_hp == 0:
             hp = args["hp"]
@@ -27,11 +23,7 @@ class Player(GameObject):
         )
 
         files = args["texture_file"].split(";")
-        self.textures = {"left": [],
-                         "right": [],
-                         "up": [],
-                         "down": [],
-                         "shoot": []}
+        self.textures = {"left": [], "right": [], "up": [], "down": [], "shoot": []}
         for i in files:
             if "left" in i:
                 self.textures["left"].append(f"/player/{i}")
@@ -52,16 +44,13 @@ class Player(GameObject):
         self.last_shoot = 0
         self.shoot_v = args["shoot_v"]
 
-    """def draw(self, graphics: vgame.graphics.Graphics):
-        graphics.rectangle((self.x, self.y), (self.width, self.height), self.color)"""
-
     def shoot(self, bullets: list[Bullet]):
         t = pygame.time.get_ticks()
         if t - self.last_shoot >= self.shoot_v:
             b = Bullet(
                 (self.x + (self.width // 2), self.y + (self.height // 2)),
                 self.damage,
-                "basic player bullet"
+                "basic player bullet",
             )
             bullets.append(b)
             self.last_shoot = t
