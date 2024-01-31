@@ -1,6 +1,5 @@
 from vgame.graphics import Graphics, Sprite
 from abc import abstractmethod
-from danmaku.bullet import Bullet
 
 
 class GameObject(Sprite):
@@ -40,13 +39,13 @@ class GameObject(Sprite):
         self.hp -= damage * self.endurance
 
     @abstractmethod
-    def shoot(self, bullets: list[Bullet]):
+    def shoot(self):
         ...
 
     @abstractmethod
     def draw(self, graphics: Graphics):
-        pass
+        ...
 
     @abstractmethod
     def collision(self, other):
-        pass
+        ...

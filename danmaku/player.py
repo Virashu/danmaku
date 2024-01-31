@@ -44,16 +44,17 @@ class Player(GameObject):
         self.last_shoot = 0
         self.shoot_v = args["shoot_v"]
 
-    def shoot(self, bullets: list[Bullet]):
+    def shoot(self) -> list[Bullet]:
         t = pygame.time.get_ticks()
         if t - self.last_shoot >= self.shoot_v:
-            b = Bullet(
+            bullet = Bullet(
                 (self.x + (self.width // 2), self.y + (self.height // 2)),
                 self.damage,
                 "basic player bullet",
             )
-            bullets.append(b)
             self.last_shoot = t
+            return [bullet]
+        return []
 
     def animation(self):
         t = pygame.time.get_ticks()

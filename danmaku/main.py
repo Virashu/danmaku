@@ -54,7 +54,6 @@ class Game(vgame.Scene):
             self.cur_level = 0
             self.bullets: list[Bullet] = []
             self.enemies: list[Enemy] = LEVELS[self.cur_level].copy()
-            #self.player = Player((100, 460), (50, 30), 500, 300, 100, 1)
             self.player = Player((100, 450), "player")
 
         if menu.last_game:
@@ -63,18 +62,32 @@ class Game(vgame.Scene):
             objects = get_saved_objects()
             for el in objects:
                 if el["object"] == "enemy":
-                    self.enemies.append(Enemy(el["object_position"], el["object_type"], updated_hp=el["object_hp"]))
-                if el["object"] == "bullet":
-                    self.bullets.append(Bullet(el["object_position"], el["object_damage"],
-                                               el["object_type"]))
-                if el["object"] == "player":
-                    self.player = Player(el["object_position"], el["object_type"], updated_hp=el["object_hp"])
+                    self.enemies.append(
+                        Enemy(
+                            el["object_position"],
+                            el["object_type"],
+                            updated_hp=el["object_hp"],
+                        )
+                    )
+                elif el["object"] == "bullet":
+                    self.bullets.append(
+                        Bullet(
+                            el["object_position"],
+                            el["object_damage"],
+                            el["object_type"],
+                        )
+                    )
+                elif el["object"] == "player":
+                    self.player = Player(
+                        el["object_position"],
+                        el["object_type"],
+                        updated_hp=el["object_hp"],
+                    )
 
             saved_game = get_saved_game()
             self.cur_level = saved_game["level"]
-            #self.player = Player((saved_game["player_x"], saved_game["player_y"]), (50, 30), 500, saved_game["player_hp"], 100, 1)
+            # self.player = Player((saved_game["player_x"], saved_game["player_y"]), (50, 30), 500, saved_game["player_hp"], 100, 1)
             delete_saved_objects()
-        self.graphics.library.load(self.player)
 
     def update(self):
         if Keys.P in self.pressed_keys:
@@ -92,7 +105,7 @@ class Game(vgame.Scene):
                 set_saved_objects("bullet", self.bullets)
                 set_saved_objects("player", [self.player])
                 set_saved_game(self.cur_level, self.player)
-                quit()
+                self.stop()
         if not self.pause:
             vx = vy = 0
             if Keys.RIGHT in self.pressed_keys:
@@ -104,7 +117,7 @@ class Game(vgame.Scene):
             if Keys.DOWN in self.pressed_keys:
                 vy += 1
             if Keys.SPACE in self.pressed_keys or Keys.Z in self.pressed_keys:
-                self.player.shoot(self.bullets)
+                self.bullets += self.player.shoot()
             if Keys.LEFT_SHIFT in self.pressed_keys:
                 self.player.speed = 100
             else:
@@ -128,11 +141,11 @@ class Game(vgame.Scene):
                 HEIGHT,
             ):
                 self.player.update(self.delta)
-                #if self.pressed_keys:
+                # if self.pressed_keys:
                 self.player.animation()
 
             for enemy in self.enemies:
-                enemy.shoot(self.bullets)
+                self.bullets += enemy.shoot()
                 enemy.animation()
                 enemy.update(self.delta)
                 if not not_in_border(

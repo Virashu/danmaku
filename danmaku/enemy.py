@@ -1,4 +1,3 @@
-from vgame.graphics import Graphics
 from danmaku.database import get_enemy_type
 from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
@@ -15,7 +14,9 @@ class Enemy(GameObject):
         self.textures = []
         for i in args["texture_file"].split(";"):
             self.textures.append(f"/enemy/{i}")
-        super().__init__(xy, args["texture_size"], args["speed"], hp, args["dm"], args["endurance"])
+        super().__init__(
+            xy, args["texture_size"], args["speed"], hp, args["dm"], args["endurance"]
+        )
         self.shoot_v = args["shoot_v"]
         self.last_shoot = 0
         self.last_animation = 0
@@ -25,17 +26,15 @@ class Enemy(GameObject):
         self.texture_size = args["texture_size"]
         self.my_type = type
 
-    def shoot(self, bullets: list[Bullet]):
+    def shoot(self) -> list[Bullet]:
         t = pygame.time.get_ticks()
         if t - self.last_shoot >= self.shoot_v:
-            b = Bullet(
-                (self.x + self.width // 2, self.y),
-                self.damage,
-                "basic enemy bullet"
+            bullet = Bullet(
+                (self.x + self.width // 2, self.y), self.damage, "basic enemy bullet"
             )
-            b.direction = "down"
-            bullets.append(b)
             self.last_shoot = t
+            return [bullet]
+        return []
 
     def animation(self):
         t = pygame.time.get_ticks()
