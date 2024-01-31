@@ -129,6 +129,7 @@ class Game(vgame.Scene):
                 self.player.speed = 100
             else:
                 self.player.speed = 150
+
             self.player.vx, self.player.vy = vx, vy
 
             # TODO: Check separately x and y
@@ -148,7 +149,6 @@ class Game(vgame.Scene):
                 HEIGHT,
             ):
                 self.player.update(self.delta)
-                # if self.pressed_keys:
                 self.player.animation()
 
             for enemy in self.enemies:
@@ -160,28 +160,30 @@ class Game(vgame.Scene):
                 ):
                     self.enemies.remove(enemy)
 
-            dell = []
+            dell = set()
+
             for bullet in self.bullets:
                 if self.player.collision(bullet):
                     self.player.get_damage(bullet.damage)
-                    dell.append(bullet)
+                    dell.add(bullet)
+
                 for enemy in self.enemies:
                     if enemy.collision(bullet):
                         enemy.get_damage(bullet.damage)
-                        dell.append(bullet)
+                        dell.add(bullet)
                         if enemy.hp <= 0:
                             self.enemies.remove(enemy)
+
                 bullet.update(self.delta)
                 bullet.draw(self.graphics)
+
                 if not not_in_border(
                     bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
-                ) or not not_in_border(
-                    bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
                 ):
-                    dell.append(bullet)
+                    dell.add(bullet)
+
             for i in dell:
-                if i in self.bullets:
-                    self.bullets.remove(i)
+                self.bullets.remove(i)
 
             if len(self.enemies) == 0:
                 self.cur_level += 1

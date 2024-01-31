@@ -2,8 +2,7 @@ import pygame
 import vgame
 from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
-from danmaku.database import get_bullet_type, get_player_type
-from danmaku.utils import resource_path
+from danmaku.database import get_player_type
 
 
 class Player(GameObject):
@@ -74,6 +73,9 @@ class Player(GameObject):
                     self.last_animation = 0
                 self.texture_file = self.textures[direction][self.last_animation]
                 self.last_animation_time = t
+
+    def draw(self, graphics: vgame.graphics.Graphics):
+        graphics.draw_sprite(self)
 
     def collision(self, other):
         if other.enemy:

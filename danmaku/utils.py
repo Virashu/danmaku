@@ -10,6 +10,7 @@ def not_in_border(
     width: int | float,
     height: int | float,
 ) -> bool:
+    """Check if the object is in screen boundary"""
     if vy < 0 and y <= 0:
         return False
     elif vy > 0 and y >= height:
