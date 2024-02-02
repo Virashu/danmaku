@@ -9,7 +9,6 @@ class GameObject(Sprite):
 
     def __init__(
         self,
-        color: tuple[int, int, int],
         xy: tuple[int | float, int | float],
         width_height: tuple[int | float, int | float],
         speed: int | float,
@@ -18,7 +17,6 @@ class GameObject(Sprite):
         endurance: int | float,
     ):
         super().__init__()
-        self.color = color
         self.x, self.y = xy
         self.speed = speed
         self.width, self.height = width_height
@@ -41,13 +39,10 @@ class GameObject(Sprite):
         self.hp -= damage * self.endurance
 
     @abstractmethod
-    def shoot(self, other):
-        ...
+    def shoot(self): ...
 
     @abstractmethod
-    def draw(self, graphics: Graphics):
-        pass
+    def draw(self, graphics: Graphics): ...
 
     @abstractmethod
-    def collision(self, other):
-        pass
+    def collision(self, other): ...

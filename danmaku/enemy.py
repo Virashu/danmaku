@@ -1,40 +1,50 @@
-from vgame.graphics import Graphics
+from danmaku.database import get_enemy_type
 from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
 import pygame
 
 
 class Enemy(GameObject):
-    def __init__(self, color, xy, width_height, speed, shoot_v, hp, dm, endurance):
-        super().__init__(color, xy, width_height, speed, hp, dm, endurance)
-        self.shoot_v = shoot_v
-        self.last_shoot = 0
-
-    def draw(self, graphics: Graphics):
-        graphics.polygon(
-            [
-                (self.x, self.y),
-                (self.x + (self.width // 2), self.y - self.height * 2),
-                (self.x - (self.width // 2), self.y - self.height * 2),
-            ],
-            self.color,
+    def __init__(self, xy, type, updated_hp=0):
+        args = get_enemy_type(type)
+        if updated_hp == 0:
+            hp = args["hp"]
+        else:
+            hp = updated_hp
+        self.textures = []
+        for i in args["texture_file"].split(";"):
+            self.textures.append(f"/enemy/{i}")
+        super().__init__(
+            xy, args["texture_size"], args["speed"], hp, args["dm"], args["endurance"]
         )
+        self.shoot_v = args["shoot_v"]
+        self.last_shoot = 0
+        self.last_animation = 0
+        self.animation_v = 100
+        self.last_animation_time = 0
+        self.texture_file = self.textures[self.last_animation]
+        self.texture_size = args["texture_size"]
+        self.my_type = type
+        self.cost = args["cost"]
 
-    def shoot(self, bullets: list[Bullet]):
+    def shoot(self) -> list[Bullet]:
         t = pygame.time.get_ticks()
         if t - self.last_shoot >= self.shoot_v:
-            b = Bullet(
-                True,
-                (225, 125, 3),
-                (self.x, self.y),
-                10,
-                150,
-                (0, 1),
-                self.damage,
+            bullet = Bullet(
+                (self.x + self.width // 2, self.y), self.damage, "basic enemy bullet"
             )
-            b.direction = "down"
-            bullets.append(b)
             self.last_shoot = t
+            return [bullet]
+        return []
+
+    def animation(self):
+        t = pygame.time.get_ticks()
+        if t - self.last_animation_time >= self.animation_v:
+            self.last_animation += 1
+            if self.last_animation >= len(self.textures):
+                self.last_animation = 0
+            self.texture_file = self.textures[self.last_animation]
+            self.last_animation_time = t
 
     def collision(self, other):
         if not other.enemy:

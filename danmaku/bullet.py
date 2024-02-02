@@ -1,24 +1,20 @@
 from danmaku.gameobject import GameObject
+from danmaku.database import get_bullet_type
 
 
 class Bullet(GameObject):
-    def __init__(
-        self,
-        enemy: bool,
-        color: tuple[int, int, int],
-        xy: tuple[int | float, int | float],
-        r: int | float,
-        speed: int | float,
-        vx_vy: tuple[int | float, int | float],
-        damage: int | float,
-    ):
-        super().__init__(color, xy, (2 * r, 2 * r), speed, 0, damage, 1)
-        self.enemy = enemy
-        self.vx, self.vy = vx_vy
-        self.r = r
+    def __init__(self, xy: tuple[int | float, int | float], damage: int | float, type):
+        args = get_bullet_type(type)
+        super().__init__(
+            xy, (2 * args["radius"], 2 * args["radius"]), args["speed"], 0, damage, 1
+        )
+        self.enemy = args["enemy"]
+        self.vx, self.vy = args["vx_vy"]
+        self.r = args["radius"]
 
-        self.texture_file = "bullet.png"
-        self.texture_size = (2 * r, 2 * r)
+        self.texture_file = args["texture_file"]
+        self.texture_size = (2 * self.r, 2 * self.r)
+        self.my_type = type
 
     def update(self, delta: int | float):
         self.x += self.vx * delta * self.speed

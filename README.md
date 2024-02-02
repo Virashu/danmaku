@@ -6,23 +6,32 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 
 ## Refactoring
 - [x] main.py
-- [ ] bullet.py
+- [x] bullet.py
 - [x] enemy.py
 - [x] gameobject.py
-- [ ] player.py
+- [x] player.py
 - [x] utils.py
 
 
 ## TODO
-- [ ] Levels
-- [ ] Sounds
-- [ ] Graphics
+- [x] Levels
+- [ ] Boss HP bar
+- [ ] Player HP/Bomb info
+- [ ] Player points info
+- [ ] Main menu
+- [ ] Leaderboard
+- [x] Sounds
+- [x] Music
+- [x] Graphics
   - [x] Images
+  - [ ] Level background
   - [ ] Effects (particles)
-- [ ] Bullets
+- [x] Bullets
   - [ ] Trajectories
 - [x] Enemies
-- [ ] Controls
-
-## Bugs
-- Fix player bullet-beam
+- [x] Controls
+  - [x] Change controls to classic (shift, z, x)
+- [ ] Settings
+- [ ] Make player hitbox smaller
+- [ ] Replace enemies strings with enum
+- [ ] Replace resource path strings with constants from db

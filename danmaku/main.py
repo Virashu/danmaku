@@ -1,92 +1,28 @@
 import vgame
-from vgame import Keys
 
-from danmaku.utils import not_in_border
-from danmaku.enemy import Enemy
-from danmaku.player import Player
-from danmaku.bullet import Bullet
-
+from danmaku.menu import Menu
+from danmaku.game import Game
+from danmaku.history import History
 
 WIDTH, HEIGHT = 300, 500
-PATH = __file__.replace("\\", "/").rsplit("/", 1)[0]
 
 
-# pylint: disable=attribute-defined-outside-init, missing-class-docstring
-class Game(vgame.Game):
-    def load(self):
-        self.graphics.library.path = PATH + "/resources/textures"
+runner = vgame.Runner()
 
-        self.bullets: list[Bullet] = []
-        self.enemies: list[Enemy] = [
-            Enemy((255, 0, 0), (100, 0), (50, 25), 30, 1500, 30, 50, 0.1),
-            Enemy((255, 0, 0), (200, 100), (50, 25), 30, 1500, 30, 50, 0.1),
-        ]
-        self.player = Player((0, 125, 255), (100, 460), (50, 30), 500, 300, 100, 1)
-
-        self.graphics.library.load(self.player)
-
-    def update(self):
-        vx = vy = 0
-        if Keys.RIGHT in self.pressed_keys:
-            vx += 1
-        if Keys.LEFT in self.pressed_keys:
-            vx -= 1
-        if Keys.UP in self.pressed_keys:
-            vy -= 1
-        if Keys.DOWN in self.pressed_keys:
-            vy += 1
-        if Keys.SPACE in self.pressed_keys:
-            self.player.shoot(self.bullets)
-        self.player.vx, self.player.vy = vx, vy
-
-        # TODO: Check separately x and y
-        if not_in_border(
-            self.player.x, self.player.y, self.player.vx, self.player.vy, WIDTH, HEIGHT
-        ):
-            self.player.update(self.delta)
-
-        for enemy in self.enemies:
-            enemy.shoot(self.bullets)
-            enemy.update(self.delta)
-            if not not_in_border(enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT):
-                self.enemies.remove(enemy)
-
-        dell = []
-        for bullet in self.bullets:
-            if self.player.collision(bullet):
-                self.player.get_damage(bullet.damage)
-                dell.append(bullet)
-            for enemy in self.enemies:
-                if enemy.collision(bullet):
-                    enemy.get_damage(bullet.damage)
-                    dell.append(bullet)
-                    if enemy.hp <= 0:
-                        self.enemies.remove(enemy)
-            bullet.update(self.delta)
-            bullet.draw(self.graphics)
-            if not not_in_border(
-                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
-            ) or not not_in_border(
-                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
-            ):
-                dell.append(bullet)
-        for i in dell:
-            self.bullets.remove(i)
-
-        if self.player.hp <= 0:
-            quit()
-
-    def draw(self):
-        self.graphics.draw_sprite(self.player)
-
-        for enemy in self.enemies:
-            enemy.draw(self.graphics)
-
-        for bullet in self.bullets:
-            self.graphics.draw_sprite(bullet)
-
-    def exit(self):
-        ...
-
-
-vgame.Run(Game(framerate=60, width=WIDTH, height=HEIGHT))
+while runner.running:
+    menu = Menu(width=WIDTH, height=HEIGHT, title="Danmaku | Menu")
+    runner.run(menu)
+    match menu.exit_status:
+        case "game_new":
+            runner.run(Game(width=WIDTH, height=HEIGHT, title="Danmaku | Game"))
+        case "game_continue":
+            game = Game(width=WIDTH, height=HEIGHT, title="Danmaku | Game")
+            game.new_game = False
+            runner.run(game)
+        case "settings":
+            # settings = Settings(width=WIDTH, height=HEIGHT, title="Danmaku | Settings")
+            # runner.run(settings)
+            raise NotImplementedError()
+        case "history":
+            history = History(width=WIDTH, height=HEIGHT, title="Danmaku | History")
+            runner.run(history)
