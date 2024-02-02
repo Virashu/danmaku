@@ -14,6 +14,8 @@ class Menu(vgame.Scene):
             ("Quit", "quit"),
         )
 
+        self.exit_status: str = ""
+
     def update(self):
         if vgame.Keys.UP in self.pressed_keys:
             self.pressed_keys.discard(vgame.Keys.UP)
@@ -25,14 +27,20 @@ class Menu(vgame.Scene):
             match self.buttons[self.selection_index][1]:
                 case "new_game":
                     # Delete game from db & go to game scene
-                    ...
+                    self.exit_status = "game_new"
+                    self.stop()
                 case "continue":
                     # Just go to game scene
-                    ...
+                    self.exit_status = "game_continue"
+                    self.stop()
                 case "settings":
                     # Go to settings scene
-                    ...
+                    # Maybe rework and do settings inside menu
+                    # Pros: same controls
+                    self.exit_status = "settings"
+                    self.stop()
                 case "quit":
+                    # Maybe rework to quit through exit status
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     def draw(self):
