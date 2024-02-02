@@ -212,8 +212,7 @@ class Game(vgame.Scene):
 
         self.graphics.text(f"HP: {self.player.hp}", (0, 0))
 
-    def exit(self):
-        ...
+    def exit(self): ...
 
 
 from danmaku.menu import Menu
