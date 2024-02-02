@@ -31,7 +31,7 @@ class History(vgame.Scene):
         for i, game in enumerate(self.history[self.selection_index :]):
             self.graphics.text(
                 f"Level: {game['level'] + 1}, Score: {game['score']}",
-                (0, 20 * i),
+                (0, 100 + 50 * i),
                 (255, 255, 255),
             )
 
