@@ -25,6 +25,7 @@ class Enemy(GameObject):
         self.texture_file = self.textures[self.last_animation]
         self.texture_size = args["texture_size"]
         self.my_type = type
+        self.cost = args["cost"]
 
     def shoot(self) -> list[Bullet]:
         t = pygame.time.get_ticks()

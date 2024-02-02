@@ -42,6 +42,7 @@ class Player(GameObject):
         self.last_animation_time = 0
         self.last_shoot = 0
         self.shoot_v = args["shoot_v"]
+        self.score = 0
 
     def shoot(self) -> list[Bullet]:
         t = pygame.time.get_ticks()

@@ -17,6 +17,7 @@ basic_enemy = EnemyTypes.create(
     hp=250,
     dm=50,
     endurance=0.1,
+    cost=50
 )
 basic_enemy.save()
 
@@ -31,6 +32,7 @@ strong_enemy = EnemyTypes.create(
     hp=250,
     dm=50,
     endurance=0.1,
+    cost=100
 )
 strong_enemy.save()
 
@@ -45,6 +47,7 @@ boss = EnemyTypes.create(
     hp=550,
     dm=70,
     endurance=0.3,
+    cost=500
 )
 boss.save()
 
@@ -85,7 +88,7 @@ player = PlayerTypes.create(
     "player_shoot_3.png;player_shoot_4.png;player_idle_right.png",
     texture_size_width=50,
     texture_size_height=50,
-    speed=150,
+    speed=100,
     shoot_v=250,
     hp=1300,
     dm=500,

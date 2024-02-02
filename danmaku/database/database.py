@@ -12,6 +12,7 @@ def get_enemy_type(name):
         "hp": a.hp,
         "dm": a.dm,
         "endurance": a.endurance,
+        "cost": a.cost
     }
 
 
@@ -65,12 +66,22 @@ def get_saved_game():
     games = tuple(iter(SavedGame.select()))
     game = games[-1]
     objects = {
-        "player_x": game.player_x,
-        "player_y": game.player_y,
-        "player_hp": game.player_hp,
+        "score": game.score,
         "level": game.level,
     }
     return objects
+
+
+def get_game_history():
+    games = tuple(iter(SavedGame.select()))
+    res = []
+    for i in games:
+        objects = {
+            "score": i.score,
+            "level": i.level,
+        }
+        res.append(objects)
+    return res
 
 
 def set_saved_objects(name, objects):
@@ -85,9 +96,9 @@ def set_saved_objects(name, objects):
         n.save()
 
 
-def set_saved_game(cur_level, player):
+def set_saved_game(cur_level, score):
     n = SavedGame.create(
-        player_x=player.x, player_y=player.y, player_hp=player.hp, level=cur_level
+        score=score, level=cur_level
     )
     n.save()
 
@@ -96,6 +107,3 @@ def delete_saved_objects():
     for e in SavedObjects.select():
         SavedObjects.delete_by_id(e)
         SavedObjects.update()
-    for e in SavedGame.select():
-        SavedGame.delete_by_id(e)
-        SavedGame.update()

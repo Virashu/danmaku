@@ -86,19 +86,12 @@ class Game(vgame.Scene):
 
             saved_game = get_saved_game()
             self.cur_level = saved_game["level"]
-            # self.player = Player(
-            #     (saved_game["player_x"], saved_game["player_y"]),
-            #     (50, 30),
-            #     500,
-            #     saved_game["player_hp"],
-            #     100,
-            #     1,
-            # )
+            self.player.score = saved_game["score"]
             delete_saved_objects()
 
     def update(self):
-        if Keys.P in self.pressed_keys:
-            self.pressed_keys.remove(Keys.P)
+        if Keys.ESCAPE in self.pressed_keys:
+            self.pressed_keys.remove(Keys.ESCAPE)
             self.pause = True
             pause_menu = Menu("pause", WIDTH, HEIGHT)
             pause_menu.load()
@@ -111,7 +104,7 @@ class Game(vgame.Scene):
                 set_saved_objects("enemy", self.enemies)
                 set_saved_objects("bullet", self.bullets)
                 set_saved_objects("player", [self.player])
-                set_saved_game(self.cur_level, self.player)
+                set_saved_game(self.cur_level, self.player.score)
                 self.stop()
         if not self.pause:
             vx = vy = 0
@@ -126,9 +119,9 @@ class Game(vgame.Scene):
             if Keys.SPACE in self.pressed_keys or Keys.Z in self.pressed_keys:
                 self.bullets += self.player.shoot()
             if Keys.LEFT_SHIFT in self.pressed_keys:
-                self.player.speed = 100
+                self.player.speed = 50
             else:
-                self.player.speed = 150
+                self.player.speed = 100
 
             self.player.vx, self.player.vy = vx, vy
 
@@ -172,6 +165,7 @@ class Game(vgame.Scene):
                         enemy.get_damage(bullet.damage)
                         dell.add(bullet)
                         if enemy.hp <= 0:
+                            self.player.score += enemy.cost
                             self.enemies.remove(enemy)
 
                 bullet.update(self.delta)
@@ -191,6 +185,7 @@ class Game(vgame.Scene):
                     self.enemies = LEVELS[self.cur_level]
 
         if self.player.hp <= 0:
+            set_saved_game(self.cur_level, self.player.score)
             death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
             channel = death_sfx.play()
             while channel.get_busy():
@@ -207,6 +202,7 @@ class Game(vgame.Scene):
             self.graphics.draw_sprite(bullet)
 
         self.graphics.text(f"HP: {self.player.hp}", (0, 0))
+        self.graphics.text(f"Score: {self.player.score}", (150, 0))
 
     def exit(self):
         ...

@@ -8,8 +8,8 @@ class Button:
         self.text_color = text_color
         self.text = " " + text + " "
         self.font_size = font_size
-        font = pygame.font.SysFont(None, self.font_size)
-        self.img = font.render(self.text, True, self.text_color)
+        self.font = pygame.font.SysFont("Segoe UI", self.font_size)
+        self.img = self.font.render(self.text, True, self.text_color)
         self.rect = self.img.get_rect()
         self.rect.topleft = (self.x, self.y)
 

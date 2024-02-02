@@ -27,6 +27,7 @@ class EnemyTypes(BaseModel):
     hp = IntegerField()
     dm = IntegerField()
     endurance = FloatField()
+    cost = IntegerField()
 
 
 class BulletTypes(BaseModel):
@@ -60,7 +61,5 @@ class SavedObjects(BaseModel):
 
 
 class SavedGame(BaseModel):
-    player_x = FloatField()
-    player_y = FloatField()
-    player_hp = FloatField()
     level = IntegerField()
+    score = IntegerField()
