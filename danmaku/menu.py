@@ -1,5 +1,5 @@
 import pygame
-from danmaku.database import get_game_history, get_saved_objects
+from danmaku.database import get_saved_objects
 import vgame
 
 

@@ -17,7 +17,7 @@ basic_enemy = EnemyTypes.create(
     hp=250,
     dm=50,
     endurance=0.1,
-    cost=50
+    cost=50,
 )
 basic_enemy.save()
 
@@ -32,7 +32,7 @@ strong_enemy = EnemyTypes.create(
     hp=250,
     dm=50,
     endurance=0.1,
-    cost=100
+    cost=100,
 )
 strong_enemy.save()
 
@@ -47,7 +47,7 @@ boss = EnemyTypes.create(
     hp=550,
     dm=70,
     endurance=0.3,
-    cost=500
+    cost=500,
 )
 boss.save()
 

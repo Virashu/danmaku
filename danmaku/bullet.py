@@ -3,14 +3,11 @@ from danmaku.database import get_bullet_type
 
 
 class Bullet(GameObject):
-    def __init__(
-        self,
-        xy: tuple[int | float, int | float],
-        damage: int | float,
-        type
-    ):
+    def __init__(self, xy: tuple[int | float, int | float], damage: int | float, type):
         args = get_bullet_type(type)
-        super().__init__(xy, (2 * args["radius"], 2 * args["radius"]), args["speed"], 0, damage, 1)
+        super().__init__(
+            xy, (2 * args["radius"], 2 * args["radius"]), args["speed"], 0, damage, 1
+        )
         self.enemy = args["enemy"]
         self.vx, self.vy = args["vx_vy"]
         self.r = args["radius"]

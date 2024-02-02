@@ -12,7 +12,7 @@ def get_enemy_type(name):
         "hp": a.hp,
         "dm": a.dm,
         "endurance": a.endurance,
-        "cost": a.cost
+        "cost": a.cost,
     }
 
 
@@ -97,9 +97,7 @@ def set_saved_objects(name, objects):
 
 
 def set_saved_game(cur_level, score):
-    n = SavedGame.create(
-        score=score, level=cur_level
-    )
+    n = SavedGame.create(score=score, level=cur_level)
     n.save()
 
 
