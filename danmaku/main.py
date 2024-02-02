@@ -14,6 +14,8 @@ from danmaku.database import (
     delete_saved_objects,
 )
 from danmaku.menu import Menu
+from danmaku.pause import Pause
+
 
 WIDTH, HEIGHT = 300, 500
 LEVEL1 = [Enemy((150, 15), "basic enemy")]
@@ -42,47 +44,53 @@ LEVELS = [LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6, FINAL]
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Game(vgame.Scene):
+    new_game: bool = True
+
     def load(self):
         self.graphics.library.path = resource_path("textures")
 
-        self.pause = False
+        pygame.mixer.init()
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.load(resource_path("sounds/bgm.wav"))
+        pygame.mixer.music.play(loops=-1)
 
-        menu = Menu("main", WIDTH, HEIGHT)
-        menu.load()
+        self.paused = False
+        self.pause_object = Pause()
+        self.pause_object.load()
 
-        if menu.new_game:
+        self.bullets: list[Bullet] = []
+
+        if self.new_game:
             self.cur_level = 0
-            self.bullets: list[Bullet] = []
             self.enemies: list[Enemy] = LEVELS[self.cur_level].copy()
             self.player = Player((100, 450), "player")
 
-        if menu.last_game:
+        else:
             self.enemies: list[Enemy] = []
-            self.bullets: list[Bullet] = []
-            objects = get_saved_objects()
-            for el in objects:
-                if el["object"] == "enemy":
-                    self.enemies.append(
-                        Enemy(
-                            el["object_position"],
-                            el["object_type"],
-                            updated_hp=el["object_hp"],
+            for entity in get_saved_objects():
+                match entity["object"]:
+                    case "enemy":
+                        self.enemies.append(
+                            Enemy(
+                                entity["object_position"],
+                                entity["object_type"],
+                                updated_hp=entity["object_hp"],
+                            )
                         )
-                    )
-                elif el["object"] == "bullet":
-                    self.bullets.append(
-                        Bullet(
-                            el["object_position"],
-                            el["object_damage"],
-                            el["object_type"],
+                    case "bullet":
+                        self.bullets.append(
+                            Bullet(
+                                entity["object_position"],
+                                entity["object_damage"],
+                                entity["object_type"],
+                            )
                         )
-                    )
-                elif el["object"] == "player":
-                    self.player = Player(
-                        el["object_position"],
-                        el["object_type"],
-                        updated_hp=el["object_hp"],
-                    )
+                    case "player":
+                        self.player = Player(
+                            entity["object_position"],
+                            entity["object_type"],
+                            updated_hp=entity["object_hp"],
+                        )
 
             saved_game = get_saved_game()
             self.cur_level = saved_game["level"]
@@ -92,21 +100,25 @@ class Game(vgame.Scene):
     def update(self):
         if Keys.ESCAPE in self.pressed_keys:
             self.pressed_keys.remove(Keys.ESCAPE)
-            self.pause = True
-            pause_menu = Menu("pause", WIDTH, HEIGHT)
-            pause_menu.load()
-            if pause_menu.start:  # It doesn't work properly
-                self.pause = False
-            if pause_menu.to_menu:
-                pass
-            if pause_menu.save:
-                delete_saved_objects()
-                set_saved_objects("enemy", self.enemies)
-                set_saved_objects("bullet", self.bullets)
-                set_saved_objects("player", [self.player])
-                set_saved_game(self.cur_level, self.player.score)
-                self.stop()
-        if not self.pause:
+            self.paused = not self.paused
+
+        if self.paused:
+            self.pause_object.update(self.pressed_keys)
+            status = self.pause_object.exit_status
+            match status:
+                case "continue":
+                    self.paused = False
+                case "settings":
+                    raise NotImplementedError()
+                case "menu":
+                    delete_saved_objects()
+                    set_saved_objects("enemy", self.enemies)
+                    set_saved_objects("bullet", self.bullets)
+                    set_saved_objects("player", [self.player])
+                    set_saved_game(self.cur_level, self.player.score)
+                    self.stop()
+
+        else:
             vx = vy = 0
             if Keys.RIGHT in self.pressed_keys:
                 vx += 1
@@ -204,14 +216,26 @@ class Game(vgame.Scene):
         self.graphics.text(f"HP: {self.player.hp}", (0, 0))
         self.graphics.text(f"Score: {self.player.score}", (150, 0))
 
+        if self.paused:
+            self.pause_object.draw(self.graphics)
+
     def exit(self):
-        ...
+        pygame.mixer.music.stop()
 
-
-pygame.mixer.init()
-pygame.mixer.music.set_volume(0.5)
-pygame.mixer.music.load(resource_path("sounds/bgm.wav"))
-pygame.mixer.music.play(loops=-1)
 
 runner = vgame.Runner()
-runner.run(Game(framerate=60, width=WIDTH, height=HEIGHT))
+
+while runner.running:
+    menu = Menu(width=WIDTH, height=HEIGHT, title="Danmaku | Menu")
+    runner.run(menu)
+    match menu.exit_status:
+        case "game_new":
+            runner.run(Game(width=WIDTH, height=HEIGHT, title="Danmaku | Game"))
+        case "game_continue":
+            game = Game(width=WIDTH, height=HEIGHT, title="Danmaku | Game")
+            game.new_game = False
+            runner.run(game)
+        case "settings":
+            # settings = Settings(width=WIDTH, height=HEIGHT, title="Danmaku | Settings")
+            # runner.run(settings)
+            raise NotImplementedError()
