@@ -1,0 +1,47 @@
+name: Pylint
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint
+    - name: Analysing the code with pylint
+      run: |
+        pylint $(git ls-files '*.py')
+    - name: PyLint with dynamic badge
+      # You may pin to the exact commit or the version.
+      # uses: Silleellie/pylint-github-action@f5341ef210a203c2c7bbfe5440c03a06b9328866
+      uses: Silleellie/pylint-github-action@v2
+      with:
+        # The path, relative to the root of the repo, of the package(s) or pyton file(s) to lint
+        lint-path: danmaku
+        # Python version which will install all dependencies and lint package(s)
+        python-version: 3.10
+        # The path, relative to the root of the repo, of the requirements to install
+        # requirements-path: # optional, default is requirements.txt
+        # The path, relative to the root of the repo, of the README.md to update with the pylint badge
+        # readme-path: # optional, default is README.md
+        # Text to display in the badge
+        # badge-text: # optional, default is PyLint
+        # Color of the badge for pylint scores < 5. Hex, rgb, rgba, hsl, hsla and css named colors can all be used
+        #color-bad-score: # optional, default is red
+        # Color of the badge for pylint scores in range [5,8). Hex, rgb, rgba, hsl, hsla and css named colors can all be used
+        #color-ok-score: # optional, default is orange
+        # Color of the badge for pylint scores in range [8,10). Hex, rgb, rgba, hsl, hsla and css named colors can all be used
+        #color-good-score: # optional, default is yellow
+        # Color of the badge for pylint scores == 10. Hex, rgb, rgba, hsl, hsla and css named colors can all be used
+        #color-perfect-score: # optional, default is brightgreen
+          
