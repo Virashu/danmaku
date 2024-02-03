@@ -26,7 +26,7 @@ class Background(vgame.graphics.Sprite):
             f"background/background_{i}.png" for i in range(self.frame_count)
         ]
         self.texture_file = self.frames[0]
-        self.textrue_size = self.width, self.height
+        self.texture_size = self.width, self.height
 
     def draw(self, graphics: vgame.graphics.Graphics):
         graphics.draw_sprite(self)
