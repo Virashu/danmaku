@@ -1,5 +1,6 @@
 # 弾幕 (Danmaku)
-
+![pylint](https://img.shields.io/badge/Pylint-%3f-ffff00.svg)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Goal
 To create a bullet hell game similar to TouHou Project, Undertale, etc.
