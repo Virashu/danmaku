@@ -3,6 +3,8 @@
 import pygame
 from vgame.graphics import Graphics
 
+from random import randint
+
 from danmaku.bullet import Bullet
 from danmaku.database import get_enemy_type
 from danmaku.gameobject import GameObject
@@ -39,6 +41,8 @@ class Enemy(GameObject):
             bullet = Bullet(
                 (self.x + self.width // 2, self.y), self.damage, "basic enemy bullet"
             )
+            bullet.vx = randint(-100, 100) / 100
+            bullet.vy = (1 - bullet.vx**2) ** 0.5
             self.last_shoot = t
             return [bullet]
         return []

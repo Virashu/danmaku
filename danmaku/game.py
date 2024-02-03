@@ -143,33 +143,32 @@ class Game(vgame.Scene):
             if not not_in_border(enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT):
                 self.enemies.remove(enemy)
 
-        dell = set()
-
         for bullet in self.bullets:
 
-            if bullet.enemy:
+            if bullet.enemy:  # enemy bullet
                 if self.player.collision(bullet):
                     self.player.get_damage(bullet.damage)
-                    dell.add(bullet)
+                    self.bullets.remove(bullet)
+                    continue
 
-            else:
+            else:  # player bullet
                 for enemy in self.enemies:
                     if enemy.collision(bullet):
                         enemy.get_damage(bullet.damage)
                         if enemy.hp <= 0:
                             self.player.score += enemy.cost
                             self.enemies.remove(enemy)
-                        dell.add(bullet)
+                        self.bullets.remove(bullet)
+                        break
 
+        for bullet in self.bullets:
             bullet.update(self.delta)
 
             if not not_in_border(
                 bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
             ):
-                dell.add(bullet)
-
-        for i in dell:
-            self.bullets.remove(i)
+                self.bullets.remove(bullet)
+                continue
 
         self.background_object.animation()
 
