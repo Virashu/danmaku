@@ -14,6 +14,7 @@ from danmaku.database import (
     delete_saved_objects,
 )
 from danmaku.pause import Pause
+from danmaku.background import Background
 
 
 WIDTH, HEIGHT = 300, 500
@@ -56,6 +57,8 @@ class Game(vgame.Scene):
         self.paused = False
         self.pause_object = Pause()
         self.pause_object.load()
+
+        self.background_object = Background(0, 0, self.width, self.height)
 
         self.bullets: list[Bullet] = []
 
@@ -190,6 +193,8 @@ class Game(vgame.Scene):
             for i in dell:
                 self.bullets.remove(i)
 
+            self.background_object.animation()
+
             if len(self.enemies) == 0:
                 self.cur_level += 1
                 if len(LEVELS) > self.cur_level:
@@ -204,6 +209,8 @@ class Game(vgame.Scene):
             self.stop()
 
     def draw(self):
+        self.graphics.draw_sprite(self.background_object)
+
         self.graphics.draw_sprite(self.player)
 
         for enemy in self.enemies:
