@@ -28,4 +28,3 @@ while runner.running:
         case "history":
             history = History(width=WIDTH, height=HEIGHT, title="Danmaku | History")
             runner.run(history)
-
