@@ -3,6 +3,7 @@ import vgame
 from danmaku.menu import Menu
 from danmaku.game import Game
 from danmaku.history import History
+from danmaku.settings import Settings
 
 WIDTH, HEIGHT = 300, 500
 
@@ -20,9 +21,8 @@ while runner.running:
             game.new_game = False
             runner.run(game)
         case "settings":
-            # settings = Settings(width=WIDTH, height=HEIGHT, title="Danmaku | Settings")
-            # runner.run(settings)
-            raise NotImplementedError()
+            settings = Settings(width=WIDTH, height=HEIGHT, title="Danmaku | Settings")
+            runner.run(settings)
         case "history":
             history = History(width=WIDTH, height=HEIGHT, title="Danmaku | History")
             runner.run(history)
