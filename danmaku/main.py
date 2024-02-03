@@ -1,6 +1,6 @@
 """Application entry point."""
 
-import vgame
+from vgame import Runner
 
 from danmaku.menu import Menu
 from danmaku.game import Game
@@ -10,7 +10,7 @@ from danmaku.settings import Settings
 WIDTH, HEIGHT = 300, 500
 
 
-runner = vgame.Runner()
+runner = Runner()
 
 while runner.running:
     menu = Menu(width=WIDTH, height=HEIGHT, title="Danmaku | Menu")
@@ -28,3 +28,4 @@ while runner.running:
         case "history":
             history = History(width=WIDTH, height=HEIGHT, title="Danmaku | History")
             runner.run(history)
+
