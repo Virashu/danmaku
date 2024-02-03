@@ -34,3 +34,10 @@ def resource_path(relative_path) -> str:
         base_path = Path(__file__).parent.parent
 
     return str(base_path / "assets" / relative_path)
+
+
+def constrain(
+    value: int | float, min_value: int | float, max_value: int | float
+) -> int | float:
+    """Constrain value between min_value and max_value."""
+    return max(min(value, max_value), min_value)

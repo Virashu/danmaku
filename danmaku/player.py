@@ -5,6 +5,7 @@ import vgame
 from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
 from danmaku.database import get_player_type
+from danmaku.utils import constrain
 
 
 class Player(GameObject):
@@ -54,6 +55,9 @@ class Player(GameObject):
         self.shoot_v = args["shoot_v"]
         self.score = 0
 
+        self.left = self.top = 0
+        self.right = self.bottom = 10e6
+
     def shoot(self) -> list[Bullet]:
         t = pygame.time.get_ticks()
         if t - self.last_shoot >= self.shoot_v:
@@ -65,6 +69,32 @@ class Player(GameObject):
             self.last_shoot = t
             return [bullet]
         return []
+
+    def set_bounds(
+        self,
+        left: int | float,
+        top: int | float,
+        right: int | float,
+        bottom: int | float,
+    ) -> None:
+        self.left = left
+        self.top = top
+        self.right = right
+        self.bottom = bottom
+
+    def update(self, delta: int | float) -> None:
+        self.x += self.vx * delta * self.speed
+        self.x = constrain(self.x, self.left, self.right - self.width)
+
+        self.y += self.vy * delta * self.speed
+        self.y = constrain(self.y, self.top, self.bottom - self.height)
+
+        self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
+            self.x,
+            self.y,
+            self.width,
+            self.height,
+        )
 
     def animation(self) -> None:
         """Animate one frame."""

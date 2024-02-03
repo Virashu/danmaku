@@ -100,6 +100,8 @@ class Game(vgame.Scene):
             self.player.score = saved_game["score"]
             delete_saved_objects()
 
+        self.player.set_bounds(0, 0, self.width, self.height)
+
     def update_pause(self):
         """Called from update loop if paused"""
         self.pause_object.update(self.pressed_keys)
@@ -131,24 +133,8 @@ class Game(vgame.Scene):
 
         self.player.vx, self.player.vy = vx, vy
 
-        # TODO: Check separately x and y
-        if not_in_border(
-            self.player.x,
-            self.player.y,
-            self.player.vx,
-            self.player.vy,
-            WIDTH,
-            HEIGHT,
-        ) and not_in_border(
-            self.player.x + self.player.width,
-            self.player.y + self.player.height,
-            self.player.vx,
-            self.player.vy,
-            WIDTH,
-            HEIGHT,
-        ):
-            self.player.update(self.delta)
-            self.player.animation()
+        self.player.update(self.delta)
+        self.player.animation()
 
         for enemy in self.enemies:
             self.bullets += enemy.shoot()
@@ -160,20 +146,22 @@ class Game(vgame.Scene):
         dell = set()
 
         for bullet in self.bullets:
-            if self.player.collision(bullet):
-                self.player.get_damage(bullet.damage)
-                dell.add(bullet)
 
-            for enemy in self.enemies:
-                if enemy.collision(bullet):
-                    enemy.get_damage(bullet.damage)
+            if bullet.enemy:
+                if self.player.collision(bullet):
+                    self.player.get_damage(bullet.damage)
                     dell.add(bullet)
-                    if enemy.hp <= 0:
-                        self.player.score += enemy.cost
-                        self.enemies.remove(enemy)
+
+            else:
+                for enemy in self.enemies:
+                    if enemy.collision(bullet):
+                        enemy.get_damage(bullet.damage)
+                        if enemy.hp <= 0:
+                            self.player.score += enemy.cost
+                            self.enemies.remove(enemy)
+                        dell.add(bullet)
 
             bullet.update(self.delta)
-            bullet.draw(self.graphics)
 
             if not not_in_border(
                 bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
