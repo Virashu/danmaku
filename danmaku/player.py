@@ -1,3 +1,5 @@
+"""Player object declaration."""
+
 import pygame
 import vgame
 from danmaku.gameobject import GameObject
@@ -6,12 +8,20 @@ from danmaku.database import get_player_type
 
 
 class Player(GameObject):
-    def __init__(self, xy: tuple[int | float, int | float], type, updated_hp=0):
-        args = get_player_type(type)
+    """Player object."""
+
+    def __init__(
+        self, xy: tuple[int | float, int | float], object_type: str, updated_hp=0
+    ) -> None:
+        args = get_player_type(object_type)
+
         if updated_hp == 0:
             hp = args["hp"]
         else:
             hp = updated_hp
+        # Can replace with:
+        # hp = updated_hp or args["hp"]
+
         super().__init__(
             xy,
             args["texture_size"],
@@ -37,7 +47,7 @@ class Player(GameObject):
         self.last_animation = 0
         self.texture_file = self.textures["left"][self.last_animation]
         self.texture_size = args["texture_size"]
-        self.my_type = type
+        self.my_type = object_type
         self.animation_v = 100
         self.last_animation_time = 0
         self.last_shoot = 0
@@ -56,7 +66,8 @@ class Player(GameObject):
             return [bullet]
         return []
 
-    def animation(self):
+    def animation(self) -> None:
+        """Animate one frame."""
         t = pygame.time.get_ticks()
         if t - self.last_animation_time >= self.animation_v:
             self.last_animation += 1
@@ -75,10 +86,10 @@ class Player(GameObject):
                 self.texture_file = self.textures[direction][self.last_animation]
                 self.last_animation_time = t
 
-    def draw(self, graphics: vgame.graphics.Graphics):
+    def draw(self, graphics: vgame.graphics.Graphics) -> None:
         graphics.draw_sprite(self)
 
-    def collision(self, other):
+    def collision(self, other) -> bool:
         if other.enemy:
             e = pygame.Rect(
                 other.x - other.r, other.y - other.r, 2 * other.r, 2 * other.r
@@ -86,3 +97,4 @@ class Player(GameObject):
             s = pygame.Rect(self.x, self.y, self.width, self.height)
             if e.colliderect(s):
                 return True
+        return False

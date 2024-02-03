@@ -1,3 +1,5 @@
+"""Peewee database models"""
+
 from peewee import (
     SqliteDatabase,
     Model,
@@ -10,6 +12,9 @@ from danmaku.utils import resource_path
 
 # look for database file in the same folder, not folder of execution
 db = SqliteDatabase(resource_path("DataBase.db"))
+
+
+# pylint: disable=missing-class-docstring
 
 
 class BaseModel(Model):

@@ -1,12 +1,18 @@
+"""Enemy object declaration."""
+
+import pygame
+from vgame.graphics import Graphics
+
+from danmaku.bullet import Bullet
 from danmaku.database import get_enemy_type
 from danmaku.gameobject import GameObject
-from danmaku.bullet import Bullet
-import pygame
 
 
 class Enemy(GameObject):
-    def __init__(self, xy, type, updated_hp=0):
-        args = get_enemy_type(type)
+    """Enemy object."""
+
+    def __init__(self, xy, object_type, updated_hp=0):
+        args = get_enemy_type(object_type)
         if updated_hp == 0:
             hp = args["hp"]
         else:
@@ -24,7 +30,7 @@ class Enemy(GameObject):
         self.last_animation_time = 0
         self.texture_file = self.textures[self.last_animation]
         self.texture_size = args["texture_size"]
-        self.my_type = type
+        self.my_type = object_type
         self.cost = args["cost"]
 
     def shoot(self) -> list[Bullet]:
@@ -38,6 +44,7 @@ class Enemy(GameObject):
         return []
 
     def animation(self):
+        """Animate sprite."""
         t = pygame.time.get_ticks()
         if t - self.last_animation_time >= self.animation_v:
             self.last_animation += 1
@@ -46,7 +53,7 @@ class Enemy(GameObject):
             self.texture_file = self.textures[self.last_animation]
             self.last_animation_time = t
 
-    def collision(self, other):
+    def collision(self, other) -> bool:
         if not other.enemy:
             e = pygame.Rect(
                 other.x - other.r, other.y - other.r, 2 * other.r, 2 * other.r
@@ -59,3 +66,6 @@ class Enemy(GameObject):
             )
             if e.colliderect(s):
                 return True
+        return False
+
+    def draw(self, graphics: Graphics): ...

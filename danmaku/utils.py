@@ -1,3 +1,5 @@
+"""Helper functions."""
+
 import sys
 from pathlib import Path
 
@@ -13,21 +15,21 @@ def not_in_border(
     """Check if the object is in screen boundary"""
     if vy < 0 and y <= 0:
         return False
-    elif vy > 0 and y >= height:
+    if vy > 0 and y >= height:
         return False
-    elif vx < 0 and x <= 0:
+    if vx < 0 and x <= 0:
         return False
-    elif vx > 0 and x >= width:
+    if vx > 0 and x >= width:
         return False
-    else:
-        return True
+    return True
 
 
 def resource_path(relative_path) -> str:
     """Get absolute path to resource, works for dev and for PyInstaller"""
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = Path(sys._MEIPASS)  # pylint: disable=protected-access
+        # pylint: disable=protected-access
+        base_path = Path(sys._MEIPASS)  # type: ignore
     except AttributeError:
         base_path = Path(__file__).parent.parent
 

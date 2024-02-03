@@ -1,8 +1,12 @@
+"""Game level background class declaration."""
+
 import vgame
 import pygame
 
 
 class Background(vgame.graphics.Sprite):
+    """Game level background class."""
+
     def __init__(
         self,
         x: int | float,
@@ -32,6 +36,7 @@ class Background(vgame.graphics.Sprite):
         graphics.draw_sprite(self)
 
     def animation(self):
+        """Animate the sprite."""
         t = pygame.time.get_ticks()
         if t - self.last_animation_time >= self.frame_duration:
             self.texture_file = self.frames[self.current_frame]

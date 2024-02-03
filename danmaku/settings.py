@@ -1,3 +1,5 @@
+"""Settings scene."""
+
 import vgame
 
 
@@ -22,11 +24,9 @@ class Settings(vgame.Scene):
             # Update settings values left<->right
             # Like: music  [x x _ _ _]
             #       sfx    [x _ _ _ _]
-            ...
         if vgame.Keys.LEFT in self.pressed_keys:
             self.pressed_keys.discard(vgame.Keys.LEFT)
             # Same
-            ...
         if {vgame.Keys.RETURN, vgame.Keys.Z, vgame.Keys.SPACE} & self.pressed_keys:
             match self.buttons[self.selection_index][1]:
                 case "quit":

@@ -1,6 +1,9 @@
+"""Main menu scene."""
+
 import pygame
-from danmaku.database import get_saved_objects
 import vgame
+
+from danmaku.database import get_saved_objects
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring

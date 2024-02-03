@@ -1,4 +1,8 @@
-from danmaku.database.models import *
+"""Construct database with default values.
+
+To be used in development process."""
+
+from danmaku.database.models import db, EnemyTypes, BulletTypes, PlayerTypes
 
 
 db.connect()

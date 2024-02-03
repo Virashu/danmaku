@@ -1,3 +1,5 @@
+"""Game scene."""
+
 import vgame
 from vgame import Keys
 import pygame
@@ -56,7 +58,6 @@ class Game(vgame.Scene):
 
         self.paused = False
         self.pause_object = Pause()
-        self.pause_object.load()
 
         self.background_object = Background(0, 0, self.width, self.height)
 

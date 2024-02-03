@@ -1,3 +1,5 @@
+"""Application entry point."""
+
 import vgame
 
 from danmaku.menu import Menu

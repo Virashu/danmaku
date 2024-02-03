@@ -1,5 +1,8 @@
-from danmaku.database import get_game_history
+"""Game history scene."""
+
 import vgame
+
+from danmaku.database import get_game_history
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
