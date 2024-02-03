@@ -16,9 +16,9 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 ## TODO
 - [x] Levels
 - [ ] Boss HP bar
-- [ ] Player HP/Bomb info
-- [ ] Player points info
-- [ ] Main menu
+- [x] Player HP/Bomb info
+- [x] Player points info
+- [x] Main menu
 - [ ] Leaderboard
 - [x] Sounds
 - [x] Music
@@ -33,5 +33,4 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
   - [x] Change controls to classic (shift, z, x)
 - [ ] Settings
 - [ ] Make player hitbox smaller
-- [ ] Replace enemies strings with enum
-- [ ] Replace resource path strings with constants from db
+- [x] Replace resource path strings with constants from db
