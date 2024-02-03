@@ -51,7 +51,7 @@ class Menu(vgame.Scene):
                     self.stop()
                 case "quit":
                     # Maybe rework to quit through exit status
-                    pygame.event.post(pygame.event.Event(pygame.QUIT))
+                    pygame.event.post(pygame.event.Event(pygame.constants.QUIT))
 
     def draw(self):
         self.graphics.text("Danmaku", (0, 10), (255, 255, 180))

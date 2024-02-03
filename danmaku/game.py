@@ -100,106 +100,95 @@ class Game(vgame.Scene):
             self.player.score = saved_game["score"]
             delete_saved_objects()
 
-    def update(self):
-        if Keys.ESCAPE in self.pressed_keys:
-            self.pressed_keys.remove(Keys.ESCAPE)
-            self.paused = not self.paused
+    def update_pause(self):
+        """Called from update loop if paused"""
+        self.pause_object.update(self.pressed_keys)
+        status = self.pause_object.exit_status
+        match status:
+            case "continue":
+                self.paused = False
+            case "settings":
+                raise NotImplementedError()
+            case "menu":
+                delete_saved_objects()
+                set_saved_objects("enemy", self.enemies)
+                set_saved_objects("bullet", self.bullets)
+                set_saved_objects("player", [self.player])
+                set_saved_game(self.cur_level, self.player.score)
+                self.stop()
 
-        if self.paused:
-            self.pause_object.update(self.pressed_keys)
-            status = self.pause_object.exit_status
-            match status:
-                case "continue":
-                    self.paused = False
-                case "settings":
-                    raise NotImplementedError()
-                case "menu":
-                    delete_saved_objects()
-                    set_saved_objects("enemy", self.enemies)
-                    set_saved_objects("bullet", self.bullets)
-                    set_saved_objects("player", [self.player])
-                    set_saved_game(self.cur_level, self.player.score)
-                    self.stop()
+    def update_game(self):
+        """Called from update loop if *not* paused"""
+        vx = (Keys.RIGHT in self.pressed_keys) - (Keys.LEFT in self.pressed_keys)
+        vy = (Keys.DOWN in self.pressed_keys) - (Keys.UP in self.pressed_keys)
 
+        if {Keys.SPACE, Keys.Z} & self.pressed_keys:
+            self.bullets += self.player.shoot()
+        if Keys.LEFT_SHIFT in self.pressed_keys:
+            self.player.speed = 50
         else:
-            vx = vy = 0
-            if Keys.RIGHT in self.pressed_keys:
-                vx += 1
-            if Keys.LEFT in self.pressed_keys:
-                vx -= 1
-            if Keys.UP in self.pressed_keys:
-                vy -= 1
-            if Keys.DOWN in self.pressed_keys:
-                vy += 1
-            if Keys.SPACE in self.pressed_keys or Keys.Z in self.pressed_keys:
-                self.bullets += self.player.shoot()
-            if Keys.LEFT_SHIFT in self.pressed_keys:
-                self.player.speed = 50
-            else:
-                self.player.speed = 100
+            self.player.speed = 100
 
-            self.player.vx, self.player.vy = vx, vy
+        self.player.vx, self.player.vy = vx, vy
 
-            # TODO: Check separately x and y
-            if not_in_border(
-                self.player.x,
-                self.player.y,
-                self.player.vx,
-                self.player.vy,
-                WIDTH,
-                HEIGHT,
-            ) and not_in_border(
-                self.player.x + self.player.width,
-                self.player.y + self.player.height,
-                self.player.vx,
-                self.player.vy,
-                WIDTH,
-                HEIGHT,
-            ):
-                self.player.update(self.delta)
-                self.player.animation()
+        # TODO: Check separately x and y
+        if not_in_border(
+            self.player.x,
+            self.player.y,
+            self.player.vx,
+            self.player.vy,
+            WIDTH,
+            HEIGHT,
+        ) and not_in_border(
+            self.player.x + self.player.width,
+            self.player.y + self.player.height,
+            self.player.vx,
+            self.player.vy,
+            WIDTH,
+            HEIGHT,
+        ):
+            self.player.update(self.delta)
+            self.player.animation()
+
+        for enemy in self.enemies:
+            self.bullets += enemy.shoot()
+            enemy.animation()
+            enemy.update(self.delta)
+            if not not_in_border(enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT):
+                self.enemies.remove(enemy)
+
+        dell = set()
+
+        for bullet in self.bullets:
+            if self.player.collision(bullet):
+                self.player.get_damage(bullet.damage)
+                dell.add(bullet)
 
             for enemy in self.enemies:
-                self.bullets += enemy.shoot()
-                enemy.animation()
-                enemy.update(self.delta)
-                if not not_in_border(
-                    enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT
-                ):
-                    self.enemies.remove(enemy)
-
-            dell = set()
-
-            for bullet in self.bullets:
-                if self.player.collision(bullet):
-                    self.player.get_damage(bullet.damage)
+                if enemy.collision(bullet):
+                    enemy.get_damage(bullet.damage)
                     dell.add(bullet)
+                    if enemy.hp <= 0:
+                        self.player.score += enemy.cost
+                        self.enemies.remove(enemy)
 
-                for enemy in self.enemies:
-                    if enemy.collision(bullet):
-                        enemy.get_damage(bullet.damage)
-                        dell.add(bullet)
-                        if enemy.hp <= 0:
-                            self.player.score += enemy.cost
-                            self.enemies.remove(enemy)
+            bullet.update(self.delta)
+            bullet.draw(self.graphics)
 
-                bullet.update(self.delta)
-                bullet.draw(self.graphics)
+            if not not_in_border(
+                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
+            ):
+                dell.add(bullet)
 
-                if not not_in_border(
-                    bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
-                ):
-                    dell.add(bullet)
+        for i in dell:
+            self.bullets.remove(i)
 
-            for i in dell:
-                self.bullets.remove(i)
+        self.background_object.animation()
 
-            self.background_object.animation()
-
-            if len(self.enemies) == 0:
-                self.cur_level += 1
-                if len(LEVELS) > self.cur_level:
-                    self.enemies = LEVELS[self.cur_level]
+        if len(self.enemies) == 0:
+            self.cur_level += 1
+            if len(LEVELS) > self.cur_level:
+                self.enemies = LEVELS[self.cur_level]
 
         if self.player.hp <= 0:
             set_saved_game(self.cur_level, self.player.score)
@@ -208,6 +197,16 @@ class Game(vgame.Scene):
             while channel.get_busy():
                 pygame.time.wait(10)
             self.stop()
+
+    def update(self):
+        if Keys.ESCAPE in self.pressed_keys:
+            self.pressed_keys.remove(Keys.ESCAPE)
+            self.paused = not self.paused
+
+        if self.paused:
+            self.update_pause()
+        else:
+            self.update_game()
 
     def draw(self):
         self.graphics.draw_sprite(self.background_object)
