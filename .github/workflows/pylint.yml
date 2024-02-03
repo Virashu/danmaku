@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.10", "3.11"]
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -18,9 +18,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pylint
-    - name: Analysing the code with pylint
-      run: |
-        pylint $(git ls-files '*.py')
+    # - name: Analysing the code with pylint
+    #   run: |
+    #     pylint $(git ls-files '*.py')
     - name: PyLint with dynamic badge
       # You may pin to the exact commit or the version.
       # uses: Silleellie/pylint-github-action@f5341ef210a203c2c7bbfe5440c03a06b9328866
