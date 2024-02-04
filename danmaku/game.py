@@ -189,6 +189,8 @@ class Game(vgame.Scene):
         if Keys.ESCAPE in self.pressed_keys:
             self.pressed_keys.remove(Keys.ESCAPE)
             self.paused = not self.paused
+            if self.paused:
+                self.pause_object.load()
 
         if self.paused:
             self.update_pause()

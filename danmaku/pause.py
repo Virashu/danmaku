@@ -5,7 +5,8 @@ import vgame
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Pause:
-    def __init__(self):
+    def load(self):
+        """Load pause menu."""
         self.selection_index = 0
 
         self.buttons = (
