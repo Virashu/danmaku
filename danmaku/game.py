@@ -121,6 +121,14 @@ class Game(vgame.Scene):
 
     def update_game(self):
         """Called from update loop if *not* paused"""
+        for bullet in self.bullets:
+            bullet.update(self.delta)
+
+            if not not_in_border(
+                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
+            ):
+                self.bullets.remove(bullet)
+
         vx = (Keys.RIGHT in self.pressed_keys) - (Keys.LEFT in self.pressed_keys)
         vy = (Keys.DOWN in self.pressed_keys) - (Keys.UP in self.pressed_keys)
 
@@ -143,38 +151,27 @@ class Game(vgame.Scene):
             if not not_in_border(enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT):
                 self.enemies.remove(enemy)
 
-        for bullet in self.bullets:
-
-            if bullet.enemy:  # enemy bullet
-                if self.player.collision(bullet):
-                    self.player.get_damage(bullet.damage)
-                    self.bullets.remove(bullet)
-                    continue
-
-            else:  # player bullet
-                for enemy in self.enemies:
-                    if enemy.collision(bullet):
-                        enemy.get_damage(bullet.damage)
-                        if enemy.hp <= 0:
-                            self.player.score += enemy.cost
-                            self.enemies.remove(enemy)
-                        self.bullets.remove(bullet)
-                        break
-
-        for bullet in self.bullets:
-            bullet.update(self.delta)
-
-            if not not_in_border(
-                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
-            ):
+        for bullet in filter(lambda b: b.enemy, self.bullets):
+            if self.player.collision(bullet):
+                self.player.get_damage(bullet.damage)
                 self.bullets.remove(bullet)
                 continue
+
+        for bullet in filter(lambda b: not b.enemy, self.bullets):
+            for enemy in self.enemies:
+                if enemy.collision(bullet):
+                    enemy.get_damage(bullet.damage)
+                    if enemy.hp <= 0:
+                        self.player.score += enemy.cost
+                        self.enemies.remove(enemy)
+                    self.bullets.remove(bullet)
+                    break
 
         self.background_object.animation()
 
         if len(self.enemies) == 0:
-            self.cur_level += 1
-            if len(LEVELS) > self.cur_level:
+            if len(LEVELS) > self.cur_level + 1:
+                self.cur_level += 1
                 self.enemies = LEVELS[self.cur_level]
 
         if self.player.hp <= 0:
@@ -186,6 +183,7 @@ class Game(vgame.Scene):
             self.stop()
 
     def update(self):
+        self.print_stats()
         if Keys.ESCAPE in self.pressed_keys:
             self.pressed_keys.remove(Keys.ESCAPE)
             self.paused = not self.paused
@@ -216,3 +214,22 @@ class Game(vgame.Scene):
 
     def exit(self):
         pygame.mixer.music.stop()
+
+    def print_stats(self):
+        print("\x1b[?25l", end="")  # hide cursor
+        print("\x1b[2J\x1b[0;0H", end="")  # clear screen
+        print(
+            f"FPS: {self.fps:.2f}",
+            f"G. Delta: {self.graphics_delta:.4f}",
+            f"TPS: {self.tps:.2f}",
+            f"Delta: {self.delta:.4f}",
+            "=" * 20,
+            sep="\n",
+        )
+
+        print()
+        print(f"HP: {self.player.hp}")
+        print(f"Score: {self.player.score}")
+        print(f"Level: {self.cur_level}")
+
+        print("\x1b[?25h", end="")  # show cursor

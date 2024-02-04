@@ -77,6 +77,7 @@ class Player(GameObject):
         right: int | float,
         bottom: int | float,
     ) -> None:
+        """Set movement bounds"""
         self.left = left
         self.top = top
         self.right = right
@@ -120,11 +121,6 @@ class Player(GameObject):
         graphics.draw_sprite(self)
 
     def collision(self, other) -> bool:
-        if other.enemy:
-            e = pygame.Rect(
-                other.x - other.r, other.y - other.r, 2 * other.r, 2 * other.r
-            )
-            s = pygame.Rect(self.x, self.y, self.width, self.height)
-            if e.colliderect(s):
-                return True
-        return False
+        e = pygame.Rect(other.x - other.r, other.y - other.r, 2 * other.r, 2 * other.r)
+        s = pygame.Rect(self.x, self.y, self.width, self.height)
+        return e.colliderect(s)

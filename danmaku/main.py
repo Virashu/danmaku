@@ -8,6 +8,7 @@ from danmaku.history import History
 from danmaku.settings import Settings
 
 WIDTH, HEIGHT = 300, 500
+TICKRATE = 120
 
 
 runner = Runner()
@@ -16,13 +17,11 @@ while runner.running:
     menu = Menu(width=WIDTH, height=HEIGHT, title="Danmaku | Menu")
     runner.run(menu)
     match menu.exit_status:
-        case "game_new":
-            game = Game(width=WIDTH, height=HEIGHT, title="Danmaku | Game")
-            game.new_game = True
-            runner.run(game)
-        case "game_continue":
-            game = Game(width=WIDTH, height=HEIGHT, title="Danmaku | Game")
-            game.new_game = False
+        case "game", new_game:
+            game = Game(
+                width=WIDTH, height=HEIGHT, title="Danmaku | Game", tickrate=TICKRATE
+            )
+            game.new_game = new_game
             runner.run(game)
         case "settings":
             settings = Settings(width=WIDTH, height=HEIGHT, title="Danmaku | Settings")
