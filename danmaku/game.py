@@ -216,20 +216,28 @@ class Game(vgame.Scene):
         pygame.mixer.music.stop()
 
     def print_stats(self):
+        """Dev debug"""
         print("\x1b[?25l", end="")  # hide cursor
-        print("\x1b[2J\x1b[0;0H", end="")  # clear screen
+        print("\x1b[2J\x1b[0;0H", end="")  # clear console
+
+        # Tech stuff
         print(
-            f"FPS: {self.fps:.2f}",
-            f"G. Delta: {self.graphics_delta:.4f}",
-            f"TPS: {self.tps:.2f}",
-            f"Delta: {self.delta:.4f}",
-            "=" * 20,
+            f"\x1b[{32 if self.fps >= self.framerate else 31}mFPS:\t{self.fps:.2f}\x1b[0m",
+            f"Gr. dT:\t{self.graphics_delta*1000}ms",
+            "",
+            f"\x1b[{32 if self.tps >= self.tickrate else 31}mTPS:\t{self.tps:.2f}\x1b[0m",
+            f"dT:\t{self.delta*1000}ms",
             sep="\n",
         )
 
-        print()
-        print(f"HP: {self.player.hp}")
-        print(f"Score: {self.player.score}")
-        print(f"Level: {self.cur_level}")
+        print(end="\n\n")
+
+        # Game stats
+        print(
+            f"HP: {self.player.hp}",
+            f"Score: {self.player.score}",
+            f"Level: {self.cur_level}",
+            sep="\n",
+        )
 
         print("\x1b[?25h", end="")  # show cursor
