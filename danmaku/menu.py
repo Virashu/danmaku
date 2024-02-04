@@ -22,11 +22,9 @@ class Menu(vgame.Scene):
         self.exit_status = ""
 
     def update(self):
-        if vgame.Keys.UP in self.pressed_keys:
-            self.pressed_keys.discard(vgame.Keys.UP)
+        if self.get_click(vgame.Keys.UP):
             self.selection_index = (self.selection_index - 1) % len(self.buttons)
-        if vgame.Keys.DOWN in self.pressed_keys:
-            self.pressed_keys.discard(vgame.Keys.DOWN)
+        if self.get_click(vgame.Keys.DOWN):
             self.selection_index = (self.selection_index + 1) % len(self.buttons)
         if {vgame.Keys.RETURN, vgame.Keys.Z, vgame.Keys.SPACE} & self.pressed_keys:
             match self.buttons[self.selection_index][1]:
