@@ -1,5 +1,6 @@
 # 弾幕 (Danmaku)
-
+![pylint](https://img.shields.io/badge/PyLint-9.79-yellow?logo=python&logoColor=white)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Goal
 To create a bullet hell game similar to TouHou Project, Undertale, etc.
@@ -16,15 +17,15 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 ## TODO
 - [x] Levels
 - [ ] Boss HP bar
-- [ ] Player HP/Bomb info
-- [ ] Player points info
-- [ ] Main menu
-- [ ] Leaderboard
+- [x] Player HP/Bomb info
+- [x] Player points info
+- [x] Main menu
+- [x] Leaderboard
 - [x] Sounds
 - [x] Music
 - [x] Graphics
   - [x] Images
-  - [ ] Level background
+  - [x] Level background
   - [ ] Effects (particles)
 - [x] Bullets
   - [ ] Trajectories
@@ -33,5 +34,4 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
   - [x] Change controls to classic (shift, z, x)
 - [ ] Settings
 - [ ] Make player hitbox smaller
-- [ ] Replace enemies strings with enum
-- [ ] Replace resource path strings with constants from db
+- [x] Replace resource path strings with constants from db

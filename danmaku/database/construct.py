@@ -1,10 +1,18 @@
-from danmaku.database.models import *
+"""Construct database with default values.
+
+To be used in development process."""
+
+from danmaku.database.models import db, EnemyTypes, BulletTypes, PlayerTypes
 
 
 db.connect()
+
+#
+# EnemyTypes
+#
+
 db.drop_tables([EnemyTypes])
 db.create_tables([EnemyTypes])
-
 
 basic_enemy = EnemyTypes.create(
     name="basic enemy",
@@ -51,6 +59,12 @@ boss = EnemyTypes.create(
 )
 boss.save()
 
+#
+# BulletTypes
+#
+
+db.drop_tables([BulletTypes])
+db.create_tables([BulletTypes])
 
 basic_enemy_bullet = BulletTypes.create(
     name="basic enemy bullet",
@@ -68,11 +82,18 @@ basic_player_bullet = BulletTypes.create(
     enemy=False,
     texture_file="bullet.png",
     radius=10,
-    speed=150,
+    speed=300,
     vx=0,
     vy=-1,
 )
 basic_player_bullet.save()
+
+#
+# PlayerTypes
+#
+
+db.drop_tables([PlayerTypes])
+db.create_tables([PlayerTypes])
 
 player = PlayerTypes.create(
     name="player",

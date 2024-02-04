@@ -1,5 +1,8 @@
-from vgame.graphics import Graphics, Sprite
+"""Base game object."""
+
 from abc import abstractmethod
+
+from vgame.graphics import Graphics, Sprite
 
 
 class GameObject(Sprite):
@@ -36,13 +39,16 @@ class GameObject(Sprite):
         )
 
     def get_damage(self, damage: int | float):
+        """Decrease health point."""
         self.hp -= damage * self.endurance
 
     @abstractmethod
-    def shoot(self): ...
+    def shoot(self) -> list:
+        """Generate bullets."""
 
     @abstractmethod
     def draw(self, graphics: Graphics): ...
 
     @abstractmethod
-    def collision(self, other): ...
+    def collision(self, other) -> bool:
+        """Check collision."""

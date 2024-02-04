@@ -1,7 +1,21 @@
-from danmaku.database.models import *
+"""Functions for work with database."""
+
+from typing import Iterable
+from danmaku.database.models import (
+    db,
+    BulletTypes,
+    EnemyTypes,
+    PlayerTypes,
+    SavedObjects,
+    SavedGame,
+)
 
 
-def get_enemy_type(name):
+def get_enemy_type(name: str) -> dict:
+    """
+    Get enemy parameters by name
+    Returns dict: {"texture_file", "texture_size", "speed", "shoot_v", "hp", "dm", "endurance"}
+    """
     with db.atomic():
         a = EnemyTypes.get(EnemyTypes.name == name)
     return {
@@ -16,7 +30,11 @@ def get_enemy_type(name):
     }
 
 
-def get_player_type(name):
+def get_player_type(name) -> dict:
+    """
+    Get player parameters by name
+    Returns dict: {"texture_file", "texture_size", "speed", "shoot_v", "hp", "dm", "endurance"}
+    """
     a = PlayerTypes.get(PlayerTypes.name == name)
     return {
         "texture_file": a.texture_file,
@@ -44,7 +62,8 @@ def get_bullet_type(name: str) -> dict:
     }
 
 
-def get_saved_objects():
+def get_saved_objects() -> list:
+    """Get saved objects from database"""
     objects = []
     for el in SavedObjects.select():
         objects.append(
@@ -62,7 +81,10 @@ def get_saved_objects():
     return objects
 
 
-def get_saved_game():
+def get_saved_game() -> dict:
+    """Get saved game from database
+    Returns dict: {"score", "level"}
+    """
     games = tuple(iter(SavedGame.select()))
     game = games[-1]
     objects = {
@@ -72,7 +94,10 @@ def get_saved_game():
     return objects
 
 
-def get_game_history():
+def get_game_history() -> list:
+    """Get game history from database
+    Returns list: [{"score", "level"}]
+    """
     games = tuple(iter(SavedGame.select()))
     res = []
     for i in games:
@@ -84,7 +109,8 @@ def get_game_history():
     return res
 
 
-def set_saved_objects(name, objects):
+def set_saved_objects(name: str, objects: Iterable) -> None:
+    """Set saved objects to database"""
     for e in objects:
         n = SavedObjects.create(
             object=name,
@@ -96,12 +122,14 @@ def set_saved_objects(name, objects):
         n.save()
 
 
-def set_saved_game(cur_level, score):
+def set_saved_game(cur_level: int, score: int) -> None:
+    """Set saved game to database"""
     n = SavedGame.create(score=score, level=cur_level)
     n.save()
 
 
-def delete_saved_objects():
+def delete_saved_objects() -> None:
+    """Delete all saved objects from database"""
     for e in SavedObjects.select():
         SavedObjects.delete_by_id(e)
         SavedObjects.update()

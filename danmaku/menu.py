@@ -1,6 +1,9 @@
+"""Main menu scene."""
+
 import pygame
-from danmaku.database import get_saved_objects
 import vgame
+
+from danmaku.database import get_saved_objects
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
@@ -16,25 +19,23 @@ class Menu(vgame.Scene):
             ("Quit", "quit"),
         )
 
-        self.exit_status: str = ""
+        self.exit_status = ""
 
     def update(self):
-        if vgame.Keys.UP in self.pressed_keys:
-            self.pressed_keys.discard(vgame.Keys.UP)
+        if self.get_click(vgame.Keys.UP):
             self.selection_index = (self.selection_index - 1) % len(self.buttons)
-        if vgame.Keys.DOWN in self.pressed_keys:
-            self.pressed_keys.discard(vgame.Keys.DOWN)
+        if self.get_click(vgame.Keys.DOWN):
             self.selection_index = (self.selection_index + 1) % len(self.buttons)
         if {vgame.Keys.RETURN, vgame.Keys.Z, vgame.Keys.SPACE} & self.pressed_keys:
             match self.buttons[self.selection_index][1]:
                 case "new_game":
                     # Delete game from db & go to game scene
-                    self.exit_status = "game_new"
+                    self.exit_status = "game", True
                     self.stop()
                 case "continue":
                     # Just go to game scene
                     if get_saved_objects():
-                        self.exit_status = "game_continue"
+                        self.exit_status = "game", False
                         self.stop()
                 case "settings":
                     # Go to settings scene
@@ -48,7 +49,7 @@ class Menu(vgame.Scene):
                     self.stop()
                 case "quit":
                     # Maybe rework to quit through exit status
-                    pygame.event.post(pygame.event.Event(pygame.QUIT))
+                    pygame.event.post(pygame.event.Event(pygame.constants.QUIT))
 
     def draw(self):
         self.graphics.text("Danmaku", (0, 10), (255, 255, 180))

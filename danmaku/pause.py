@@ -1,10 +1,12 @@
-import pygame
+"""In-game pause menu."""
+
 import vgame
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Pause:
     def load(self):
+        """Load pause menu."""
         self.selection_index = 0
 
         self.buttons = (
@@ -16,6 +18,7 @@ class Pause:
         self.exit_status: str = ""
 
     def update(self, pressed_keys):
+        """Update pause menu."""
         if vgame.Keys.UP in pressed_keys:
             pressed_keys.discard(vgame.Keys.UP)
             self.selection_index = (self.selection_index - 1) % len(self.buttons)
@@ -26,6 +29,7 @@ class Pause:
             self.exit_status = self.buttons[self.selection_index][1]
 
     def draw(self, graphics: vgame.graphics.Graphics):
+        """Draw pause menu."""
         graphics.text("Danmaku", (0, 10), (255, 255, 180))
 
         for i, button in enumerate(self.buttons):

@@ -1,3 +1,5 @@
+"""Game scene."""
+
 import vgame
 from vgame import Keys
 import pygame
@@ -14,6 +16,7 @@ from danmaku.database import (
     delete_saved_objects,
 )
 from danmaku.pause import Pause
+from danmaku.background import Background
 
 
 WIDTH, HEIGHT = 300, 500
@@ -55,7 +58,8 @@ class Game(vgame.Scene):
 
         self.paused = False
         self.pause_object = Pause()
-        self.pause_object.load()
+
+        self.background_object = Background(0, 0, self.width, self.height)
 
         self.bullets: list[Bullet] = []
 
@@ -96,104 +100,79 @@ class Game(vgame.Scene):
             self.player.score = saved_game["score"]
             delete_saved_objects()
 
-    def update(self):
-        if Keys.ESCAPE in self.pressed_keys:
-            self.pressed_keys.remove(Keys.ESCAPE)
-            self.paused = not self.paused
+        self.player.set_bounds(0, 0, self.width, self.height)
 
-        if self.paused:
-            self.pause_object.update(self.pressed_keys)
-            status = self.pause_object.exit_status
-            match status:
-                case "continue":
-                    self.paused = False
-                case "settings":
-                    raise NotImplementedError()
-                case "menu":
-                    delete_saved_objects()
-                    set_saved_objects("enemy", self.enemies)
-                    set_saved_objects("bullet", self.bullets)
-                    set_saved_objects("player", [self.player])
-                    set_saved_game(self.cur_level, self.player.score)
-                    self.stop()
+    def update_pause(self):
+        """Called from update loop if paused"""
+        self.pause_object.update(self.pressed_keys)
+        status = self.pause_object.exit_status
+        match status:
+            case "continue":
+                self.paused = False
+            case "settings":
+                raise NotImplementedError()
+            case "menu":
+                delete_saved_objects()
+                set_saved_objects("enemy", self.enemies)
+                set_saved_objects("bullet", self.bullets)
+                set_saved_objects("player", [self.player])
+                set_saved_game(self.cur_level, self.player.score)
+                self.stop()
 
-        else:
-            vx = vy = 0
-            if Keys.RIGHT in self.pressed_keys:
-                vx += 1
-            if Keys.LEFT in self.pressed_keys:
-                vx -= 1
-            if Keys.UP in self.pressed_keys:
-                vy -= 1
-            if Keys.DOWN in self.pressed_keys:
-                vy += 1
-            if Keys.SPACE in self.pressed_keys or Keys.Z in self.pressed_keys:
-                self.bullets += self.player.shoot()
-            if Keys.LEFT_SHIFT in self.pressed_keys:
-                self.player.speed = 50
-            else:
-                self.player.speed = 100
+    def update_game(self):
+        """Called from update loop if *not* paused"""
+        for bullet in self.bullets:
+            bullet.update(self.delta)
 
-            self.player.vx, self.player.vy = vx, vy
-
-            # TODO: Check separately x and y
-            if not_in_border(
-                self.player.x,
-                self.player.y,
-                self.player.vx,
-                self.player.vy,
-                WIDTH,
-                HEIGHT,
-            ) and not_in_border(
-                self.player.x + self.player.width,
-                self.player.y + self.player.height,
-                self.player.vx,
-                self.player.vy,
-                WIDTH,
-                HEIGHT,
+            if not not_in_border(
+                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
             ):
-                self.player.update(self.delta)
-                self.player.animation()
+                self.bullets.remove(bullet)
 
+        vx = (Keys.RIGHT in self.pressed_keys) - (Keys.LEFT in self.pressed_keys)
+        vy = (Keys.DOWN in self.pressed_keys) - (Keys.UP in self.pressed_keys)
+
+        if {Keys.SPACE, Keys.Z} & self.pressed_keys:
+            self.bullets += self.player.shoot()
+        if Keys.LEFT_SHIFT in self.pressed_keys:
+            self.player.speed = 50
+        else:
+            self.player.speed = 100
+
+        self.player.vx, self.player.vy = vx, vy
+
+        self.player.update(self.delta)
+        self.player.animation()
+
+        for enemy in self.enemies:
+            self.bullets += enemy.shoot()
+            enemy.animation()
+            enemy.update(self.delta)
+            if not not_in_border(enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT):
+                self.enemies.remove(enemy)
+
+        for bullet in filter(lambda b: b.enemy, self.bullets):
+            if self.player.collision(bullet):
+                self.player.get_damage(bullet.damage)
+                self.bullets.remove(bullet)
+                continue
+
+        for bullet in filter(lambda b: not b.enemy, self.bullets):
             for enemy in self.enemies:
-                self.bullets += enemy.shoot()
-                enemy.animation()
-                enemy.update(self.delta)
-                if not not_in_border(
-                    enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT
-                ):
-                    self.enemies.remove(enemy)
+                if enemy.collision(bullet):
+                    enemy.get_damage(bullet.damage)
+                    if enemy.hp <= 0:
+                        self.player.score += enemy.cost
+                        self.enemies.remove(enemy)
+                    self.bullets.remove(bullet)
+                    break
 
-            dell = set()
+        self.background_object.animation()
 
-            for bullet in self.bullets:
-                if self.player.collision(bullet):
-                    self.player.get_damage(bullet.damage)
-                    dell.add(bullet)
-
-                for enemy in self.enemies:
-                    if enemy.collision(bullet):
-                        enemy.get_damage(bullet.damage)
-                        dell.add(bullet)
-                        if enemy.hp <= 0:
-                            self.player.score += enemy.cost
-                            self.enemies.remove(enemy)
-
-                bullet.update(self.delta)
-                bullet.draw(self.graphics)
-
-                if not not_in_border(
-                    bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
-                ):
-                    dell.add(bullet)
-
-            for i in dell:
-                self.bullets.remove(i)
-
-            if len(self.enemies) == 0:
+        if len(self.enemies) == 0:
+            if len(LEVELS) > self.cur_level + 1:
                 self.cur_level += 1
-                if len(LEVELS) > self.cur_level:
-                    self.enemies = LEVELS[self.cur_level]
+                self.enemies = LEVELS[self.cur_level]
 
         if self.player.hp <= 0:
             set_saved_game(self.cur_level, self.player.score)
@@ -203,7 +182,22 @@ class Game(vgame.Scene):
                 pygame.time.wait(10)
             self.stop()
 
+    def update(self):
+        self.print_stats()
+        if Keys.ESCAPE in self.pressed_keys:
+            self.pressed_keys.remove(Keys.ESCAPE)
+            self.paused = not self.paused
+            if self.paused:
+                self.pause_object.load()
+
+        if self.paused:
+            self.update_pause()
+        else:
+            self.update_game()
+
     def draw(self):
+        self.graphics.draw_sprite(self.background_object)
+
         self.graphics.draw_sprite(self.player)
 
         for enemy in self.enemies:
@@ -220,3 +214,30 @@ class Game(vgame.Scene):
 
     def exit(self):
         pygame.mixer.music.stop()
+
+    def print_stats(self):
+        """Dev debug"""
+        print("\x1b[?25l", end="")  # hide cursor
+        print("\x1b[2J\x1b[0;0H", end="")  # clear console
+
+        # Tech stuff
+        print(
+            f"\x1b[{32 if self.fps >= self.framerate else 31}mFPS:\t{self.fps:.2f}\x1b[0m",
+            f"Gr. dT:\t{self.graphics_delta*1000}ms",
+            "",
+            f"\x1b[{32 if self.tps >= self.tickrate else 31}mTPS:\t{self.tps:.2f}\x1b[0m",
+            f"dT:\t{self.delta*1000}ms",
+            sep="\n",
+        )
+
+        print(end="\n\n")
+
+        # Game stats
+        print(
+            f"HP: {self.player.hp}",
+            f"Score: {self.player.score}",
+            f"Level: {self.cur_level}",
+            sep="\n",
+        )
+
+        print("\x1b[?25h", end="")  # show cursor
