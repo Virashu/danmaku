@@ -17,7 +17,9 @@ while runner.running:
     runner.run(menu)
     match menu.exit_status:
         case "game_new":
-            runner.run(Game(width=WIDTH, height=HEIGHT, title="Danmaku | Game"))
+            game = Game(width=WIDTH, height=HEIGHT, title="Danmaku | Game")
+            game.new_game = True
+            runner.run(game)
         case "game_continue":
             game = Game(width=WIDTH, height=HEIGHT, title="Danmaku | Game")
             game.new_game = False
