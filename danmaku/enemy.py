@@ -14,28 +14,36 @@ from danmaku.gameobject import GameObject
 class Enemy(GameObject):
     """Enemy object."""
 
-    def __init__(self, xy, object_type, updated_hp=0):
+    def __init__(
+        self,
+        xy: tuple[int | float, int | float],
+        object_type: str,
+        updated_hp: int | float = 0,
+    ):
         args = get_enemy_type(object_type)
-        if updated_hp == 0:
-            hp = args["hp"]
-        else:
-            hp = updated_hp
-        self.textures = []
-        for i in args["texture_file"].split(";"):
-            self.textures.append(f"/enemy/{i}")
+
+        hp = updated_hp or args["hp"]
+
         super().__init__(
             xy, args["texture_size"], args["speed"], hp, args["dm"], args["endurance"]
         )
-        self.shoot_v = args["shoot_v"]
-        self.last_shoot = 0
-        self.last_animation = 0
-        self.animation_v = 100
-        self.last_animation_time = 0
-        self.texture_file = self.textures[self.last_animation]
-        self.texture_size = args["texture_size"]
         self.my_type = object_type
         self.cost = args["cost"]
+
+        self.shoot_v = args["shoot_v"]
+        self.last_shoot = 0
+
         self.hitbox_radius = int(self.width / 2)
+
+        # Animation
+        self.textures = tuple(
+            map(lambda x: f"/enemy/{x}", args["texture_file"].split(";"))
+        )
+        self.texture_file = self.textures[self.last_animation]
+        self.texture_size = args["texture_size"]
+        self.last_animation = 0
+        self.last_animation_time = 0
+        self.animation_v = 100
 
     def shoot(self) -> list[Bullet]:
         t = pygame.time.get_ticks()

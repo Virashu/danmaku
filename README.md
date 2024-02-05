@@ -35,3 +35,7 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 - [ ] Settings
 - [ ] Make player hitbox smaller
 - [x] Replace resource path strings with constants from db
+- [ ]  Rework base classes
+  - [ ] GameObject
+  - [ ] +Animatable
+  - [ ] +Shooter
