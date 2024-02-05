@@ -36,14 +36,14 @@ class Enemy(GameObject):
         self.hitbox_radius = int(self.width / 2)
 
         # Animation
-        self.textures = tuple(
+        self.current_frame = 0
+        self.last_animation_time = 0
+        self.frame_duration = 100
+        self.frames = tuple(
             map(lambda x: f"/enemy/{x}", args["texture_file"].split(";"))
         )
-        self.texture_file = self.textures[self.last_animation]
+        self.texture_file = self.frames[self.current_frame]
         self.texture_size = args["texture_size"]
-        self.last_animation = 0
-        self.last_animation_time = 0
-        self.animation_v = 100
 
     def shoot(self) -> list[Bullet]:
         t = pygame.time.get_ticks()
@@ -79,11 +79,9 @@ class Enemy(GameObject):
     def animation(self):
         """Animate sprite."""
         t = pygame.time.get_ticks()
-        if t - self.last_animation_time >= self.animation_v:
-            self.last_animation += 1
-            if self.last_animation >= len(self.textures):
-                self.last_animation = 0
-            self.texture_file = self.textures[self.last_animation]
+        if t - self.last_animation_time >= self.frame_duration:
+            self.current_frame = (self.current_frame + 1) % len(self.frames)
+            self.texture_file = self.frames[self.current_frame]
             self.last_animation_time = t
 
     def draw(self, graphics: Graphics): ...
