@@ -198,7 +198,7 @@ class Game(vgame.Scene):
     def draw(self):
         self.graphics.draw_sprite(self.background_object)
 
-        self.graphics.draw_sprite(self.player)
+        self.player.draw(self.graphics)
 
         for enemy in self.enemies:
             self.graphics.draw_sprite(enemy)

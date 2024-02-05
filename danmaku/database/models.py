@@ -55,6 +55,7 @@ class PlayerTypes(BaseModel):
     hp = IntegerField()
     dm = IntegerField()
     endurance = FloatField()
+    hitbox_radius = IntegerField()
 
 
 class SavedObjects(BaseModel):

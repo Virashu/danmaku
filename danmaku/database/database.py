@@ -44,6 +44,7 @@ def get_player_type(name) -> dict:
         "hp": a.hp,
         "dm": a.dm,
         "endurance": a.endurance,
+        "hitbox_radius": a.hitbox_radius,
     }
 
 

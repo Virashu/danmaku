@@ -114,5 +114,6 @@ player = PlayerTypes.create(
     hp=1300,
     dm=500,
     endurance=1,
+    hitbox_radius=10,
 )
 player.save()

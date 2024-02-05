@@ -10,6 +10,8 @@ class GameObject(Sprite):
     A base game entity object.
     """
 
+    hitbox_radius: int
+
     def __init__(
         self,
         xy: tuple[int | float, int | float],
@@ -31,9 +33,10 @@ class GameObject(Sprite):
     def update(self, delta: int | float):
         self.x += self.vx * delta * self.speed
         self.y += self.vy * delta * self.speed
+
         self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
-            self.x,
-            self.y,
+            self.x - self.width / 2,
+            self.y - self.height / 2,
             self.width,
             self.height,
         )

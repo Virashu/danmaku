@@ -54,6 +54,7 @@ class Player(GameObject):
         self.last_shoot = 0
         self.shoot_v = args["shoot_v"]
         self.score = 0
+        self.hitbox_radius = args["hitbox_radius"]
 
         self.left = self.top = 0
         self.right = self.bottom = 10e6
@@ -62,7 +63,7 @@ class Player(GameObject):
         t = pygame.time.get_ticks()
         if t - self.last_shoot >= self.shoot_v:
             bullet = Bullet(
-                (self.x + (self.width // 2), self.y + (self.height // 2)),
+                (self.x, self.y),
                 self.damage,
                 "basic player bullet",
             )
@@ -85,16 +86,20 @@ class Player(GameObject):
 
     def update(self, delta: int | float) -> None:
         self.x += self.vx * delta * self.speed
-        self.x = constrain(self.x, self.left, self.right - self.width)
+        self.x = constrain(
+            self.x, self.left + self.width / 2, self.right - self.width / 2
+        )
 
         self.y += self.vy * delta * self.speed
-        self.y = constrain(self.y, self.top, self.bottom - self.height)
+        self.y = constrain(
+            self.y, self.top + self.height / 2, self.bottom - self.height / 2
+        )
 
         self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
-            self.x,
-            self.y,
-            self.width,
-            self.height,
+            int(self.x - self.width / 2),
+            int(self.y - self.height / 2),
+            int(self.width),
+            int(self.height),
         )
 
     def animation(self) -> None:
@@ -119,8 +124,16 @@ class Player(GameObject):
 
     def draw(self, graphics: vgame.graphics.Graphics) -> None:
         graphics.draw_sprite(self)
+        graphics.circle((self.x, self.y), self.hitbox_radius, (255, 255, 255))
 
     def collision(self, other) -> bool:
-        e = pygame.Rect(other.x - other.r, other.y - other.r, 2 * other.r, 2 * other.r)
-        s = pygame.Rect(self.x, self.y, self.width, self.height)
-        return e.colliderect(s)
+        other_rect = pygame.Rect(
+            other.x - other.r, other.y - other.r, 2 * other.r, 2 * other.r
+        )
+        self_rect = pygame.Rect(
+            self.x - self.hitbox_radius,
+            self.y - self.hitbox_radius,
+            self.hitbox_radius * 2,
+            self.hitbox_radius * 2,
+        )
+        return other_rect.colliderect(self_rect)
