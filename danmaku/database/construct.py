@@ -109,7 +109,7 @@ player = PlayerTypes.create(
     "player_shoot_3.png;player_shoot_4.png;player_idle_right.png",
     texture_size_width=50,
     texture_size_height=50,
-    speed=100,
+    speed=200,
     shoot_v=250,
     hp=1300,
     dm=500,

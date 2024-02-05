@@ -35,6 +35,7 @@ class Enemy(GameObject):
         self.texture_size = args["texture_size"]
         self.my_type = object_type
         self.cost = args["cost"]
+        self.hitbox_radius = int(self.width / 2)
 
     def shoot(self) -> list[Bullet]:
         t = pygame.time.get_ticks()
@@ -76,15 +77,5 @@ class Enemy(GameObject):
                 self.last_animation = 0
             self.texture_file = self.textures[self.last_animation]
             self.last_animation_time = t
-
-    def collision(self, other) -> bool:
-        e = pygame.Rect(other.x - other.r, other.y - other.r, 2 * other.r, 2 * other.r)
-        s = pygame.Rect(
-            self.x - (self.width // 2),
-            self.y - self.height * 2,
-            self.width,
-            self.height,
-        )
-        return e.colliderect(s)
 
     def draw(self, graphics: Graphics): ...

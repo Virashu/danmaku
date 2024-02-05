@@ -55,6 +55,7 @@ class Player(GameObject):
         self.shoot_v = args["shoot_v"]
         self.score = 0
         self.hitbox_radius = args["hitbox_radius"]
+        self.slow = False
 
         self.left = self.top = 0
         self.right = self.bottom = 10e6
@@ -85,12 +86,14 @@ class Player(GameObject):
         self.bottom = bottom
 
     def update(self, delta: int | float) -> None:
-        self.x += self.vx * delta * self.speed
+        speed = self.speed if not self.slow else self.speed * 0.5
+
+        self.x += self.vx * delta * speed
         self.x = constrain(
             self.x, self.left + self.width / 2, self.right - self.width / 2
         )
 
-        self.y += self.vy * delta * self.speed
+        self.y += self.vy * delta * speed
         self.y = constrain(
             self.y, self.top + self.height / 2, self.bottom - self.height / 2
         )
@@ -125,15 +128,3 @@ class Player(GameObject):
     def draw(self, graphics: vgame.graphics.Graphics) -> None:
         graphics.draw_sprite(self)
         graphics.circle((self.x, self.y), self.hitbox_radius, (255, 255, 255))
-
-    def collision(self, other) -> bool:
-        other_rect = pygame.Rect(
-            other.x - other.r, other.y - other.r, 2 * other.r, 2 * other.r
-        )
-        self_rect = pygame.Rect(
-            self.x - self.hitbox_radius,
-            self.y - self.hitbox_radius,
-            self.hitbox_radius * 2,
-            self.hitbox_radius * 2,
-        )
-        return other_rect.colliderect(self_rect)
