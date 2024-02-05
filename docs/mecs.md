@@ -40,3 +40,31 @@ graph LR
 ```
 
 As we can see, all other scenes return to the main menu
+
+
+
+## Position, hitboxes
+
+
+Position of an object is a position of it's center point
+
+*placement:*
+```
+/-----\
+|     |
+|  *  |
+|     |
+\-----/
+```
+(where the star is at)
+
+**NOT** coordinates of left top corner
+
+*wrong placement:*
+```
+*-----\
+|     |
+|     |
+|     |
+\-----/
+```

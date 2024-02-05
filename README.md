@@ -1,5 +1,5 @@
 # 弾幕 (Danmaku)
-![pylint](https://img.shields.io/badge/PyLint-9.79-yellow?logo=python&logoColor=white)
+![pylint](https://img.shields.io/badge/PyLint-9.80-yellow?logo=python&logoColor=white)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Goal
@@ -35,3 +35,7 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 - [ ] Settings
 - [ ] Make player hitbox smaller
 - [x] Replace resource path strings with constants from db
+- [ ]  Rework base classes
+  - [ ] GameObject
+  - [ ] +Animatable
+  - [ ] +Shooter

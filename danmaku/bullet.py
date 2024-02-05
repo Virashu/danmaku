@@ -18,26 +18,29 @@ class Bullet(GameObject):
         )
         self.enemy = args["enemy"]
         self.vx, self.vy = args["vx_vy"]
-        self.r = args["radius"]
+        self.radius = args["radius"]
+        self.hitbox_radius = self.radius
 
         self.texture_file = args["texture_file"]
-        self.texture_size = (2 * self.r, 2 * self.r)
+        self.texture_size = (2 * self.radius, 2 * self.radius)
         self.my_type = object_type
 
     def update(self, delta: int | float):
         self.x += self.vx * delta * self.speed
         self.y += self.vy * delta * self.speed
+
         self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
-            self.x - self.r,
-            self.y - self.r,
+            self.x - self.radius,
+            self.y - self.radius,
             self.width,
             self.height,
         )
 
-    def collision(self, other) -> bool:
-        # Need to change this because of bombs
-        # (The bullets that can damage bullets)
-        return other.collision(self)
-
     def draw(self, graphics: vgame.graphics.Graphics):
         graphics.draw_sprite(self)
+
+    def shoot(self) -> list:
+        # bruh...
+        # Need to rewrite and split GameObject into 2 classes (GameObject, Shooter)
+        # TODO
+        ...

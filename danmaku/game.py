@@ -66,7 +66,7 @@ class Game(vgame.Scene):
         if self.new_game:
             self.cur_level = 0
             self.enemies: list[Enemy] = LEVELS[self.cur_level].copy()
-            self.player = Player((100, 450), "player")
+            self.player = Player((WIDTH // 2, HEIGHT - 50), "player")
 
         else:
             self.enemies: list[Enemy] = []
@@ -135,9 +135,9 @@ class Game(vgame.Scene):
         if {Keys.SPACE, Keys.Z} & self.pressed_keys:
             self.bullets += self.player.shoot()
         if Keys.LEFT_SHIFT in self.pressed_keys:
-            self.player.speed = 50
+            self.player.slow = True
         else:
-            self.player.speed = 100
+            self.player.slow = False
 
         self.player.vx, self.player.vy = vx, vy
 
@@ -198,7 +198,7 @@ class Game(vgame.Scene):
     def draw(self):
         self.graphics.draw_sprite(self.background_object)
 
-        self.graphics.draw_sprite(self.player)
+        self.player.draw(self.graphics)
 
         for enemy in self.enemies:
             self.graphics.draw_sprite(enemy)

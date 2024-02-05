@@ -1,5 +1,7 @@
 """Base game object."""
 
+import math
+
 from abc import abstractmethod
 
 from vgame.graphics import Graphics, Sprite
@@ -9,6 +11,8 @@ class GameObject(Sprite):
     """
     A base game entity object.
     """
+
+    hitbox_radius: int
 
     def __init__(
         self,
@@ -31,9 +35,10 @@ class GameObject(Sprite):
     def update(self, delta: int | float):
         self.x += self.vx * delta * self.speed
         self.y += self.vy * delta * self.speed
+
         self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
-            self.x,
-            self.y,
+            self.x - self.width / 2,
+            self.y - self.height / 2,
             self.width,
             self.height,
         )
@@ -49,6 +54,23 @@ class GameObject(Sprite):
     @abstractmethod
     def draw(self, graphics: Graphics): ...
 
-    @abstractmethod
     def collision(self, other) -> bool:
         """Check collision."""
+        # other_rect = pygame.Rect(
+        #     other.x - other.hitbox_radius,
+        #     other.y - other.hitbox_radius,
+        #     other.hitbox_radius * 2,
+        #     other.hitbox_radius * 2,
+        # )
+        # self_rect = pygame.Rect(
+        #     self.x - self.hitbox_radius,
+        #     self.y - self.hitbox_radius,
+        #     self.hitbox_radius * 2,
+        #     self.hitbox_radius * 2,
+        # )
+        # res = other_rect.colliderect(self_rect)
+        res = (
+            math.hypot(self.x - other.x, self.y - other.y)
+            < self.hitbox_radius + other.hitbox_radius
+        )
+        return res
