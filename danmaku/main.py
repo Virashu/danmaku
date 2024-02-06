@@ -3,7 +3,7 @@
 from vgame import Runner
 
 from danmaku.menu import Menu
-from danmaku.game import Game
+from danmaku.game import Game  
 from danmaku.history import History
 from danmaku.settings import Settings
 
@@ -16,7 +16,7 @@ runner = Runner()
 while runner.running:
     menu = Menu(width=WIDTH, height=HEIGHT, title="Danmaku | Menu")
     runner.run(menu)
-    match menu.exit_status:
+    match menu.exit_status: 
         case "game", new_game:
             game = Game(
                 width=WIDTH, height=HEIGHT, title="Danmaku | Game", tickrate=TICKRATE

@@ -14,24 +14,28 @@ class Bullet(GameObject):
     ):
         args = get_bullet_type(object_type)
         super().__init__(
-            xy, (2 * args["radius"], 2 * args["radius"]), args["speed"], 0, damage, 1
+            xy,
+            (args["texture_size"][0], args["texture_size"][1]),
+            args["speed"],
+            0,
+            damage,
+            1,
         )
         self.enemy = args["enemy"]
         self.vx, self.vy = args["vx_vy"]
-        self.radius = args["radius"]
-        self.hitbox_radius = self.radius
+        self.hitbox_radius = args["hitbox_radius"]
 
         self.texture_file = args["texture_file"]
-        self.texture_size = (2 * self.radius, 2 * self.radius)
+        self.texture_size = args["texture_size"]
         self.my_type = object_type
 
     def update(self, delta: int | float):
         self.x += self.vx * delta * self.speed
         self.y += self.vy * delta * self.speed
 
-        self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
-            int(self.x - self.radius),
-            int(self.y - self.radius),
+        self.rect.centerx, self.rect.centery, self.rect.w, self.rect.h = (
+            int(self.x),
+            int(self.y),
             int(self.width),
             int(self.height),
         )

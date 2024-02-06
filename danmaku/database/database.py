@@ -59,7 +59,7 @@ def get_bullet_type(name: str) -> dict:
     return {
         "texture_file": a.texture_file,
         "texture_size": (a.texture_size_width, a.texture_size_height),
-        "hitbox_radius": a.radius,
+        "hitbox_radius": a.hitbox_radius,
         "vx_vy": (a.vx, a.vy),
         "speed": a.speed,
         "enemy": a.enemy,
