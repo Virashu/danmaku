@@ -37,10 +37,10 @@ class GameObject(Sprite):
         self.y += self.vy * delta * self.speed
 
         self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
-            self.x - self.width / 2,
-            self.y - self.height / 2,
-            self.width,
-            self.height,
+            int(self.x - self.width / 2),
+            int(self.y - self.height / 2),
+            int(self.width),
+            int(self.height),
         )
 
     def get_damage(self, damage: int | float):

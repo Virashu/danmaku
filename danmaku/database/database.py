@@ -14,7 +14,8 @@ from danmaku.database.models import (
 def get_enemy_type(name: str) -> dict:
     """
     Get enemy parameters by name
-    Returns dict: {"texture_file", "texture_size", "speed", "shoot_v", "hp", "dm", "endurance"}
+    Returns dict:
+        {"texture_file", "texture_size", "speed", "shoot_v", "hp", "dm", "endurance"}
     """
     with db.atomic():
         a = EnemyTypes.get(EnemyTypes.name == name)
@@ -33,7 +34,8 @@ def get_enemy_type(name: str) -> dict:
 def get_player_type(name) -> dict:
     """
     Get player parameters by name
-    Returns dict: {"texture_file", "texture_size", "speed", "shoot_v", "hp", "dm", "endurance"}
+    Returns dict: {"texture_file", "texture_size", "speed", "shoot_v", "hp", "dm",
+         "endurance", "hitbox_radius"}
     """
     a = PlayerTypes.get(PlayerTypes.name == name)
     return {
@@ -51,12 +53,13 @@ def get_player_type(name) -> dict:
 def get_bullet_type(name: str) -> dict:
     """
     Get bullet parameters by name
-    Returns dict: {"texture_file", "radius", "vx_vy", "speed", "enemy"}
+    Returns dict: {"texture_file", "texture_size", "hitbox_radius", "vx_vy", "speed", "enemy"}
     """
     a = BulletTypes.get(BulletTypes.name == name)
     return {
         "texture_file": a.texture_file,
-        "radius": a.radius,
+        "texture_size": (a.texture_size_width, a.texture_size_height),
+        "hitbox_radius": a.radius,
         "vx_vy": (a.vx, a.vy),
         "speed": a.speed,
         "enemy": a.enemy,

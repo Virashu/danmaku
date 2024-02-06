@@ -30,10 +30,10 @@ class Bullet(GameObject):
         self.y += self.vy * delta * self.speed
 
         self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
-            self.x - self.radius,
-            self.y - self.radius,
-            self.width,
-            self.height,
+            int(self.x - self.radius),
+            int(self.y - self.radius),
+            int(self.width),
+            int(self.height),
         )
 
     def draw(self, graphics: vgame.graphics.Graphics):
