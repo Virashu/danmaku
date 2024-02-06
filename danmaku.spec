@@ -6,9 +6,13 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        ("./assets", "assets")
+        ("./assets", "assets"),
     ],
-    hiddenimports=[],
+    hiddenimports=[
+        "pygame",
+        "vgame",
+        "peewee",
+    ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
