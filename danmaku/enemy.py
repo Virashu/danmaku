@@ -51,9 +51,7 @@ class Enemy(GameObject):
             self.last_shoot = t
             if self.my_type == "boss":
                 return self.shoot_radial()
-            bullet = Bullet(
-                (self.x + self.width // 2, self.y), self.damage, "basic enemy bullet"
-            )
+            bullet = Bullet((self.x, self.y), self.damage, "basic enemy bullet")
             bullet.vx = randint(-100, 100) / 100
             bullet.vy = (1 - bullet.vx**2) ** 0.5
             return [bullet]
