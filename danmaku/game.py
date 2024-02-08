@@ -19,7 +19,7 @@ from danmaku.database import (
 )
 from danmaku.pause import Pause
 from danmaku.background import Background
-from danmaku.drop import PowerUp, Points
+from danmaku.drop import Drop, PowerUp, Points
 
 
 WIDTH, HEIGHT = 300, 500
@@ -232,7 +232,7 @@ class Game(vgame.Scene):
                 self.stop()
 
         if self.player.hp <= 0:
-            set_saved_game(self.cur_level, self.player.score)
+            set_saved_game(self.cur_level, self.player.score, self.player.power)
             self.exit_status = "lose"
             death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
             channel = death_sfx.play()
