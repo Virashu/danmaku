@@ -160,6 +160,14 @@ class Game(vgame.Scene):
                     self.bullets.remove(bullet)
                     break
 
+        for bullet in self.bullets:
+            bullet.update(self.delta)
+
+            if not not_in_border(
+                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
+            ):
+                self.bullets.remove(bullet)
+
         self.background_object.animation()
 
         if len(self.enemies) == 0:
@@ -174,14 +182,6 @@ class Game(vgame.Scene):
             while channel.get_busy():
                 pygame.time.wait(10)
             self.stop()
-
-        for bullet in self.bullets:
-            bullet.update(self.delta)
-
-            if not not_in_border(
-                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
-            ):
-                self.bullets.remove(bullet)
 
     def update(self):
         self.print_stats()
