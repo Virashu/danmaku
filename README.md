@@ -41,3 +41,11 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
   - [ ] +Animatable
   - [ ] +Shooter
   - [ ] +Texture
+- [ ] Drops
+  - [ ] HP
+  - [x] XP
+  - [ ] Powerups
+  - [ ] Coins
+- [ ] Levels transition (portals?)
+  - [ ] Background change
+  - [ ] Enemies' texture change
