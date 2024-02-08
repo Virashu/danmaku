@@ -1,5 +1,5 @@
 # 弾幕 (Danmaku)
-![pylint](https://img.shields.io/badge/PyLint-9.75-yellow?logo=python&logoColor=white)
+![pylint](https://img.shields.io/badge/PyLint-9.55-yellow?logo=python&logoColor=white)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Goal
@@ -41,3 +41,14 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
   - [ ] +Animatable
   - [ ] +Shooter
   - [ ] +Texture
+- [x] Drops
+  - [ ] HP (?)
+  - [x] XP
+  - [x] Powerups
+  - [ ] Coins (?)
+- [ ] Levels transition (portals?)
+  - [ ] Background change
+  - [ ] Enemies' texture change
+- [ ] Split enemies types into classes
+- [ ] Add enemy generate_drop() method
+- [ ] **Replace ticks with seconds everywhere**

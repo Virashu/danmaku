@@ -1,5 +1,6 @@
 """Player object declaration."""
 
+import math
 import pygame
 import vgame
 from danmaku.gameobject import GameObject
@@ -34,6 +35,7 @@ class Player(GameObject):
 
         self.my_type = object_type
         self.score = 0
+        self.power = 1
 
         self.last_shoot = 0
         self.shoot_v = args["shoot_v"]
@@ -70,16 +72,40 @@ class Player(GameObject):
         self.last_animation_time = 0
 
     def shoot(self) -> list[Bullet]:
+        res: list[Bullet] = []
+
         t = pygame.time.get_ticks()
         if t - self.last_shoot >= self.shoot_v:
+            self.last_shoot = t
+
             bullet = Bullet(
                 (self.x, self.y),
-                self.damage,
+                self.damage + self.power,
                 "basic player bullet",
             )
-            self.last_shoot = t
-            return [bullet]
-        return []
+
+            res.append(bullet)
+
+            if self.power > 4:
+                vx = math.cos(math.pi * 75 / 180)
+                vy = -math.sin(math.pi * 75 / 180)
+
+                b1 = Bullet(
+                    (self.x, self.y),
+                    self.damage + self.power,
+                    "basic player bullet",
+                )
+                b2 = Bullet(
+                    (self.x, self.y),
+                    self.damage + self.power,
+                    "basic player bullet",
+                )
+                b1.vx = vx
+                b2.vx = -vx
+                b1.vy = b2.vy = vy
+                res.extend([b1, b2])
+
+        return res
 
     def set_bounds(
         self,

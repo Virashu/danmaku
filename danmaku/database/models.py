@@ -71,3 +71,4 @@ class SavedObjects(BaseModel):
 class SavedGame(BaseModel):
     level = IntegerField()
     score = IntegerField()
+    power = IntegerField()

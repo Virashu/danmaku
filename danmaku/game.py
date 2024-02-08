@@ -1,5 +1,7 @@
 """Game scene."""
 
+import random
+
 import vgame
 from vgame import Keys
 import pygame
@@ -17,6 +19,7 @@ from danmaku.database import (
 )
 from danmaku.pause import Pause
 from danmaku.background import Background
+from danmaku.drop import PowerUp, Points
 
 
 WIDTH, HEIGHT = 300, 500
@@ -40,8 +43,34 @@ LEVEL6 = [
     Enemy((200, -50), "basic enemy"),
     Enemy((110, -35), "strong enemy"),
 ]
-FINAL = [Enemy((WIDTH / 2, -40), "boss")]
-LEVELS = [LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6, FINAL]
+LEVEL7 = [Enemy((WIDTH / 2, -40), "boss")]
+LEVEL8 = [
+    Enemy((50, -15), "strong enemy"),
+    Enemy((200, -50), "strong enemy"),
+    Enemy((WIDTH - 50, -35), "strong enemy"),
+]
+LEVEL9 = [
+    Enemy((50, -15), "strong enemy"),
+    Enemy((200, -50), "strong enemy"),
+    Enemy((WIDTH - 50, -35), "strong enemy"),
+]
+LEVEL10 = [
+    Enemy((50, -15), "strong enemy"),
+    Enemy((200, -50), "boss"),
+    Enemy((WIDTH - 50, -35), "strong enemy"),
+]
+LEVELS = [
+    LEVEL1,
+    LEVEL2,
+    LEVEL3,
+    LEVEL4,
+    LEVEL5,
+    LEVEL6,
+    LEVEL7,
+    LEVEL8,
+    LEVEL9,
+    LEVEL10,
+]
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
@@ -62,6 +91,7 @@ class Game(vgame.Scene):
         self.background_object = Background(0, 0, self.width, self.height)
 
         self.bullets: list[Bullet] = []
+        self.drops: list[Drop] = []
 
         if self.new_game:
             self.cur_level = 0
@@ -98,6 +128,7 @@ class Game(vgame.Scene):
             saved_game = get_saved_game()
             self.cur_level = saved_game["level"]
             self.player.score = saved_game["score"]
+            self.player.power = saved_game["power"]
             delete_saved_objects()
 
         self.player.set_bounds(0, 0, self.width, self.height)
@@ -116,7 +147,7 @@ class Game(vgame.Scene):
                 set_saved_objects("enemy", self.enemies)
                 set_saved_objects("bullet", self.bullets)
                 set_saved_objects("player", [self.player])
-                set_saved_game(self.cur_level, self.player.score)
+                set_saved_game(self.cur_level, self.player.score, self.player.power)
                 self.stop()
 
     def update_game(self):
@@ -156,7 +187,15 @@ class Game(vgame.Scene):
                     enemy.get_damage(bullet.damage)
                     if enemy.hp <= 0:
                         self.player.score += enemy.cost
+                        x, y = enemy.x, enemy.y
                         self.enemies.remove(enemy)
+
+                        match random.choices(("powerup", "points", None), (1, 1, 2))[0]:
+                            case "powerup":
+                                self.drops.append(PowerUp((x, y)))
+                            case "points":
+                                self.drops.append(Points((x, y)))
+
                     self.bullets.remove(bullet)
                     break
 
@@ -167,6 +206,20 @@ class Game(vgame.Scene):
                 bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
             ):
                 self.bullets.remove(bullet)
+
+        for drop in self.drops:
+            if self.player.collision(drop):
+                if isinstance(drop, PowerUp):
+                    self.player.power += 2
+                elif isinstance(drop, Points):
+                    self.player.score += 10
+                self.drops.remove(drop)
+                continue
+
+            drop.update(self.delta)
+
+            if not not_in_border(drop.x, drop.y, drop.vx, drop.vy, WIDTH, HEIGHT):
+                self.drops.remove(drop)
 
         self.background_object.animation()
 
@@ -207,6 +260,9 @@ class Game(vgame.Scene):
         for bullet in self.bullets:
             self.graphics.draw_sprite(bullet)
 
+        for drop in self.drops:
+            self.graphics.draw_sprite(drop)
+
         self.graphics.text(f"HP: {self.player.hp}", (0, 0))
         self.graphics.text(f"Score: {self.player.score}", (150, 0))
 
@@ -238,6 +294,10 @@ class Game(vgame.Scene):
             f"HP: {self.player.hp}",
             f"Score: {self.player.score}",
             f"Level: {self.cur_level}",
+            "",
+            f"Enemies: {len(self.enemies)}",
+            f"Bullets: {len(self.bullets)}",
+            f"Drops: {len(self.drops)}",
             sep="\n",
         )
 
