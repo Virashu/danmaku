@@ -1,5 +1,5 @@
 # 弾幕 (Danmaku)
-![pylint](https://img.shields.io/badge/PyLint-9.48-yellow?logo=python&logoColor=white)
+![pylint](https://img.shields.io/badge/PyLint-9.51-yellow?logo=python&logoColor=white)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Goal
