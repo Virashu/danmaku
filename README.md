@@ -41,13 +41,14 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
   - [ ] +Animatable
   - [ ] +Shooter
   - [ ] +Texture
-- [ ] Drops
-  - [ ] HP
+- [x] Drops
+  - [ ] HP (?)
   - [x] XP
-  - [ ] Powerups
-  - [ ] Coins
+  - [x] Powerups
+  - [ ] Coins (?)
 - [ ] Levels transition (portals?)
   - [ ] Background change
   - [ ] Enemies' texture change
 - [ ] Split enemies types into classes
 - [ ] Add enemy generate_drop() method
+- [ ] **Replace ticks with seconds everywhere**

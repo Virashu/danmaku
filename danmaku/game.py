@@ -43,8 +43,34 @@ LEVEL6 = [
     Enemy((200, -50), "basic enemy"),
     Enemy((110, -35), "strong enemy"),
 ]
-FINAL = [Enemy((WIDTH / 2, -40), "boss")]
-LEVELS = [LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6, FINAL]
+LEVEL7 = [Enemy((WIDTH / 2, -40), "boss")]
+LEVEL8 = [
+    Enemy((50, -15), "strong enemy"),
+    Enemy((200, -50), "strong enemy"),
+    Enemy((WIDTH - 50, -35), "strong enemy"),
+]
+LEVEL9 = [
+    Enemy((50, -15), "strong enemy"),
+    Enemy((200, -50), "strong enemy"),
+    Enemy((WIDTH - 50, -35), "strong enemy"),
+]
+LEVEL10 = [
+    Enemy((50, -15), "strong enemy"),
+    Enemy((200, -50), "boss"),
+    Enemy((WIDTH - 50, -35), "strong enemy"),
+]
+LEVELS = [
+    LEVEL1,
+    LEVEL2,
+    LEVEL3,
+    LEVEL4,
+    LEVEL5,
+    LEVEL6,
+    LEVEL7,
+    LEVEL8,
+    LEVEL9,
+    LEVEL10,
+]
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
@@ -102,6 +128,7 @@ class Game(vgame.Scene):
             saved_game = get_saved_game()
             self.cur_level = saved_game["level"]
             self.player.score = saved_game["score"]
+            self.player.power = saved_game["power"]
             delete_saved_objects()
 
         self.player.set_bounds(0, 0, self.width, self.height)
@@ -120,7 +147,7 @@ class Game(vgame.Scene):
                 set_saved_objects("enemy", self.enemies)
                 set_saved_objects("bullet", self.bullets)
                 set_saved_objects("player", [self.player])
-                set_saved_game(self.cur_level, self.player.score)
+                set_saved_game(self.cur_level, self.player.score, self.player.power)
                 self.stop()
 
     def update_game(self):
@@ -163,7 +190,7 @@ class Game(vgame.Scene):
                         x, y = enemy.x, enemy.y
                         self.enemies.remove(enemy)
 
-                        match random.choices(("powerup", "points", None), (1, 3, 5))[0]:
+                        match random.choices(("powerup", "points", None), (1, 1, 2))[0]:
                             case "powerup":
                                 self.drops.append(PowerUp((x, y)))
                             case "points":
@@ -183,7 +210,7 @@ class Game(vgame.Scene):
         for drop in self.drops:
             if self.player.collision(drop):
                 if isinstance(drop, PowerUp):
-                    ...
+                    self.player.power += 2
                 elif isinstance(drop, Points):
                     self.player.score += 10
                 self.drops.remove(drop)

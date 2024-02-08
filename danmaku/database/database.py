@@ -87,13 +87,14 @@ def get_saved_objects() -> list:
 
 def get_saved_game() -> dict:
     """Get saved game from database
-    Returns dict: {"score", "level"}
+    Returns dict: {"score", "level", "power"}
     """
     games = tuple(iter(SavedGame.select()))
     game = games[-1]
     objects = {
         "score": game.score,
         "level": game.level,
+        "power": game.power,
     }
     return objects
 
@@ -126,9 +127,9 @@ def set_saved_objects(name: str, objects: Iterable) -> None:
         n.save()
 
 
-def set_saved_game(cur_level: int, score: int) -> None:
+def set_saved_game(cur_level: int, score: int, power: int) -> None:
     """Set saved game to database"""
-    n = SavedGame.create(score=score, level=cur_level)
+    n = SavedGame.create(score=score, level=cur_level, power=power)
     n.save()
 
 
