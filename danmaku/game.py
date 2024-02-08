@@ -227,9 +227,13 @@ class Game(vgame.Scene):
             if len(LEVELS) > self.cur_level + 1:
                 self.cur_level += 1
                 self.enemies = LEVELS[self.cur_level]
+            else:
+                self.exit_status = "win"
+                self.stop()
 
         if self.player.hp <= 0:
             set_saved_game(self.cur_level, self.player.score)
+            self.exit_status = "lose"
             death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
             channel = death_sfx.play()
             while channel.get_busy():
