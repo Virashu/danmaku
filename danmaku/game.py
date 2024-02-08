@@ -22,25 +22,25 @@ from danmaku.background import Background
 WIDTH, HEIGHT = 300, 500
 LEVEL1 = [Enemy((150, 15), "basic enemy")]
 LEVEL2 = [
-    Enemy((50, 25), "basic enemy"),
-    Enemy((200, 10), "basic enemy"),
+    Enemy((50, -25), "basic enemy"),
+    Enemy((200, -50), "basic enemy"),
 ]
 LEVEL3 = [Enemy((110, 5), "strong enemy")]
 LEVEL4 = [
-    Enemy((50, 25), "strong enemy"),
-    Enemy((200, 10), "strong enemy"),
+    Enemy((50, -25), "strong enemy"),
+    Enemy((200, -50), "strong enemy"),
 ]
 LEVEL5 = [
-    Enemy((50, 15), "basic enemy"),
-    Enemy((200, 10), "basic enemy"),
-    Enemy((110, 5), "strong enemy"),
+    Enemy((50, -20), "basic enemy"),
+    Enemy((200, -50), "basic enemy"),
+    Enemy((110, -35), "strong enemy"),
 ]
 LEVEL6 = [
-    Enemy((50, 15), "strong enemy"),
-    Enemy((200, 10), "basic enemy"),
-    Enemy((110, 5), "strong enemy"),
+    Enemy((50, -15), "strong enemy"),
+    Enemy((200, -50), "basic enemy"),
+    Enemy((110, -35), "strong enemy"),
 ]
-FINAL = [Enemy((150, 15), "boss")]
+FINAL = [Enemy((WIDTH / 2, -40), "boss")]
 LEVELS = [LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6, FINAL]
 
 
@@ -121,13 +121,6 @@ class Game(vgame.Scene):
 
     def update_game(self):
         """Called from update loop if *not* paused"""
-        for bullet in self.bullets:
-            bullet.update(self.delta)
-
-            if not not_in_border(
-                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
-            ):
-                self.bullets.remove(bullet)
 
         vx = (Keys.RIGHT in self.pressed_keys) - (Keys.LEFT in self.pressed_keys)
         vy = (Keys.DOWN in self.pressed_keys) - (Keys.UP in self.pressed_keys)
@@ -148,7 +141,7 @@ class Game(vgame.Scene):
             self.bullets += enemy.shoot()
             enemy.animation()
             enemy.update(self.delta)
-            if not not_in_border(enemy.x, enemy.y, enemy.vx, enemy.vy, WIDTH, HEIGHT):
+            if enemy.y > HEIGHT / 2 and not 0 <= enemy.x < WIDTH:
                 self.enemies.remove(enemy)
 
         for bullet in filter(lambda b: b.enemy, self.bullets):
@@ -166,6 +159,14 @@ class Game(vgame.Scene):
                         self.enemies.remove(enemy)
                     self.bullets.remove(bullet)
                     break
+
+        for bullet in self.bullets:
+            bullet.update(self.delta)
+
+            if not not_in_border(
+                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
+            ):
+                self.bullets.remove(bullet)
 
         self.background_object.animation()
 
