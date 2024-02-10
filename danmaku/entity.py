@@ -13,12 +13,14 @@ class Entity(GameObject):
         speed: int | float,
         health: int | float,
         damage: int | float,
+        endurance: int | float = 1,
     ):
         GameObject.__init__(self, xy, width_height, speed)
 
         self.health = health
         self.damage = damage
+        self.endurance = endurance
 
     def get_damage(self, damage: int | float):
         """Decrease health point."""
-        self.health -= damage
+        self.health -= damage / self.endurance

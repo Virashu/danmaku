@@ -32,11 +32,12 @@ class Shooter(Entity):
         speed: int | float,
         health: int | float,
         damage: int | float,
+        endurance: int | float,
         bullet_type: str,
         shoot_freq: int | float,
         shoot_period: int | float | None = None,
     ):
-        super().__init__(xy, width_height, speed, health, damage)
+        super().__init__(xy, width_height, speed, health, damage, endurance)
         self.bullet_type = bullet_type
 
         if shoot_period is not None:

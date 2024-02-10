@@ -30,9 +30,10 @@ class Enemy(Shooter, Animated):
             args["speed"],
             health,
             args["dm"],
+            args["endurance"],
             "basic enemy bullet",
             0,
-            shoot_period=args["shoot_v"] / 1000,
+            args["shoot_v"] / 1000,
         )
         self.my_type = object_type
         self.cost = args["cost"]

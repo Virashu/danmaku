@@ -5,7 +5,6 @@ from peewee import (
     Model,
     CharField,
     IntegerField,
-    FloatField,
     BooleanField,
 )
 from danmaku.utils import resource_path
@@ -31,7 +30,7 @@ class EnemyTypes(BaseModel):
     shoot_v = IntegerField()
     hp = IntegerField()
     dm = IntegerField()
-    endurance = FloatField()
+    endurance = IntegerField()
     cost = IntegerField()
 
 
@@ -56,7 +55,7 @@ class PlayerTypes(BaseModel):
     shoot_v = IntegerField()
     hp = IntegerField()
     dm = IntegerField()
-    endurance = FloatField()
+    endurance = IntegerField()
     hitbox_radius = IntegerField()
 
 

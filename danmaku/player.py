@@ -25,9 +25,10 @@ class Player(Shooter, Animated):
             args["speed"],
             health,
             args["dm"],
+            args["endurance"],
             "basic player bullet",
             0,
-            shoot_period=args["shoot_v"] / 1000,
+            args["shoot_v"] / 1000,
         )
 
         self.my_type = object_type
