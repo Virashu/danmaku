@@ -31,12 +31,16 @@ graph LR
   A(Main menu)
   B(Game)
   C(Settings)
+  D(History)
 
-  A -->B
-  B -->A
+  A-->|new_game|B
+  B-->|win or lose|A
 
-  A -->C
-  C -->A
+  A-->C
+  C-->A
+
+  A-->D
+  D-->A
 ```
 
 As we can see, all other scenes return to the main menu
