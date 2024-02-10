@@ -3,13 +3,13 @@
 import math
 import pygame
 import vgame
-from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
 from danmaku.database import get_player_type
 from danmaku.utils import constrain, Direction
+from danmaku.shooter import Shooter
 
 
-class Player(GameObject):
+class Player(Shooter):
     """Player object."""
 
     def __init__(
@@ -31,6 +31,7 @@ class Player(GameObject):
             hp,
             args["dm"],
             args["endurance"],
+            "basic player bullet",
         )
 
         self.my_type = object_type
@@ -74,14 +75,12 @@ class Player(GameObject):
     def shoot(self) -> list[Bullet]:
         res: list[Bullet] = []
 
-        t = pygame.time.get_ticks()
-        if t - self.last_shoot >= self.shoot_v:
-            self.last_shoot = t
+        if self.can_shoot():
 
             bullet = Bullet(
                 (self.x, self.y),
                 self.damage + self.power,
-                "basic player bullet",
+                self.bullet_type,
             )
 
             res.append(bullet)
@@ -93,12 +92,12 @@ class Player(GameObject):
                 b1 = Bullet(
                     (self.x, self.y),
                     self.damage + self.power,
-                    "basic player bullet",
+                    self.bullet_type,
                 )
                 b2 = Bullet(
                     (self.x, self.y),
                     self.damage + self.power,
-                    "basic player bullet",
+                    self.bullet_type,
                 )
                 b1.vx = vx
                 b2.vx = -vx
@@ -109,9 +108,7 @@ class Player(GameObject):
 
     def bomb(self) -> list[Bullet]:
         res: list[Bullet] = []
-        t = pygame.time.get_ticks()
-        if t - self.last_shoot >= self.shoot_v:
-            self.last_shoot = t
+        if self.can_shoot():
             bullet = Bullet(
                 (self.x, self.y),
                 self.damage + self.power + 50,
