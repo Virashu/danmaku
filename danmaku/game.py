@@ -108,7 +108,7 @@ class Game(vgame.Scene):
                             Enemy(
                                 entity["object_position"],
                                 entity["object_type"],
-                                updated_hp=entity["object_hp"],
+                                start_hp=entity["object_hp"],
                             )
                         )
                     case "bullet":
@@ -169,13 +169,13 @@ class Game(vgame.Scene):
         self.player.vx, self.player.vy = vx, vy
 
         self.player.update(self.delta)
-        self.player.animation()
+        self.player.animate()
 
         for enemy in self.enemies:
             if self.player.collision(enemy):
                 self.player.get_damage(enemy.damage / 100)
             self.bullets += enemy.shoot()
-            enemy.animation()
+            enemy.animate()
             enemy.update(self.delta)
             if enemy.y > HEIGHT / 2 and not 0 <= enemy.x < WIDTH:
                 self.enemies.remove(enemy)
@@ -190,7 +190,7 @@ class Game(vgame.Scene):
             for enemy in self.enemies:
                 if enemy.collision(bullet):
                     enemy.get_damage(bullet.damage)
-                    if enemy.hp <= 0:
+                    if enemy.health <= 0:
                         self.player.score += enemy.cost
                         x, y = enemy.x, enemy.y
                         self.enemies.remove(enemy)
@@ -226,7 +226,7 @@ class Game(vgame.Scene):
             if not not_in_border(drop.x, drop.y, drop.vx, drop.vy, WIDTH, HEIGHT):
                 self.drops.remove(drop)
 
-        self.background_object.animation()
+        self.background_object.animate()
 
         if len(self.enemies) == 0:
             if len(LEVELS) > self.cur_level + 1:
@@ -237,7 +237,7 @@ class Game(vgame.Scene):
                 self.exit_status = "win"
                 self.stop()
 
-        if self.player.hp <= 0:
+        if self.player.health <= 0:
             set_saved_game(self.cur_level, self.player.score, self.player.power)
             self.exit_status = "lose"
             death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
@@ -273,7 +273,7 @@ class Game(vgame.Scene):
         for drop in self.drops:
             self.graphics.draw_sprite(drop)
 
-        self.graphics.text(f"HP: {self.player.hp}", (0, 0))
+        self.graphics.text(f"HP: {self.player.health}", (0, 0))
         self.graphics.text(f"Score: {self.player.score}", (150, 0))
 
         if self.paused:
@@ -301,7 +301,7 @@ class Game(vgame.Scene):
 
         # Game stats
         print(
-            f"HP: {self.player.hp}",
+            f"HP: {self.player.health}",
             f"Score: {self.player.score}",
             f"Level: {self.cur_level}",
             "",

@@ -1,15 +1,15 @@
 """Player object declaration."""
 
 import math
-import pygame
 import vgame
-from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
 from danmaku.database import get_player_type
 from danmaku.utils import constrain, Direction
+from danmaku.shooter import Shooter
+from danmaku.animated import Animated
 
 
-class Player(GameObject):
+class Player(Shooter, Animated):
     """Player object."""
 
     def __init__(
@@ -17,28 +17,24 @@ class Player(GameObject):
     ) -> None:
         args = get_player_type(object_type)
 
-        if updated_hp == 0:
-            hp = args["hp"]
-        else:
-            hp = updated_hp
-        # Can replace with:
-        # hp = updated_hp or args["hp"]
+        health = updated_hp or args["hp"]
 
         super().__init__(
             xy,
             args["texture_size"],
             args["speed"],
-            hp,
+            health,
             args["dm"],
             args["endurance"],
+            "basic player bullet",
+            0,
+            args["shoot_v"] / 1000,
         )
 
         self.my_type = object_type
         self.score = 0
         self.power = 1
 
-        self.last_shoot = 0
-        self.shoot_v = args["shoot_v"]
         self.hitbox_radius = args["hitbox_radius"]
         self.slow = False
 
@@ -48,7 +44,7 @@ class Player(GameObject):
 
         # Animation
         files = args["texture_file"].split(";")
-        self.textures = {
+        self.animation_frames = {
             Direction.LEFT: [],
             Direction.RIGHT: [],
             Direction.UP: [],
@@ -57,31 +53,32 @@ class Player(GameObject):
         for i in files:
             path = f"/player/{i}"
             if "left" in i:
-                self.textures[Direction.LEFT].append(path)
+                self.animation_frames[Direction.LEFT].append(path)
             if "right" in i:
-                self.textures[Direction.RIGHT].append(path)
+                self.animation_frames[Direction.RIGHT].append(path)
             if "up" in i:
-                self.textures[Direction.UP].append(path)
+                self.animation_frames[Direction.UP].append(path)
             if "down" in i:
-                self.textures[Direction.DOWN].append(path)
+                self.animation_frames[Direction.DOWN].append(path)
 
-        self.current_frame = 0
-        self.texture_file = self.textures[Direction.LEFT][self.current_frame]
+        Animated.__init__(
+            self, xy, args["texture_size"], args["speed"], [], 0, period=100
+        )
+
+        self.texture_file = self.animation_frames[Direction.LEFT][
+            self.animation_current
+        ]
         self.texture_size = args["texture_size"]
-        self.animation_v = 100
-        self.last_animation_time = 0
 
     def shoot(self) -> list[Bullet]:
         res: list[Bullet] = []
 
-        t = pygame.time.get_ticks()
-        if t - self.last_shoot >= self.shoot_v:
-            self.last_shoot = t
+        if self.can_shoot():
 
             bullet = Bullet(
                 (self.x, self.y),
                 self.damage + self.power,
-                "basic player bullet",
+                self.bullet_type,
             )
 
             res.append(bullet)
@@ -93,12 +90,12 @@ class Player(GameObject):
                 b1 = Bullet(
                     (self.x, self.y),
                     self.damage + self.power,
-                    "basic player bullet",
+                    self.bullet_type,
                 )
                 b2 = Bullet(
                     (self.x, self.y),
                     self.damage + self.power,
-                    "basic player bullet",
+                    self.bullet_type,
                 )
                 b1.vx = vx
                 b2.vx = -vx
@@ -108,10 +105,9 @@ class Player(GameObject):
         return res
 
     def bomb(self) -> list[Bullet]:
+        """Spawn bomb, AKA super-bullet"""
         res: list[Bullet] = []
-        t = pygame.time.get_ticks()
-        if t - self.last_shoot >= self.shoot_v:
-            self.last_shoot = t
+        if self.can_shoot():
             bullet = Bullet(
                 (self.x, self.y),
                 self.damage + self.power + 50,
@@ -153,10 +149,9 @@ class Player(GameObject):
             int(self.height),
         )
 
-    def animation(self) -> None:
+    def animate(self) -> None:
         """Animate one frame."""
-        t = pygame.time.get_ticks()
-        if t - self.last_animation_time >= self.animation_v:
+        if self.can_animate():
             direction = None
             if self.vx > 0:
                 direction = Direction.RIGHT
@@ -167,11 +162,12 @@ class Player(GameObject):
             elif self.vy < 0:
                 direction = Direction.UP
             if direction is not None:
-                self.current_frame = (self.current_frame + 1) % len(
-                    self.textures[direction]
+                self.animation_current = (self.animation_current + 1) % len(
+                    self.animation_frames[direction]
                 )
-                self.texture_file = self.textures[direction][self.current_frame]
-                self.last_animation_time = t
+                self.texture_file = self.animation_frames[direction][
+                    self.animation_current
+                ]
 
     def draw(self, graphics: vgame.graphics.Graphics) -> None:
         graphics.draw_sprite(self)

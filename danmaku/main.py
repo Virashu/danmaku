@@ -15,6 +15,7 @@ runner = Runner()
 
 
 def run_game(is_new: bool):
+    "Game exit handling"
     game = Game(width=WIDTH, height=HEIGHT, title="Danmaku | Game", tickrate=TICKRATE)
     game.new_game = is_new
     runner.run(game)

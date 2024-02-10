@@ -31,12 +31,16 @@ graph LR
   A(Main menu)
   B(Game)
   C(Settings)
+  D(History)
 
-  A -->B
-  B -->A
+  A-->|new_game|B
+  B-->|win or lose|A
 
-  A -->C
-  C -->A
+  A-->C
+  C-->A
+
+  A-->D
+  D-->A
 ```
 
 As we can see, all other scenes return to the main menu
@@ -67,4 +71,63 @@ Position of an object is a position of it's center point
 |     |
 |     |
 \-----/
+```
+
+## Classes
+
+```mermaid
+classDiagram
+  Sprite <-- GameObject
+  GameObject <-- Entity
+  Shooter <-- Enemy
+  Shooter <-- Player
+  Entity <-- Bullet
+  Animated <-- Player
+  Animated <-- Enemy
+  GameObject <-- Animated
+  Animated <-- Background
+  Entity <-- Shooter
+
+  class Sprite {
+    texture_file: str
+    texture_size: tuple
+    rect: Rect
+  }
+  class GameObject {
+    x: int
+    y: int
+    update()
+    draw()
+    collision() -> bool
+  }
+  class Entity {
+    health: int
+    damage: int
+    get_damage()
+  }
+  class Shooter {
+    shoot_freq: float
+    last_shot: float
+    can_shoot() -> bool
+    shoot()
+  }
+  class Player {
+    score: int
+    power: int
+  }
+  class Enemy {
+    cost: int
+  }
+  class Animated {
+    animation_frames: list[str]
+    animation_current: int
+    animation_period: float
+    animate()
+  }
+  class Bullet {
+    
+  }
+  class Background {
+
+  }
 ```
