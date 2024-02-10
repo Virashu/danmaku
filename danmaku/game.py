@@ -107,7 +107,7 @@ class Game(vgame.Scene):
                             Enemy(
                                 entity["object_position"],
                                 entity["object_type"],
-                                updated_hp=entity["object_hp"],
+                                start_hp=entity["object_hp"],
                             )
                         )
                     case "bullet":

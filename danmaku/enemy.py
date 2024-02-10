@@ -8,30 +8,33 @@ from vgame.graphics import Graphics
 
 from danmaku.bullet import Bullet
 from danmaku.database import get_enemy_type
-from danmaku.gameobject import GameObject
+from danmaku.shooter import Shooter
 
 
-class Enemy(GameObject):
+class Enemy(Shooter):
     """Enemy object."""
 
     def __init__(
         self,
         xy: tuple[int | float, int | float],
         object_type: str,
-        updated_hp: int | float = 0,
+        start_hp: int | float = 0,
     ):
         args = get_enemy_type(object_type)
 
-        hp = updated_hp or args["hp"]
+        hp = start_hp or args["hp"]
 
         super().__init__(
-            xy, args["texture_size"], args["speed"], hp, args["dm"], args["endurance"]
+            xy,
+            args["texture_size"],
+            args["speed"],
+            hp,
+            args["dm"],
+            args["shoot_v"],
+            "basic enemy bullet",
         )
         self.my_type = object_type
         self.cost = args["cost"]
-
-        self.shoot_v = args["shoot_v"]
-        self.last_shoot = 0
 
         self.hitbox_radius = int(self.width / 2)
 
@@ -46,12 +49,10 @@ class Enemy(GameObject):
         self.texture_size = args["texture_size"]
 
     def shoot(self) -> list[Bullet]:
-        t = pygame.time.get_ticks()
-        if t - self.last_shoot >= self.shoot_v:
-            self.last_shoot = t
+        if self.can_shoot():
             if self.my_type == "boss":
                 return self.shoot_radial()
-            bullet = Bullet((self.x, self.y), self.damage, "basic enemy bullet")
+            bullet = Bullet((self.x, self.y), self.damage, self.bullet_type)
             bullet.vx = randint(-100, 100) / 100
             bullet.vy = (1 - bullet.vx**2) ** 0.5
             return [bullet]
@@ -66,9 +67,7 @@ class Enemy(GameObject):
 
         for i in range(0, 360, 60):
             angle = pi * ((a + i) % 360) / 180
-            bullet = Bullet(
-                (self.x + self.width // 2, self.y), self.damage, "basic enemy bullet"
-            )
+            bullet = Bullet((self.x, self.y), self.damage, self.bullet_type)
             bullet.vx = cos(angle)
             bullet.vy = sin(angle)
             bullets.append(bullet)

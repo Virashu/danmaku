@@ -21,7 +21,6 @@ class GameObject(Sprite):
         speed: int | float,
         hp: int | float,
         damage: int | float,
-        endurance: int | float,
     ):
         super().__init__()
         self.x, self.y = xy
@@ -29,8 +28,7 @@ class GameObject(Sprite):
         self.width, self.height = width_height
         self.hp = hp
         self.damage = damage
-        self.endurance = endurance
-        self.vx, self.vy = (0, 1)
+        self.vx, self.vy = (0, 0)
 
     def update(self, delta: int | float):
         self.x += self.vx * delta * self.speed
@@ -45,7 +43,7 @@ class GameObject(Sprite):
 
     def get_damage(self, damage: int | float):
         """Decrease health point."""
-        self.hp -= damage * self.endurance
+        self.hp -= damage
 
     @abstractmethod
     def shoot(self) -> list:
