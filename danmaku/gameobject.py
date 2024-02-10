@@ -2,8 +2,6 @@
 
 import math
 
-from abc import abstractmethod
-
 from vgame.graphics import Graphics, Sprite
 
 
@@ -44,5 +42,5 @@ class GameObject(Sprite):
             < self.hitbox_radius + other.hitbox_radius
         )
 
-    @abstractmethod
-    def draw(self, graphics: Graphics): ...
+    def draw(self, graphics: Graphics):
+        graphics.draw_sprite(self)

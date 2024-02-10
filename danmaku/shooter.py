@@ -1,12 +1,12 @@
 """Base class for shooting objects."""
 
+from abc import abstractmethod
+
 import pygame
 import vgame
 
 from danmaku.entity import Entity
 from danmaku.bullet import Bullet
-
-from abc import abstractmethod
 
 
 class Shooter(Entity):
@@ -19,6 +19,9 @@ class Shooter(Entity):
         health (int | float): Health of the object.
         damage (int | float): Damage of the object.
         shoot_freq (int | float): Maximum frequency of bullets (per second).
+        shoot_period (int | float | None, optional): Time between shots. Defaults to None.
+
+        You can pass shoot_freq as '0' and just use shoot_period
 
     """
 

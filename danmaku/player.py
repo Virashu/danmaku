@@ -17,13 +17,13 @@ class Player(Shooter, Animated):
     ) -> None:
         args = get_player_type(object_type)
 
-        hp = updated_hp or args["hp"]
+        health = updated_hp or args["hp"]
 
         super().__init__(
             xy,
             args["texture_size"],
             args["speed"],
-            hp,
+            health,
             args["dm"],
             "basic player bullet",
             0,
@@ -104,6 +104,7 @@ class Player(Shooter, Animated):
         return res
 
     def bomb(self) -> list[Bullet]:
+        """Spawn bomb, AKA super-bullet"""
         res: list[Bullet] = []
         if self.can_shoot():
             bullet = Bullet(

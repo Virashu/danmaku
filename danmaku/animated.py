@@ -1,3 +1,5 @@
+"""Declaration of Animated class"""
+
 import pygame
 import vgame
 
@@ -5,6 +7,20 @@ from danmaku.gameobject import GameObject
 
 
 class Animated(GameObject):
+    """Base class for animated objects
+
+    Args:
+        xy (tuple[int | float, int | float]): Position of the object.
+        width_height (tuple[int | float, int | float]): Width and height of the object.
+        speed (int | float): Speed of the object.
+        frames (list[str]): List of frames
+        freq (int | float): Frequency of animation
+        period (int | float | None, optional): Period of animation. Defaults to None.
+
+        You can pass freq as '0' and just use period
+
+    """
+
     def __init__(
         self,
         xy: tuple[int | float, int | float],

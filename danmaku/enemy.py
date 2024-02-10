@@ -22,13 +22,13 @@ class Enemy(Shooter, Animated):
     ):
         args = get_enemy_type(object_type)
 
-        hp = start_hp or args["hp"]
+        health = start_hp or args["hp"]
 
         super().__init__(
             xy,
             args["texture_size"],
             args["speed"],
-            hp,
+            health,
             args["dm"],
             "basic enemy bullet",
             0,

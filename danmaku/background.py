@@ -1,10 +1,8 @@
 """Game level background class declaration."""
 
 import vgame
-import pygame
 
 from danmaku.animated import Animated
-from danmaku.gameobject import GameObject
 
 
 class Background(Animated):

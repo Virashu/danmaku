@@ -1,4 +1,4 @@
-import vgame
+"""Base class for alive objects"""
 
 from danmaku.gameobject import GameObject
 
@@ -22,5 +22,3 @@ class Entity(GameObject):
     def get_damage(self, damage: int | float):
         """Decrease health point."""
         self.health -= damage
-
-    def draw(self, graphics: vgame.graphics.Graphics): ...

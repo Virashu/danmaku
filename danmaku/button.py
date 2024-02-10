@@ -1,8 +1,9 @@
 """Menu button class declaration."""
 
+from dataclasses import dataclass
+
 import pygame
 import vgame
-from dataclasses import dataclass
 
 
 class ClickableButton(vgame.graphics.Sprite):

@@ -1,7 +1,5 @@
 """Entity's bullet declaration."""
 
-import vgame
-
 from danmaku.entity import Entity
 from danmaku.database import get_bullet_type
 
@@ -27,23 +25,3 @@ class Bullet(Entity):
         self.texture_file = args["texture_file"]
         self.texture_size = args["texture_size"]
         self.my_type = object_type
-
-    def update(self, delta: int | float):
-        self.x += self.vx * delta * self.speed
-        self.y += self.vy * delta * self.speed
-
-        self.rect.centerx, self.rect.centery, self.rect.w, self.rect.h = (
-            int(self.x),
-            int(self.y),
-            int(self.width),
-            int(self.height),
-        )
-
-    def draw(self, graphics: vgame.graphics.Graphics):
-        graphics.draw_sprite(self)
-
-    def shoot(self) -> list:
-        # bruh...
-        # Need to rewrite and split GameObject into 2 classes (GameObject, Shooter)
-        # TODO
-        ...
