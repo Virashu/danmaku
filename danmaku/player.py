@@ -107,6 +107,19 @@ class Player(GameObject):
 
         return res
 
+    def bomb(self) -> list[Bullet]:
+        res: list[Bullet] = []
+        t = pygame.time.get_ticks()
+        if t - self.last_shoot >= self.shoot_v:
+            self.last_shoot = t
+            bullet = Bullet(
+                (self.x, self.y),
+                self.damage + self.power + 50,
+                "player bomb",
+            )
+            res.append(bullet)
+        return res
+
     def set_bounds(
         self,
         left: int | float,

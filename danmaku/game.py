@@ -87,6 +87,7 @@ class Game(vgame.Scene):
 
         self.paused = False
         self.pause_object = Pause()
+        self.exit_status = ""
 
         self.background_object = Background(0, 0, self.width, self.height)
 
@@ -158,6 +159,8 @@ class Game(vgame.Scene):
 
         if {Keys.SPACE, Keys.Z} & self.pressed_keys:
             self.bullets += self.player.shoot()
+        if Keys.X in self.pressed_keys:
+            self.bullets += self.player.bomb()
         if Keys.LEFT_SHIFT in self.pressed_keys:
             self.player.slow = True
         else:
@@ -169,6 +172,8 @@ class Game(vgame.Scene):
         self.player.animation()
 
         for enemy in self.enemies:
+            if self.player.collision(enemy):
+                self.player.get_damage(enemy.damage / 100)
             self.bullets += enemy.shoot()
             enemy.animation()
             enemy.update(self.delta)
@@ -228,6 +233,7 @@ class Game(vgame.Scene):
                 self.cur_level += 1
                 self.enemies = LEVELS[self.cur_level]
             else:
+                set_saved_game(self.cur_level, self.player.score, self.player.power)
                 self.exit_status = "win"
                 self.stop()
 
@@ -241,7 +247,7 @@ class Game(vgame.Scene):
             self.stop()
 
     def update(self):
-        self.print_stats()
+        # self.print_stats()
         if Keys.ESCAPE in self.pressed_keys:
             self.pressed_keys.remove(Keys.ESCAPE)
             self.paused = not self.paused
