@@ -226,7 +226,7 @@ class Game(vgame.Scene):
         if len(self.enemies) == 0:
             if len(LEVELS) > self.cur_level + 1:
                 self.cur_level += 1
-                self.enemies = LEVELS[self.cur_level]
+                self.enemies = LEVELS[self.cur_level].copy()
             else:
                 self.exit_status = "win"
                 self.stop()
