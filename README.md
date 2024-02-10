@@ -22,18 +22,24 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 - [x] Main menu
 - [x] Leaderboard
 - [x] Sounds
+  - [x] Death
+  - [ ] Shoot
+  - [ ] Hit
 - [x] Music
 - [x] Graphics
   - [x] Images
   - [x] Level background
   - [ ] Effects (particles)
+  - [ ] Scaling
 - [x] Bullets
   - [ ] Trajectories
 - [x] Enemies
 - [x] Controls
   - [x] Change controls to classic (shift, z, x)
 - [ ] Settings
-- [ ] Make player hitbox smaller
+  - [ ] DB
+  - [ ] Menu interface
+- [x] Make player hitbox smaller
 - [x] Replace resource path strings with constants from db
 - [ ]  Rework base classes
   - [ ] Reduce instance attribute count
@@ -52,3 +58,10 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 - [ ] Split enemies types into classes
 - [ ] Add enemy generate_drop() method
 - [ ] **Replace ticks with seconds everywhere**
+- [ ] Make textures preload
+- [x] Main menu style
+  - [ ] Background
+- [ ] Game switch background ol level change
+- [ ] Move levels to DB
+- [ ] Fullscreen
+- [ ] 
