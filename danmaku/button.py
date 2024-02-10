@@ -40,3 +40,25 @@ class Button:
 
     text: str
     codename: str
+
+
+class Cursor(vgame.graphics.Sprite):
+    """Cursor class"""
+
+    def __init__(self, xy):
+        super().__init__()
+        self.x, self.y = xy
+        self.width, self.height = 42, 40
+        self.texture_file = "bullet.png"
+        self.texture_size = (self.width, self.height)
+
+    def update(self, delta: int | float):
+        self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
+            int(self.x),
+            int(self.y),
+            int(self.width),
+            int(self.height),
+        )
+
+    def draw(self, graphics: vgame.graphics.Graphics):
+        graphics.draw_sprite(self)

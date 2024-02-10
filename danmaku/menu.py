@@ -4,12 +4,15 @@ import pygame
 import vgame
 
 from danmaku.database import get_saved_objects
-from danmaku.button import Button
+from danmaku.button import Button, Cursor
+from danmaku.utils import resource_path
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Menu(vgame.Scene):
     def load(self):
+        self.graphics.library.path = resource_path("textures")
+
         self.selection_index = 0
 
         self.buttons = (
@@ -19,6 +22,8 @@ class Menu(vgame.Scene):
             Button("History", "history"),
             Button("Quit", "quit"),
         )
+
+        self.cursor = Cursor((10, 100))
 
         self.exit_status = ""
 
@@ -51,24 +56,24 @@ class Menu(vgame.Scene):
                 case "quit":
                     # Maybe rework to quit through exit status
                     pygame.event.post(pygame.event.Event(pygame.constants.QUIT))
+        self.cursor.y = 100 + self.selection_index * 50
+        self.cursor.update(self.delta)
 
     def draw(self):
         self.graphics.text("Danmaku", (0, 10), (255, 255, 180))
 
+        self.cursor.draw(self.graphics)
+
         for i, button in enumerate(self.buttons):
+            selected_color = (180, 255, 255)
             if button.codename == "continue":
-                if get_saved_objects():
-                    color = (255, 255, 255)
-                else:
-                    color = (255, 100, 100)
-            else:
-                color = (
-                    (255, 200, 180) if i == self.selection_index else (255, 255, 255)
-                )
+                if not get_saved_objects():
+                    selected_color = (255, 100, 100)
+            color = selected_color if i == self.selection_index else (255, 255, 255)
 
             self.graphics.text(
                 button.text,
-                (0, 100 + i * 50),
+                (70, 100 + i * 50),
                 color,
             )
 
