@@ -43,9 +43,9 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 - [x] Replace resource path strings with constants from db
 - [ ]  Rework base classes
   - [ ] Reduce instance attribute count
-  - [ ] GameObject
-  - [ ] +Animatable
-  - [ ] +Shooter
+  - [x] GameObject
+  - [x] +Animated
+  - [x] +Shooter
   - [ ] +Texture
 - [x] Drops
   - [ ] HP (?)
@@ -57,7 +57,7 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
   - [ ] Enemies' texture change
 - [ ] Split enemies types into classes
 - [ ] Add enemy generate_drop() method
-- [ ] **Replace ticks with seconds everywhere**
+- [x] Seconds
 - [ ] Make textures preload
 - [x] Main menu style
   - [ ] Background
