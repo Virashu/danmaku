@@ -3,8 +3,11 @@
 import vgame
 import pygame
 
+from danmaku.animated import Animated
+from danmaku.gameobject import GameObject
 
-class Background(vgame.graphics.Sprite):
+
+class Background(Animated):
     """Game level background class."""
 
     def __init__(
@@ -14,34 +17,13 @@ class Background(vgame.graphics.Sprite):
         width: int | float,
         height: int | float,
     ):
-        super().__init__()
-
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-
-        # Making it animated
-        self.last_animation_time = 0
-        self.current_frame = 0
         self.frame_count = 48
-        self.frame_duration = 100
-        self.frames = [
-            f"background/background_{i}.png" for i in range(self.frame_count)
-        ]
-        self.texture_file = self.frames[0]
+        frames = [f"background/background_{i}.png" for i in range(self.frame_count)]
+        super().__init__((x, y), (width, height), 0, frames, 0, period=0.1)
         self.texture_size = self.width, self.height
 
     def draw(self, graphics: vgame.graphics.Graphics):
         graphics.draw_sprite(self)
 
-    def animation(self):
-        """Animate the sprite."""
-        t = pygame.time.get_ticks()
-        if t - self.last_animation_time >= self.frame_duration:
-            self.texture_file = self.frames[self.current_frame]
-            self.current_frame = (self.current_frame + 1) % self.frame_count
-            self.last_animation_time = t
-
     def update(self, delta: int | float):
-        self.animation()
+        self.animate()

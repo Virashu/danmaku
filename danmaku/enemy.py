@@ -3,15 +3,15 @@
 from random import randint
 from math import sin, cos, pi
 
-import pygame
 from vgame.graphics import Graphics
 
+from danmaku.animated import Animated
 from danmaku.bullet import Bullet
 from danmaku.database import get_enemy_type
 from danmaku.shooter import Shooter
 
 
-class Enemy(Shooter):
+class Enemy(Shooter, Animated):
     """Enemy object."""
 
     def __init__(
@@ -39,17 +39,13 @@ class Enemy(Shooter):
 
         self.hitbox_radius = int(self.width / 2)
 
-        self.vx, self.vy = 0, 1
-
         # Animation
-        self.current_frame = 0
-        self.last_animation_time = 0
-        self.frame_duration = 100
-        self.frames = tuple(
-            map(lambda x: f"/enemy/{x}", args["texture_file"].split(";"))
+        frames = list(map(lambda x: f"/enemy/{x}", args["texture_file"].split(";")))
+        Animated.__init__(
+            self, xy, args["texture_size"], args["speed"], frames, 0, period=0.1
         )
-        self.texture_file = self.frames[self.current_frame]
         self.texture_size = args["texture_size"]
+        self.vx, self.vy = 0, 1
 
     def shoot(self) -> list[Bullet]:
         if self.can_shoot():
@@ -75,13 +71,5 @@ class Enemy(Shooter):
             bullet.vy = sin(angle)
             bullets.append(bullet)
         return bullets
-
-    def animation(self):
-        """Animate sprite."""
-        t = pygame.time.get_ticks()
-        if t - self.last_animation_time >= self.frame_duration:
-            self.current_frame = (self.current_frame + 1) % len(self.frames)
-            self.texture_file = self.frames[self.current_frame]
-            self.last_animation_time = t
 
     def draw(self, graphics: Graphics): ...

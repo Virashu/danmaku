@@ -169,13 +169,13 @@ class Game(vgame.Scene):
         self.player.vx, self.player.vy = vx, vy
 
         self.player.update(self.delta)
-        self.player.animation()
+        self.player.animate()
 
         for enemy in self.enemies:
             if self.player.collision(enemy):
                 self.player.get_damage(enemy.damage / 100)
             self.bullets += enemy.shoot()
-            enemy.animation()
+            enemy.animate()
             enemy.update(self.delta)
             if enemy.y > HEIGHT / 2 and not 0 <= enemy.x < WIDTH:
                 self.enemies.remove(enemy)
@@ -226,7 +226,7 @@ class Game(vgame.Scene):
             if not not_in_border(drop.x, drop.y, drop.vx, drop.vy, WIDTH, HEIGHT):
                 self.drops.remove(drop)
 
-        self.background_object.animation()
+        self.background_object.animate()
 
         if len(self.enemies) == 0:
             if len(LEVELS) > self.cur_level + 1:

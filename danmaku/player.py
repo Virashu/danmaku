@@ -147,7 +147,7 @@ class Player(Shooter, Animated):
             int(self.height),
         )
 
-    def animation(self) -> None:
+    def animate(self) -> None:
         """Animate one frame."""
         if self.can_animate():
             direction = None

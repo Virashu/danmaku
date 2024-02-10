@@ -80,45 +80,44 @@ classDiagram
   Entity <-- Bullet
   Animated <-- Player
   Animated <-- Enemy
-  Sprite <-- Animated
+  GameObject <-- Animated
   Animated <-- Background
-  GameObject <.. Background
   Entity <-- Shooter
 
   class Sprite {
-    str texture_file
-    str texture_size
-    Rect rect
+    texture_file: str
+    texture_size: tuple
+    rect: Rect
   }
   class GameObject {
-    int x
-    int y
+    x: int
+    y: int
     update()
     draw()
-    collision()
+    collision() -> bool
   }
   class Entity {
-    int health
-    int damage
+    health: int
+    damage: int
     get_damage()
   }
   class Shooter {
-    float shoot_freq
-    float last_shot
+    shoot_freq: float
+    last_shot: float
+    can_shoot() -> bool
     shoot()
   }
   class Player {
-    int score
-    int power
+    score: int
+    power: int
   }
   class Enemy {
-    int cost
-    type
+    cost: int
   }
   class Animated {
-    list[str] frames
-    int current_frame
-    float fps
+    animation_frames: list[str]
+    animation_current: int
+    animation_period: float
     animate()
   }
   class Bullet {
