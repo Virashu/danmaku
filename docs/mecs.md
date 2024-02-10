@@ -74,15 +74,16 @@ Position of an object is a position of it's center point
 ```mermaid
 classDiagram
   Sprite <-- GameObject
-  GameObject <-- Shooter
+  GameObject <-- Entity
   Shooter <-- Enemy
   Shooter <-- Player
-  GameObject <-- Bullet
+  Entity <-- Bullet
   Animated <-- Player
   Animated <-- Enemy
   Sprite <-- Animated
-  Animated <--Background
+  Animated <-- Background
   GameObject <.. Background
+  Entity <-- Shooter
 
   class Sprite {
     str texture_file
@@ -92,12 +93,14 @@ classDiagram
   class GameObject {
     int x
     int y
-    int health
-    int damage
     update()
     draw()
-    get_damage()
     collision()
+  }
+  class Entity {
+    int health
+    int damage
+    get_damage()
   }
   class Shooter {
     float shoot_freq

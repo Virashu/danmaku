@@ -3,11 +3,13 @@
 import pygame
 import vgame
 
-from danmaku.gameobject import GameObject
+from danmaku.entity import Entity
 from danmaku.bullet import Bullet
 
+from abc import abstractmethod
 
-class Shooter(GameObject):
+
+class Shooter(Entity):
     """Base class for shooting objects.
 
     Args:
@@ -27,13 +29,20 @@ class Shooter(GameObject):
         speed: int | float,
         health: int | float,
         damage: int | float,
-        shoot_freq: int | float,
         bullet_type: str,
+        shoot_freq: int | float,
+        shoot_period: int | float | None = None,
     ):
         super().__init__(xy, width_height, speed, health, damage)
         self.bullet_type = bullet_type
-        self.shoot_freq = shoot_freq
-        self.shoot_period = 1 / self.shoot_freq
+
+        if shoot_period is not None:
+            self.shoot_freq = 1 / shoot_period
+            self.shoot_period = shoot_period
+        else:
+            self.shoot_freq = shoot_freq
+            self.shoot_period = 1 / self.shoot_freq
+
         self.last_shot = 0  # seconds
 
     def can_shoot(self) -> bool:
@@ -46,6 +55,8 @@ class Shooter(GameObject):
             return True
         return False
 
-    def shoot(self) -> list[Bullet]: ...
-    def update(self, delta: int | float): ...
-    def draw(self, graphics: vgame.graphics.Graphics): ...
+    @abstractmethod
+    def shoot(self) -> list[Bullet]:
+        """Generate bullets."""
+
+    def draw(self, graphics: vgame.graphics.Graphics) -> None: ...

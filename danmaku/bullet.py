@@ -2,11 +2,11 @@
 
 import vgame
 
-from danmaku.gameobject import GameObject
+from danmaku.entity import Entity
 from danmaku.database import get_bullet_type
 
 
-class Bullet(GameObject):
+class Bullet(Entity):
     """Bullet object."""
 
     def __init__(
@@ -19,7 +19,6 @@ class Bullet(GameObject):
             args["speed"],
             0,
             damage,
-            1,
         )
         self.enemy = args["enemy"]
         self.vx, self.vy = args["vx_vy"]

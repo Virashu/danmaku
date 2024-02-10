@@ -190,7 +190,7 @@ class Game(vgame.Scene):
             for enemy in self.enemies:
                 if enemy.collision(bullet):
                     enemy.get_damage(bullet.damage)
-                    if enemy.hp <= 0:
+                    if enemy.health <= 0:
                         self.player.score += enemy.cost
                         x, y = enemy.x, enemy.y
                         self.enemies.remove(enemy)
@@ -237,7 +237,7 @@ class Game(vgame.Scene):
                 self.exit_status = "win"
                 self.stop()
 
-        if self.player.hp <= 0:
+        if self.player.health <= 0:
             set_saved_game(self.cur_level, self.player.score, self.player.power)
             self.exit_status = "lose"
             death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
@@ -273,7 +273,7 @@ class Game(vgame.Scene):
         for drop in self.drops:
             self.graphics.draw_sprite(drop)
 
-        self.graphics.text(f"HP: {self.player.hp}", (0, 0))
+        self.graphics.text(f"HP: {self.player.health}", (0, 0))
         self.graphics.text(f"Score: {self.player.score}", (150, 0))
 
         if self.paused:

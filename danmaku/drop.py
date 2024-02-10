@@ -17,9 +17,6 @@ class Drop(GameObject):
             xy,
             (width, height),
             speed,
-            0,
-            0,
-            1,
         )
         self.vx, self.vy = (0, 1)
         self.hitbox_radius = 10

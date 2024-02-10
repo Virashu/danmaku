@@ -30,13 +30,16 @@ class Enemy(Shooter):
             args["speed"],
             hp,
             args["dm"],
-            args["shoot_v"],
             "basic enemy bullet",
+            0,
+            shoot_period=args["shoot_v"] / 1000,
         )
         self.my_type = object_type
         self.cost = args["cost"]
 
         self.hitbox_radius = int(self.width / 2)
+
+        self.vx, self.vy = 0, 1
 
         # Animation
         self.current_frame = 0
