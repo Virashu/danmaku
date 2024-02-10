@@ -62,7 +62,7 @@ class Player(Shooter, Animated):
                 self.animation_frames[Direction.DOWN].append(path)
 
         Animated.__init__(
-            self, xy, args["texture_size"], args["speed"], [], 0, period=100
+            self, xy, args["texture_size"], args["speed"], [], 0, period=0.1
         )
 
         self.texture_file = self.animation_frames[Direction.LEFT][
@@ -171,4 +171,5 @@ class Player(Shooter, Animated):
 
     def draw(self, graphics: vgame.graphics.Graphics) -> None:
         graphics.draw_sprite(self)
-        graphics.circle((self.x, self.y), self.hitbox_radius, (255, 255, 255))
+        if self.slow:
+            graphics.circle((self.x, self.y), self.hitbox_radius, (255, 255, 255))

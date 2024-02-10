@@ -89,14 +89,8 @@ def get_saved_game() -> dict:
     """Get saved game from database
     Returns dict: {"score", "level", "power"}
     """
-    games = tuple(iter(SavedGame.select()))
-    game = games[-1]
-    objects = {
-        "score": game.score,
-        "level": game.level,
-        "power": game.power,
-    }
-    return objects
+    game = tuple(iter(SavedGame.select().dicts()))[-1]
+    return game
 
 
 def get_game_history() -> list:
@@ -120,8 +114,8 @@ def set_saved_objects(name: str, objects: Iterable) -> None:
         n = SavedObjects.create(
             object=name,
             object_type=e.my_type,
-            object_position=str(e.x) + ", " + str(e.y),
-            object_hp=e.hp,
+            object_position=f"{e.x}, {e.y}",
+            object_hp=e.health,
             object_damage=e.damage,
         )
         n.save()
@@ -138,3 +132,7 @@ def delete_saved_objects() -> None:
     for e in SavedObjects.select():
         SavedObjects.delete_by_id(e)
         SavedObjects.update()
+
+
+if __name__ == "__main__":
+    print(get_saved_game())

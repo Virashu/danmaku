@@ -14,8 +14,9 @@ class Entity(GameObject):
         health: int | float,
         damage: int | float,
         endurance: int | float = 1,
+        **kwargs,
     ):
-        GameObject.__init__(self, xy, width_height, speed)
+        GameObject.__init__(self, xy, width_height, speed, **kwargs)
 
         self.health = health
         self.damage = damage

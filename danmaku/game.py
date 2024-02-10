@@ -177,7 +177,9 @@ class Game(vgame.Scene):
             self.bullets += enemy.shoot()
             enemy.animate()
             enemy.update(self.delta)
-            if enemy.y > HEIGHT / 2 and not 0 <= enemy.x < WIDTH:
+            if (
+                enemy.y > HEIGHT / 2 and not 0 <= enemy.x < WIDTH
+            ) or enemy.y > HEIGHT + enemy.height:
                 self.enemies.remove(enemy)
 
         for bullet in filter(lambda b: b.enemy, self.bullets):
@@ -252,7 +254,7 @@ class Game(vgame.Scene):
             self.pressed_keys.remove(Keys.ESCAPE)
             self.paused = not self.paused
             if self.paused:
-                self.pause_object.load()
+                self.pause_object.load(self.width, self.height)
 
         if self.paused:
             self.update_pause()

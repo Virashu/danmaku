@@ -3,7 +3,6 @@
 from abc import abstractmethod
 
 import pygame
-import vgame
 
 from danmaku.entity import Entity
 from danmaku.bullet import Bullet
@@ -36,8 +35,9 @@ class Shooter(Entity):
         bullet_type: str,
         shoot_freq: int | float,
         shoot_period: int | float | None = None,
+        **kwargs,
     ):
-        super().__init__(xy, width_height, speed, health, damage, endurance)
+        super().__init__(xy, width_height, speed, health, damage, endurance, **kwargs)
         self.bullet_type = bullet_type
 
         if shoot_period is not None:
@@ -62,5 +62,3 @@ class Shooter(Entity):
     @abstractmethod
     def shoot(self) -> list[Bullet]:
         """Generate bullets."""
-
-    def draw(self, graphics: vgame.graphics.Graphics) -> None: ...

@@ -3,8 +3,6 @@
 from random import randint
 from math import sin, cos, pi
 
-from vgame.graphics import Graphics
-
 from danmaku.animated import Animated
 from danmaku.bullet import Bullet
 from danmaku.database import get_enemy_type
@@ -34,18 +32,18 @@ class Enemy(Shooter, Animated):
             "basic enemy bullet",
             0,
             args["shoot_v"] / 1000,
+            hitbox_radius=args["texture_size"][0] // 2,
+            direction=(0, 1),
         )
-        self.my_type = object_type
-        self.cost = args["cost"]
 
-        self.hitbox_radius = int(self.width / 2)
-
-        # Animation
         frames = list(map(lambda x: f"/enemy/{x}", args["texture_file"].split(";")))
         Animated.__init__(
             self, xy, args["texture_size"], args["speed"], frames, 0, period=0.1
         )
         self.texture_size = args["texture_size"]
+        self.my_type = object_type
+        self.cost = args["cost"]
+
         self.vx, self.vy = 0, 1
 
     def shoot(self) -> list[Bullet]:
@@ -72,5 +70,3 @@ class Enemy(Shooter, Animated):
             bullet.vy = sin(angle)
             bullets.append(bullet)
         return bullets
-
-    def draw(self, graphics: Graphics): ...

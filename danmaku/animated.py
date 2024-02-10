@@ -1,7 +1,6 @@
 """Declaration of Animated class"""
 
 import pygame
-import vgame
 
 from danmaku.gameobject import GameObject
 
@@ -50,7 +49,7 @@ class Animated(GameObject):
         """Check if possible to animate"""
         time = pygame.time.get_ticks() / 1000
 
-        if time - self.animation_last >= self.animation_freq:
+        if time - self.animation_last >= self.animation_period:
             self.animation_last = time
             return True
         return False
@@ -62,5 +61,3 @@ class Animated(GameObject):
                 self.animation_frames
             )
             self.texture_file = self.animation_frames[self.animation_current]
-
-    def draw(self, graphics: vgame.graphics.Graphics) -> None: ...

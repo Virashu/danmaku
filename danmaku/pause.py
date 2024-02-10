@@ -5,9 +5,11 @@ import vgame
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Pause:
-    def load(self):
+    def load(self, width, height):
         """Load pause menu."""
         self.selection_index = 0
+
+        self.width, self.height = width, height
 
         self.buttons = (
             ("Continue", "continue"),
@@ -30,6 +32,7 @@ class Pause:
 
     def draw(self, graphics: vgame.graphics.Graphics):
         """Draw pause menu."""
+        graphics.rectangle((0, 0), (self.width, self.height), (0, 0, 0, 180), alpha=1)
         graphics.text("Danmaku", (0, 10), (255, 255, 180))
 
         for i, button in enumerate(self.buttons):
@@ -37,5 +40,4 @@ class Pause:
                 button[0],
                 (0, 100 + i * 50),
                 (255, 200, 180) if i == self.selection_index else (255, 255, 255),
-                background=(55, 55, 55),
             )
