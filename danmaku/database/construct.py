@@ -92,6 +92,19 @@ basic_player_bullet = BulletTypes.create(
 )
 basic_player_bullet.save()
 
+bomb = BulletTypes.create(
+    name="player bomb",
+    enemy=False,
+    texture_file="bomb.png",
+    texture_size_width=25,
+    texture_size_height=25,
+    hitbox_radius=20,
+    speed=300,
+    vx=0,
+    vy=-1,
+)
+bomb.save()
+
 #
 # PlayerTypes
 #
