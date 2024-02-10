@@ -301,7 +301,7 @@ class Game(vgame.Scene):
 
         # Game stats
         print(
-            f"HP: {self.player.hp}",
+            f"HP: {self.player.health}",
             f"Score: {self.player.score}",
             f"Level: {self.cur_level}",
             "",
