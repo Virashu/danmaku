@@ -64,4 +64,5 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 - [ ] Game switch background ol level change
 - [ ] Move levels to DB
 - [ ] Fullscreen
-- [ ] 
+- [ ] Rework database.database
+  - [ ] Dicts with hand mapping --> namedtuples
