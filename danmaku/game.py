@@ -196,14 +196,8 @@ class Game(vgame.Scene):
                     enemy.get_damage(bullet.damage)
                     if enemy.health <= 0:
                         self.player.score += enemy.cost
-                        x, y = enemy.x, enemy.y
+                        self.drops += enemy.generate_drops()
                         self.enemies.remove(enemy)
-
-                        match random.choices(("powerup", "points", None), (1, 1, 2))[0]:
-                            case "powerup":
-                                self.drops.append(PowerUp((x, y)))
-                            case "points":
-                                self.drops.append(Points((x, y)))
 
                     self.bullets.remove(bullet)
                     break

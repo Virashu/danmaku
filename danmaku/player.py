@@ -31,17 +31,6 @@ class Player(Shooter, Animated):
             args["shoot_v"] / 1000,
         )
 
-        self.my_type = object_type
-        self.score = 0
-        self.power = 1
-
-        self.hitbox_radius = args["hitbox_radius"]
-        self.slow = False
-
-        # Bounds
-        self.left = self.top = 0
-        self.right = self.bottom = 10e6
-
         # Animation
         files = args["texture_file"].split(";")
         self.animation_frames = {
@@ -50,6 +39,7 @@ class Player(Shooter, Animated):
             Direction.UP: [],
             Direction.DOWN: [],
         }
+
         for i in files:
             path = f"/player/{i}"
             if "left" in i:
@@ -70,6 +60,17 @@ class Player(Shooter, Animated):
         ]
         self.texture_size = args["texture_size"]
 
+        self.my_type = object_type
+        self.score = 0
+        self.power = 1
+
+        self.hitbox_radius = args["hitbox_radius"]
+        self.slow = False
+
+        # Bounds
+        self.left = self.top = 0
+        self.right = self.bottom = 10e6
+
     def shoot(self) -> list[Bullet]:
         res: list[Bullet] = []
 
@@ -84,8 +85,8 @@ class Player(Shooter, Animated):
             res.append(bullet)
 
             if self.power > 4:
-                vx = math.cos(math.pi * 75 / 180)
-                vy = -math.sin(math.pi * 75 / 180)
+                vx = math.cos(math.pi * 85 / 180)
+                vy = -math.sin(math.pi * 85 / 180)
 
                 b1 = Bullet(
                     (self.x, self.y),
@@ -142,9 +143,9 @@ class Player(Shooter, Animated):
             self.y, self.top + self.height / 2, self.bottom - self.height / 2
         )
 
-        self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
-            int(self.x - self.width / 2),
-            int(self.y - self.height / 2),
+        self.rect.centerx, self.rect.centery, self.rect.w, self.rect.h = (
+            int(self.x),
+            int(self.y),
             int(self.width),
             int(self.height),
         )
@@ -172,4 +173,4 @@ class Player(Shooter, Animated):
     def draw(self, graphics: vgame.graphics.Graphics) -> None:
         graphics.draw_sprite(self)
         if self.slow:
-            graphics.circle((self.x, self.y), self.hitbox_radius, (255, 255, 255))
+            graphics.circle((self.x, self.y), self.hitbox_radius, (200, 0, 200))

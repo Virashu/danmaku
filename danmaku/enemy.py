@@ -1,12 +1,13 @@
 """Enemy object declaration."""
 
-from random import randint
+from random import randint, choices
 from math import sin, cos, pi
 
 from danmaku.animated import Animated
 from danmaku.bullet import Bullet
 from danmaku.database import get_enemy_type
 from danmaku.shooter import Shooter
+from danmaku.drop import PowerUp, Points
 
 
 class Enemy(Shooter, Animated):
@@ -48,25 +49,61 @@ class Enemy(Shooter, Animated):
 
     def shoot(self) -> list[Bullet]:
         if self.can_shoot():
-            if self.my_type == "boss":
-                return self.shoot_radial()
-            bullet = Bullet((self.x, self.y), self.damage, self.bullet_type)
-            bullet.vx = randint(-100, 100) / 100
-            bullet.vy = (1 - bullet.vx**2) ** 0.5
-            return [bullet]
+            match self.my_type:
+                case "boss":
+                    if randint(0, 6) == 0:
+                        return self.shoot_cluster()
+                    return self.shoot_radial(waves=2, base_angle=randint(0, 359))
+                case "basic enemy":
+                    bullet = Bullet((self.x, self.y), self.damage, self.bullet_type)
+                    bullet.vx = randint(-100, 100) / 100
+                    bullet.vy = (1 - bullet.vx**2) ** 0.5
+                    return [bullet]
+                case "strong enemy":
+                    return self.shoot_radial(waves=3, n=5)
         return []
 
-    def shoot_radial(self) -> list[Bullet]:
+    def shoot_radial(self, base_angle=0, angle_step=0, waves=1, n=6) -> list[Bullet]:
         """Shoot circle of bullets"""
 
         bullets = []
 
-        a = randint(0, 359)
-
-        for i in range(0, 360, 60):
-            angle = pi * ((a + i) % 360) / 180
-            bullet = Bullet((self.x, self.y), self.damage, self.bullet_type)
-            bullet.vx = cos(angle)
-            bullet.vy = sin(angle)
-            bullets.append(bullet)
+        for wave in range(waves):
+            first_angle = base_angle + wave * angle_step
+            for add_angle in range(0, 360, 360 // n):
+                angle = pi * ((first_angle + add_angle) % 360) / 180
+                bullet = Bullet((self.x, self.y), self.damage, self.bullet_type)
+                bullet.vx = cos(angle)
+                bullet.vy = sin(angle)
+                for _ in range(wave):
+                    bullet.update(0.3)
+                bullets.append(bullet)
         return bullets
+
+    def shoot_cluster(self, waves=1, n=10, base_angle=0, arc=180):
+        bullets = []
+        for wave in range(waves):
+            for i, a in enumerate(range(0, arc, arc // n)):
+                angle = pi * ((base_angle + a) % 360) / 180
+                bullet = Bullet((self.x, self.y), self.damage, self.bullet_type)
+                bullet.vx = cos(angle) * (i + 1)
+                bullet.vy = sin(angle) * (i + 1)
+                for _ in range(wave):
+                    bullet.update(0.3)
+                bullets.append(bullet)
+        return bullets
+
+    def generate_drops(self) -> list:
+        drops = []
+        count = 1
+        if self.my_type == "boss":
+            count = 5
+        for _ in range(count):
+            pos = (self.x + randint(-10, 10), self.y + randint(-10, 10))
+            match choices(("powerup", "points", None), (1, 1, 2))[0]:
+                case "powerup":
+                    drops.append(PowerUp(pos))
+                case "points":
+                    drops.append(Points(pos))
+
+        return drops
