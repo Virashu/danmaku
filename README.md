@@ -15,54 +15,57 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 
 
 ## TODO
-- [x] Levels
-- [ ] Boss HP bar
-- [x] Player HP/Bomb info
-- [x] Player points info
-- [x] Main menu
-- [x] Leaderboard
-- [x] Sounds
-  - [x] Death
-  - [ ] Shoot
-  - [ ] Hit
-- [x] Music
+
+- [x] Game mechanics
+  - [x] Drops
+      - [ ] HP (?)
+    - [x] XP
+    - [x] Powerups
+    - [ ] Coins (?)
+  - [x] Bullets
+    - [ ] Trajectories
+  - [x] Enemies
+  - [x] Controls
+    - [x] Change controls to classic (shift, z, x)
+  - [x] Levels
+  - [x] Make player hitbox smaller
+  - [ ] Levels transition (portals?)
+    - [ ] Background change
+    - [ ] Enemies' texture change
 - [x] Graphics
   - [x] Images
   - [x] Level background
   - [ ] Effects (particles)
   - [ ] Scaling
-- [x] Bullets
-  - [ ] Trajectories
-- [x] Enemies
-- [x] Controls
-  - [x] Change controls to classic (shift, z, x)
-- [ ] Settings
-  - [ ] DB
-  - [ ] Menu interface
-- [x] Make player hitbox smaller
-- [x] Replace resource path strings with constants from db
-- [ ]  Rework base classes
-  - [ ] Reduce instance attribute count
-  - [x] GameObject
-  - [x] +Animated
-  - [x] +Shooter
-  - [ ] +Texture
-- [x] Drops
-  - [ ] HP (?)
-  - [x] XP
-  - [x] Powerups
-  - [ ] Coins (?)
-- [ ] Levels transition (portals?)
-  - [ ] Background change
-  - [ ] Enemies' texture change
-- [ ] Split enemies types into classes
-- [ ] Add enemy generate_drop() method
-- [x] Seconds
-- [ ] Make textures preload
-- [x] Main menu style
-  - [ ] Background
-- [ ] Game switch background ol level change
-- [ ] Move levels to DB
-- [ ] Fullscreen
-- [ ] Rework database.database
-  - [ ] Dicts with hand mapping --> namedtuples
+  - [ ] Fullscreen
+  - [ ] Boss HP bar
+  - [x] Player HP/Bomb info
+  - [x] Player points info
+  - [ ] UI
+    - [x] Main menu
+      - [x] Main menu style
+      - [ ] Background
+    - [x] Leaderboard
+    - [x] Settings
+      - [x] DB
+      - [x] Menu interface
+  - [ ] Make textures preload
+- [x] Code
+  - [x] Rework base classes
+    - [x] Reduce instance attribute count
+    - [x] GameObject
+    - [x] +Animated
+    - [x] +Shooter
+    - [ ] +Texture
+  - [ ] Split enemies types into classes
+  - [x] Add enemy generate_drop() method
+  - [x] Seconds
+  - [ ] Move levels to DB
+  - [ ] Rework database.database
+    - [ ] Dicts with hand mapping --> namedtuples
+  - [x] Replace resource path strings with constants from db
+- [x] Sounds
+  - [x] Death
+  - [ ] Shoot
+  - [ ] Hit
+- [x] Music
