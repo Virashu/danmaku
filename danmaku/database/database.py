@@ -158,5 +158,18 @@ def get_settings() -> dict:
     return settings
 
 
+def delete_settings():
+    for setting in Settings.select():
+        Settings.delete_by_id(setting)
+        Settings.update()
+
+
+def set_settings(settings: dict) -> None:
+    for key, value in settings.items():
+        s = Settings.get(Settings.name == key)
+        s.value = value
+        s.save()
+
+
 if __name__ == "__main__":
     print(get_saved_game())

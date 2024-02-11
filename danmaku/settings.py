@@ -5,6 +5,7 @@ import vgame
 from danmaku.database import get_settings
 
 from danmaku.button import SettingsValue, Button
+from danmaku.database.database import set_settings
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
@@ -72,5 +73,11 @@ class Settings(vgame.Scene):
                 )
 
     def exit(self):
-        # Save settings
-        ...
+        update = {}
+        for setting in self.buttons:
+            if isinstance(setting, SettingsValue):
+                name = setting.codename
+                value = setting.value
+
+                update[name] = str(value)
+        set_settings(update)
