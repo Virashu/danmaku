@@ -16,6 +16,7 @@ from danmaku.database import (
     set_saved_objects,
     set_saved_game,
     delete_saved_objects,
+    get_settings,
 )
 from danmaku.pause import Pause
 from danmaku.background import Background
@@ -80,8 +81,10 @@ class Game(vgame.Scene):
     def load(self):
         self.graphics.library.path = resource_path("textures")
 
+        self.settings = get_settings()
+
         pygame.mixer.init()
-        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.set_volume(self.settings["music_volume"]["value"] / 100)
         pygame.mixer.music.load(resource_path("sounds/bgm.wav"))
         pygame.mixer.music.play(loops=-1)
 
@@ -243,6 +246,7 @@ class Game(vgame.Scene):
             set_saved_game(self.cur_level, self.player.score, self.player.power)
             self.exit_status = "lose"
             death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
+            death_sfx.set_volume(self.settings["sfx_volume"]["value"] / 100)
             channel = death_sfx.play()
             while channel.get_busy():
                 pygame.time.wait(10)
