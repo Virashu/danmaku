@@ -86,8 +86,8 @@ class Enemy(Shooter, Animated):
             for i, a in enumerate(range(0, arc, arc // n)):
                 angle = pi * ((base_angle + a) % 360) / 180
                 bullet = Bullet((self.x, self.y), self.damage, self.bullet_type)
-                bullet.vx = cos(angle) * (i + 1)
-                bullet.vy = sin(angle) * (i + 1)
+                bullet.vx = cos(angle) * (i + 1) * 0.2
+                bullet.vy = sin(angle) * (i + 1) * 0.2
                 for _ in range(wave):
                     bullet.update(0.3)
                 bullets.append(bullet)
