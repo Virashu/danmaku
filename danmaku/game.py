@@ -23,44 +23,43 @@ from danmaku.background import Background
 from danmaku.drop import Drop, PowerUp, Points
 
 
-WIDTH, HEIGHT = 300, 500
-LEVEL1 = [Enemy((150, 15), "basic enemy")]
-LEVEL2 = [
+LEVEL1 = (Enemy((150, 15), "basic enemy"),)
+LEVEL2 = (
     Enemy((50, -25), "basic enemy"),
     Enemy((200, -50), "basic enemy"),
-]
-LEVEL3 = [Enemy((110, 5), "strong enemy")]
-LEVEL4 = [
+)
+LEVEL3 = (Enemy((110, 5), "strong enemy"),)
+LEVEL4 = (
     Enemy((50, -25), "strong enemy"),
     Enemy((200, -50), "strong enemy"),
-]
-LEVEL5 = [
+)
+LEVEL5 = (
     Enemy((50, -20), "basic enemy"),
     Enemy((200, -50), "basic enemy"),
     Enemy((110, -35), "strong enemy"),
-]
-LEVEL6 = [
+)
+LEVEL6 = (
     Enemy((50, -15), "strong enemy"),
     Enemy((200, -50), "basic enemy"),
     Enemy((110, -35), "strong enemy"),
-]
-LEVEL7 = [Enemy((WIDTH / 2, -40), "boss")]
-LEVEL8 = [
+)
+LEVEL7 = (Enemy((150, -40), "boss"),)
+LEVEL8 = (
     Enemy((50, -15), "strong enemy"),
     Enemy((200, -50), "strong enemy"),
-    Enemy((WIDTH - 50, -35), "strong enemy"),
-]
-LEVEL9 = [
+    Enemy((300 - 50, -35), "strong enemy"),
+)
+LEVEL9 = (
     Enemy((50, -15), "strong enemy"),
     Enemy((200, -50), "strong enemy"),
-    Enemy((WIDTH - 50, -35), "strong enemy"),
-]
-LEVEL10 = [
+    Enemy((300 - 50, -35), "strong enemy"),
+)
+LEVEL10 = (
     Enemy((50, -15), "strong enemy"),
     Enemy((200, -50), "boss"),
-    Enemy((WIDTH - 50, -35), "strong enemy"),
-]
-LEVELS = [
+    Enemy((300 - 50, -35), "strong enemy"),
+)
+LEVELS = (
     LEVEL1,
     LEVEL2,
     LEVEL3,
@@ -71,7 +70,7 @@ LEVELS = [
     LEVEL8,
     LEVEL9,
     LEVEL10,
-]
+)
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
@@ -100,7 +99,7 @@ class Game(vgame.Scene):
         if self.new_game:
             self.cur_level = 0
             self.enemies: list[Enemy] = LEVELS[self.cur_level].copy()
-            self.player = Player((WIDTH // 2, HEIGHT - 50), "player")
+            self.player = Player((self.width // 2, self.height - 50), "player")
 
         else:
             self.enemies: list[Enemy] = []
@@ -181,8 +180,8 @@ class Game(vgame.Scene):
             enemy.animate()
             enemy.update(self.delta)
             if (
-                enemy.y > HEIGHT / 2 and not 0 <= enemy.x < WIDTH
-            ) or enemy.y > HEIGHT + enemy.height:
+                enemy.y > self.height / 2 and not 0 <= enemy.x < self.width
+            ) or enemy.y > self.height + enemy.height / 2:
                 self.enemies.remove(enemy)
 
         for bullet in filter(lambda b: b.enemy, self.bullets):
@@ -213,7 +212,7 @@ class Game(vgame.Scene):
             bullet.update(self.delta)
 
             if not not_in_border(
-                bullet.x, bullet.y, bullet.vx, bullet.vy, WIDTH, HEIGHT
+                bullet.x, bullet.y, bullet.vx, bullet.vy, self.width, self.height
             ):
                 self.bullets.remove(bullet)
 
@@ -228,7 +227,9 @@ class Game(vgame.Scene):
 
             drop.update(self.delta)
 
-            if not not_in_border(drop.x, drop.y, drop.vx, drop.vy, WIDTH, HEIGHT):
+            if not not_in_border(
+                drop.x, drop.y, drop.vx, drop.vy, self.width, self.height
+            ):
                 self.drops.remove(drop)
 
         self.background_object.animate()
@@ -236,7 +237,7 @@ class Game(vgame.Scene):
         if len(self.enemies) == 0:
             if len(LEVELS) > self.cur_level + 1:
                 self.cur_level += 1
-                self.enemies = LEVELS[self.cur_level].copy()
+                self.enemies = list(LEVELS[self.cur_level])
             else:
                 set_saved_game(self.cur_level, self.player.score, self.player.power)
                 self.exit_status = "win"
