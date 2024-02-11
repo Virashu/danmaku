@@ -98,7 +98,7 @@ class Game(vgame.Scene):
 
         if self.new_game:
             self.cur_level = 0
-            self.enemies: list[Enemy] = LEVELS[self.cur_level].copy()
+            self.enemies: list[Enemy] = list(LEVELS[self.cur_level])
             self.player = Player((self.width // 2, self.height - 50), "player")
 
         else:
