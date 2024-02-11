@@ -2,6 +2,7 @@
 
 from typing import Iterable
 from danmaku.database.models import (
+    Settings,
     db,
     BulletTypes,
     EnemyTypes,
@@ -132,6 +133,29 @@ def delete_saved_objects() -> None:
     for e in SavedObjects.select():
         SavedObjects.delete_by_id(e)
         SavedObjects.update()
+
+
+def get_settings() -> dict:
+    settings = {}
+    for setting in Settings.select():
+        match setting.type:
+            case "int":
+                value = int(setting.value)
+                possible_values = list(map(int, setting.possible_values.split(";")))
+            case "bool":
+                value = bool(setting.value)
+                possible_values = [True, False]
+            case "str":
+                value = setting.value
+                possible_values = setting.possible_values.split(";")
+
+        settings[setting.name] = {
+            "display_name": setting.display_name,
+            "possible_values": possible_values,
+            "value": value,
+        }
+
+    return settings
 
 
 if __name__ == "__main__":

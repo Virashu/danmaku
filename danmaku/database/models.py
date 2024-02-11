@@ -71,3 +71,11 @@ class SavedGame(BaseModel):
     level = IntegerField()
     score = IntegerField()
     power = IntegerField()
+
+
+class Settings(BaseModel):
+    name = CharField(unique=True)
+    display_name = CharField()
+    type = CharField()
+    possible_values = CharField()
+    value = CharField()

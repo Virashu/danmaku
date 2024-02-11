@@ -2,21 +2,31 @@
 
 import vgame
 
+from danmaku.database import get_settings
+
+from danmaku.button import SettingsValue, Button
+
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Settings(vgame.Scene):
     def load(self):
         self.selection_index = 0
 
-        # Buttons
-        # ("Text", "codename",)
+        settings_dict = get_settings()
 
-        # Settings
-        # ("Text", "codename", (current_value_index, (*possible_values)))
+        self.buttons: list[object] = [
+            SettingsValue("music_volume", "Music Volume", (0, 25, 50, 75, 100), 50),
+        ]
 
-        self.buttons = (
-            ("Volume", "volume", (3, (0, 1, 2, 3, 4, 5))),
-            ("Quit", "quit"),
+        for key, value in settings_dict.items():
+            self.buttons.append(
+                SettingsValue(
+                    key, value["display_name"], value["possible_values"], value["value"]
+                )
+            )
+
+        self.buttons.append(
+            Button("Quit", "quit"),
         )
 
         self.exit_status: str = ""
@@ -27,16 +37,17 @@ class Settings(vgame.Scene):
         if self.get_click(vgame.Keys.DOWN):
             self.selection_index = (self.selection_index + 1) % len(self.buttons)
         if self.get_click(vgame.Keys.RIGHT):
-            # Update settings values left<->right
-            # Like: music  [x x _ _ _]
-            #       sfx    [x _ _ _ _]
-            ...
+            button = self.buttons[self.selection_index]
+            if isinstance(button, SettingsValue):
+                button.increase()
         if self.get_click(vgame.Keys.LEFT):
-            # Same
-            ...
+            button = self.buttons[self.selection_index]
+            if isinstance(button, SettingsValue):
+                button.decrease()
         if {vgame.Keys.RETURN, vgame.Keys.Z, vgame.Keys.SPACE} & self.pressed_keys:
-            match self.buttons[self.selection_index][1]:
-                case "quit":
+            button = self.buttons[self.selection_index]
+            if isinstance(button, Button):
+                if button.codename == "quit":
                     self.stop()
 
     def draw(self):
@@ -46,10 +57,20 @@ class Settings(vgame.Scene):
 
             color = (255, 200, 180) if i == self.selection_index else (255, 255, 255)
 
-            self.graphics.text(
-                button[0],
-                (0, 100 + i * 50),
-                color,
-            )
+            if isinstance(button, Button):
+                self.graphics.text(
+                    button.text,
+                    (0, 100 + i * 50),
+                    color,
+                )
 
-    def exit(self): ...
+            if isinstance(button, SettingsValue):
+                self.graphics.text(
+                    f"{button.text}:  < {button.value} >",
+                    (0, 100 + i * 50),
+                    color,
+                )
+
+    def exit(self):
+        # Save settings
+        ...

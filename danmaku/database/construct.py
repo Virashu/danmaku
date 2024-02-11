@@ -2,7 +2,7 @@
 
 To be used in development process."""
 
-from danmaku.database.models import db, EnemyTypes, BulletTypes, PlayerTypes
+from danmaku.database.models import Settings, db, EnemyTypes, BulletTypes, PlayerTypes
 
 
 db.connect()
@@ -134,3 +134,23 @@ player = PlayerTypes.create(
     hitbox_radius=10,
 )
 player.save()
+
+db.drop_tables([Settings])
+db.create_tables([Settings])
+
+start_settings = (
+    ("music_volume", "Music Volume", "int", "0;25;50;75;100", "50"),
+    ("sfx_volume", "SFX Volume", "int", "0;25;50;75;100", "50"),
+    ("fullscreen", "Fullscreen", "bool", "True;False", "False"),
+    ("lives", "Lives", "int", "1;2;3;4;5", "3"),
+    ("bombs", "Bombs", "int", "1;2;3;4;5", "3"),
+)
+
+for setting in start_settings:
+    Settings.create(
+        name=setting[0],
+        display_name=setting[1],
+        type=setting[2],
+        possible_values=setting[3],
+        value=setting[4],
+    ).save()

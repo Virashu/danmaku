@@ -63,3 +63,20 @@ class Cursor(vgame.graphics.Sprite):
 
     def draw(self, graphics: vgame.graphics.Graphics):
         graphics.draw_sprite(self)
+
+
+class SettingsValue:
+    def __init__(self, name: str, display_name: str, possible_values, value) -> None:
+        self.codename = name
+        self.text = display_name
+        self.possible_values = possible_values
+        self.value = value
+        self.selection_index = self.possible_values.index(self.value)
+
+    def increase(self):
+        self.selection_index = (self.selection_index + 1) % len(self.possible_values)
+        self.value = self.possible_values[self.selection_index]
+
+    def decrease(self):
+        self.selection_index = (self.selection_index - 1) % len(self.possible_values)
+        self.value = self.possible_values[self.selection_index]
