@@ -2,7 +2,7 @@
 
 To be used in development process."""
 
-from danmaku.database.models import db, EnemyTypes, BulletTypes, PlayerTypes
+from danmaku.database.models import Settings, db, EnemyTypes, BulletTypes, PlayerTypes
 
 
 db.connect()
@@ -22,9 +22,9 @@ basic_enemy = EnemyTypes.create(
     texture_size_height=65,
     speed=30,
     shoot_v=1500,
-    hp=250,
+    hp=150,
     dm=50,
-    endurance=0.1,
+    endurance=1,
     cost=50,
 )
 basic_enemy.save()
@@ -36,10 +36,10 @@ strong_enemy = EnemyTypes.create(
     texture_size_width=50,
     texture_size_height=65,
     speed=20,
-    shoot_v=1000,
-    hp=250,
+    shoot_v=7000,  # ms
+    hp=200,
     dm=50,
-    endurance=0.1,
+    endurance=1,
     cost=100,
 )
 strong_enemy.save()
@@ -52,9 +52,9 @@ boss = EnemyTypes.create(
     texture_size_height=85,
     speed=10,
     shoot_v=500,
-    hp=550,
+    hp=500,
     dm=70,
-    endurance=0.3,
+    endurance=2,
     cost=500,
 )
 boss.save()
@@ -70,7 +70,9 @@ basic_enemy_bullet = BulletTypes.create(
     name="basic enemy bullet",
     enemy=True,
     texture_file="bullet.png",
-    radius=10,
+    texture_size_width=20,
+    texture_size_height=20,
+    hitbox_radius=10,
     speed=150,
     vx=0,
     vy=1,
@@ -81,12 +83,27 @@ basic_player_bullet = BulletTypes.create(
     name="basic player bullet",
     enemy=False,
     texture_file="bullet.png",
-    radius=10,
+    texture_size_width=15,
+    texture_size_height=15,
+    hitbox_radius=10,
     speed=300,
     vx=0,
     vy=-1,
 )
 basic_player_bullet.save()
+
+bomb = BulletTypes.create(
+    name="player bomb",
+    enemy=False,
+    texture_file="bomb.png",
+    texture_size_width=25,
+    texture_size_height=25,
+    hitbox_radius=20,
+    speed=300,
+    vx=0,
+    vy=-1,
+)
+bomb.save()
 
 #
 # PlayerTypes
@@ -109,10 +126,31 @@ player = PlayerTypes.create(
     "player_shoot_3.png;player_shoot_4.png;player_idle_right.png",
     texture_size_width=50,
     texture_size_height=50,
-    speed=100,
+    speed=200,
     shoot_v=250,
     hp=1300,
-    dm=500,
+    dm=10,
     endurance=1,
+    hitbox_radius=10,
 )
 player.save()
+
+db.drop_tables([Settings])
+db.create_tables([Settings])
+
+start_settings = (
+    ("music_volume", "Music Volume", "int", "0;25;50;75;100", "50"),
+    ("sfx_volume", "SFX Volume", "int", "0;25;50;75;100", "50"),
+    ("fullscreen", "Fullscreen", "bool", "True;False", "False"),
+    ("lives", "Lives", "int", "1;2;3;4;5", "3"),
+    ("bombs", "Bombs", "int", "1;2;3;4;5", "3"),
+)
+
+for setting in start_settings:
+    Settings.create(
+        name=setting[0],
+        display_name=setting[1],
+        type=setting[2],
+        possible_values=setting[3],
+        value=setting[4],
+    ).save()

@@ -1,12 +1,10 @@
 """Entity's bullet declaration."""
 
-import vgame
-
-from danmaku.gameobject import GameObject
+from danmaku.entity import Entity
 from danmaku.database import get_bullet_type
 
 
-class Bullet(GameObject):
+class Bullet(Entity):
     """Bullet object."""
 
     def __init__(
@@ -14,30 +12,16 @@ class Bullet(GameObject):
     ):
         args = get_bullet_type(object_type)
         super().__init__(
-            xy, (2 * args["radius"], 2 * args["radius"]), args["speed"], 0, damage, 1
+            xy,
+            (args["texture_size"][0], args["texture_size"][1]),
+            args["speed"],
+            0,
+            damage,
         )
         self.enemy = args["enemy"]
         self.vx, self.vy = args["vx_vy"]
-        self.r = args["radius"]
+        self.hitbox_radius = args["hitbox_radius"]
 
         self.texture_file = args["texture_file"]
-        self.texture_size = (2 * self.r, 2 * self.r)
+        self.texture_size = args["texture_size"]
         self.my_type = object_type
-
-    def update(self, delta: int | float):
-        self.x += self.vx * delta * self.speed
-        self.y += self.vy * delta * self.speed
-        self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
-            self.x - self.r,
-            self.y - self.r,
-            self.width,
-            self.height,
-        )
-
-    def collision(self, other) -> bool:
-        # Need to change this because of bombs
-        # (The bullets that can damage bullets)
-        return other.collision(self)
-
-    def draw(self, graphics: vgame.graphics.Graphics):
-        graphics.draw_sprite(self)

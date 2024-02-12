@@ -4,20 +4,26 @@ import pygame
 import vgame
 
 from danmaku.database import get_saved_objects
+from danmaku.button import Button, Cursor
+from danmaku.utils import resource_path
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Menu(vgame.Scene):
     def load(self):
+        self.graphics.library.path = resource_path("textures")
+
         self.selection_index = 0
 
         self.buttons = (
-            ("New game", "new_game"),
-            ("Continue", "continue"),
-            ("Settings", "settings"),
-            ("History", "history"),
-            ("Quit", "quit"),
+            Button("New game", "new_game"),
+            Button("Continue", "continue"),
+            Button("Settings", "settings"),
+            Button("History", "history"),
+            Button("Quit", "quit"),
         )
+
+        self.cursor = Cursor((10, 100))
 
         self.exit_status = ""
 
@@ -27,7 +33,7 @@ class Menu(vgame.Scene):
         if self.get_click(vgame.Keys.DOWN):
             self.selection_index = (self.selection_index + 1) % len(self.buttons)
         if {vgame.Keys.RETURN, vgame.Keys.Z, vgame.Keys.SPACE} & self.pressed_keys:
-            match self.buttons[self.selection_index][1]:
+            match self.buttons[self.selection_index].codename:
                 case "new_game":
                     # Delete game from db & go to game scene
                     self.exit_status = "game", True
@@ -50,24 +56,24 @@ class Menu(vgame.Scene):
                 case "quit":
                     # Maybe rework to quit through exit status
                     pygame.event.post(pygame.event.Event(pygame.constants.QUIT))
+        self.cursor.y = 100 + self.selection_index * 50
+        self.cursor.update(self.delta)
 
     def draw(self):
         self.graphics.text("Danmaku", (0, 10), (255, 255, 180))
 
+        self.cursor.draw(self.graphics)
+
         for i, button in enumerate(self.buttons):
-            if button[1] == "continue":
-                if get_saved_objects():
-                    color = (255, 255, 255)
-                else:
-                    color = (255, 100, 100)
-            else:
-                color = (
-                    (255, 200, 180) if i == self.selection_index else (255, 255, 255)
-                )
+            selected_color = (180, 255, 255)
+            if button.codename == "continue":
+                if not get_saved_objects():
+                    selected_color = (255, 100, 100)
+            color = selected_color if i == self.selection_index else (255, 255, 255)
 
             self.graphics.text(
-                button[0],
-                (0, 100 + i * 50),
+                button.text,
+                (70, 100 + i * 50),
                 color,
             )
 

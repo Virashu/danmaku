@@ -5,7 +5,6 @@ from peewee import (
     Model,
     CharField,
     IntegerField,
-    FloatField,
     BooleanField,
 )
 from danmaku.utils import resource_path
@@ -31,7 +30,7 @@ class EnemyTypes(BaseModel):
     shoot_v = IntegerField()
     hp = IntegerField()
     dm = IntegerField()
-    endurance = FloatField()
+    endurance = IntegerField()
     cost = IntegerField()
 
 
@@ -39,7 +38,9 @@ class BulletTypes(BaseModel):
     name = CharField(unique=True)
     enemy = BooleanField()
     texture_file = CharField()
-    radius = IntegerField()
+    texture_size_width = IntegerField()
+    texture_size_height = IntegerField()
+    hitbox_radius = IntegerField()
     speed = IntegerField()
     vx = IntegerField()
     vy = IntegerField()
@@ -54,7 +55,8 @@ class PlayerTypes(BaseModel):
     shoot_v = IntegerField()
     hp = IntegerField()
     dm = IntegerField()
-    endurance = FloatField()
+    endurance = IntegerField()
+    hitbox_radius = IntegerField()
 
 
 class SavedObjects(BaseModel):
@@ -68,3 +70,12 @@ class SavedObjects(BaseModel):
 class SavedGame(BaseModel):
     level = IntegerField()
     score = IntegerField()
+    power = IntegerField()
+
+
+class Settings(BaseModel):
+    name = CharField(unique=True)
+    display_name = CharField()
+    type = CharField()
+    possible_values = CharField()
+    value = CharField()

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "danmaku"
-version = "0.10.0"
+version = "0.11.0"
 description = ""
 authors = ["Vlad <89295404+Virashu@users.noreply.github.com>"]
 readme = "README.md"

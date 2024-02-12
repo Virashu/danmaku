@@ -1,5 +1,6 @@
 """Helper functions."""
 
+from enum import IntEnum
 import sys
 from pathlib import Path
 
@@ -41,3 +42,12 @@ def constrain(
 ) -> int | float:
     """Constrain value between min_value and max_value."""
     return max(min(value, max_value), min_value)
+
+
+class Direction(IntEnum):
+    """Direction enum."""
+
+    LEFT = 0
+    RIGHT = 1
+    UP = 2
+    DOWN = 3

@@ -1,14 +1,15 @@
 """Player object declaration."""
 
-import pygame
+import math
 import vgame
-from danmaku.gameobject import GameObject
 from danmaku.bullet import Bullet
 from danmaku.database import get_player_type
-from danmaku.utils import constrain
+from danmaku.utils import constrain, Direction
+from danmaku.shooter import Shooter
+from danmaku.animated import Animated
 
 
-class Player(GameObject):
+class Player(Shooter, Animated):
     """Player object."""
 
     def __init__(
@@ -16,59 +17,105 @@ class Player(GameObject):
     ) -> None:
         args = get_player_type(object_type)
 
-        if updated_hp == 0:
-            hp = args["hp"]
-        else:
-            hp = updated_hp
-        # Can replace with:
-        # hp = updated_hp or args["hp"]
+        health = updated_hp or args["hp"]
 
         super().__init__(
             xy,
             args["texture_size"],
             args["speed"],
-            hp,
+            health,
             args["dm"],
             args["endurance"],
+            "basic player bullet",
+            0,
+            args["shoot_v"] / 1000,
         )
 
+        # Animation
         files = args["texture_file"].split(";")
-        self.textures = {"left": [], "right": [], "up": [], "down": [], "shoot": []}
-        for i in files:
-            if "left" in i:
-                self.textures["left"].append(f"/player/{i}")
-            if "right" in i:
-                self.textures["right"].append(f"/player/{i}")
-            if "up" in i:
-                self.textures["up"].append(f"/player/{i}")
-            if "down" in i:
-                self.textures["down"].append(f"/player/{i}")
-            if "shoot" in i:
-                self.textures["shoot"].append(f"/player/{i}")
-        self.last_animation = 0
-        self.texture_file = self.textures["left"][self.last_animation]
-        self.texture_size = args["texture_size"]
-        self.my_type = object_type
-        self.animation_v = 100
-        self.last_animation_time = 0
-        self.last_shoot = 0
-        self.shoot_v = args["shoot_v"]
-        self.score = 0
+        self.animation_frames = {
+            Direction.LEFT: [],
+            Direction.RIGHT: [],
+            Direction.UP: [],
+            Direction.DOWN: [],
+        }
 
+        for i in files:
+            path = f"/player/{i}"
+            if "left" in i:
+                self.animation_frames[Direction.LEFT].append(path)
+            if "right" in i:
+                self.animation_frames[Direction.RIGHT].append(path)
+            if "up" in i:
+                self.animation_frames[Direction.UP].append(path)
+            if "down" in i:
+                self.animation_frames[Direction.DOWN].append(path)
+
+        Animated.__init__(
+            self, xy, args["texture_size"], args["speed"], [], 0, period=0.1
+        )
+
+        self.texture_file = self.animation_frames[Direction.LEFT][
+            self.animation_current
+        ]
+        self.texture_size = args["texture_size"]
+
+        self.my_type = object_type
+        self.score = 0
+        self.power = 1
+
+        self.hitbox_radius = args["hitbox_radius"]
+        self.slow = False
+
+        # Bounds
         self.left = self.top = 0
         self.right = self.bottom = 10e6
 
     def shoot(self) -> list[Bullet]:
-        t = pygame.time.get_ticks()
-        if t - self.last_shoot >= self.shoot_v:
+        res: list[Bullet] = []
+
+        if self.can_shoot():
+
             bullet = Bullet(
-                (self.x + (self.width // 2), self.y + (self.height // 2)),
-                self.damage,
-                "basic player bullet",
+                (self.x, self.y),
+                self.damage + self.power,
+                self.bullet_type,
             )
-            self.last_shoot = t
-            return [bullet]
-        return []
+
+            res.append(bullet)
+
+            if self.power > 4:
+                vx = math.cos(math.pi * 85 / 180)
+                vy = -math.sin(math.pi * 85 / 180)
+
+                b1 = Bullet(
+                    (self.x, self.y),
+                    self.damage + self.power,
+                    self.bullet_type,
+                )
+                b2 = Bullet(
+                    (self.x, self.y),
+                    self.damage + self.power,
+                    self.bullet_type,
+                )
+                b1.vx = vx
+                b2.vx = -vx
+                b1.vy = b2.vy = vy
+                res.extend([b1, b2])
+
+        return res
+
+    def bomb(self) -> list[Bullet]:
+        """Spawn bomb, AKA super-bullet"""
+        res: list[Bullet] = []
+        if self.can_shoot():
+            bullet = Bullet(
+                (self.x, self.y),
+                self.damage + self.power + 50,
+                "player bomb",
+            )
+            res.append(bullet)
+        return res
 
     def set_bounds(
         self,
@@ -84,43 +131,46 @@ class Player(GameObject):
         self.bottom = bottom
 
     def update(self, delta: int | float) -> None:
-        self.x += self.vx * delta * self.speed
-        self.x = constrain(self.x, self.left, self.right - self.width)
+        speed = self.speed if not self.slow else self.speed * 0.5
 
-        self.y += self.vy * delta * self.speed
-        self.y = constrain(self.y, self.top, self.bottom - self.height)
-
-        self.rect.x, self.rect.y, self.rect.w, self.rect.h = (
-            self.x,
-            self.y,
-            self.width,
-            self.height,
+        self.x += self.vx * delta * speed
+        self.x = constrain(
+            self.x, self.left + self.width / 2, self.right - self.width / 2
         )
 
-    def animation(self) -> None:
+        self.y += self.vy * delta * speed
+        self.y = constrain(
+            self.y, self.top + self.height / 2, self.bottom - self.height / 2
+        )
+
+        self.rect.centerx, self.rect.centery, self.rect.w, self.rect.h = (
+            int(self.x),
+            int(self.y),
+            int(self.width),
+            int(self.height),
+        )
+
+    def animate(self) -> None:
         """Animate one frame."""
-        t = pygame.time.get_ticks()
-        if t - self.last_animation_time >= self.animation_v:
-            self.last_animation += 1
-            direction = 0
+        if self.can_animate():
+            direction = None
             if self.vx > 0:
-                direction = "right"
+                direction = Direction.RIGHT
             elif self.vy > 0:
-                direction = "down"
+                direction = Direction.DOWN
             elif self.vx < 0:
-                direction = "left"
+                direction = Direction.LEFT
             elif self.vy < 0:
-                direction = "up"
-            if direction != 0:
-                if self.last_animation >= len(self.textures[direction]):
-                    self.last_animation = 0
-                self.texture_file = self.textures[direction][self.last_animation]
-                self.last_animation_time = t
+                direction = Direction.UP
+            if direction is not None:
+                self.animation_current = (self.animation_current + 1) % len(
+                    self.animation_frames[direction]
+                )
+                self.texture_file = self.animation_frames[direction][
+                    self.animation_current
+                ]
 
     def draw(self, graphics: vgame.graphics.Graphics) -> None:
         graphics.draw_sprite(self)
-
-    def collision(self, other) -> bool:
-        e = pygame.Rect(other.x - other.r, other.y - other.r, 2 * other.r, 2 * other.r)
-        s = pygame.Rect(self.x, self.y, self.width, self.height)
-        return e.colliderect(s)
+        if self.slow:
+            graphics.circle((self.x, self.y), self.hitbox_radius, (200, 0, 200))
