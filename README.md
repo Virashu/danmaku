@@ -22,6 +22,10 @@ Then,
 .\build
 ```
 
+## For developers
+
+Most important things is written down [here](./docs/mecs.md)
+
 ## Refactoring
 - [x] main.py
 - [x] bullet.py
