@@ -4,7 +4,7 @@ import pygame
 import vgame
 
 from danmaku.database import get_saved_objects
-from danmaku.button import Button, Cursor
+from danmaku.ui.button import Button, Cursor
 from danmaku.utils import resource_path
 
 

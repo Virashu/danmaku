@@ -4,7 +4,7 @@ import vgame
 
 from danmaku.database import get_settings
 
-from danmaku.button import SettingsValue, Button
+from danmaku.ui.button import SettingsValue, Button
 from danmaku.database.database import set_settings
 
 

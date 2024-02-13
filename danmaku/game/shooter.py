@@ -4,8 +4,8 @@ from abc import abstractmethod
 
 import pygame
 
-from danmaku.entity import Entity
-from danmaku.bullet import Bullet
+from danmaku.game.entity import Entity
+from danmaku.game.bullet import Bullet
 
 
 class Shooter(Entity):

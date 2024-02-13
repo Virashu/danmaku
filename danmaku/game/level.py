@@ -8,7 +8,7 @@ Stage contains enemies and/or boss
 
 import pygame
 
-from danmaku.enemy import Enemy
+from danmaku.game.enemy import Enemy
 
 
 class Stage:

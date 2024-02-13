@@ -5,9 +5,9 @@ from vgame import Keys
 import pygame
 
 from danmaku.utils import not_in_border, resource_path
-from danmaku.enemy import Enemy
-from danmaku.player import Player
-from danmaku.bullet import Bullet
+from danmaku.game.enemy import Enemy
+from danmaku.game.player import Player
+from danmaku.game.bullet import Bullet
 from danmaku.database import (
     get_saved_objects,
     get_saved_game,
@@ -16,10 +16,10 @@ from danmaku.database import (
     delete_saved_objects,
     get_settings,
 )
-from danmaku.pause import Pause
-from danmaku.background import Background
-from danmaku.drop import Drop, PowerUp, Points
-from danmaku.level import Level, Stage, BossStage
+from danmaku.game.pause import Pause
+from danmaku.game.background import Background
+from danmaku.game.drop import Drop, PowerUp, Points
+from danmaku.game.level import Level, Stage, BossStage
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring

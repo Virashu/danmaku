@@ -2,10 +2,10 @@
 
 from vgame import Runner
 
-from danmaku.menu import Menu
-from danmaku.game import Game
-from danmaku.history import History
-from danmaku.settings import Settings
+from danmaku.ui.menu import Menu
+from danmaku.game.game import Game
+from danmaku.ui.history import History
+from danmaku.ui.settings import Settings
 
 WIDTH, HEIGHT = 500, 500
 TICKRATE = 120

@@ -1,6 +1,6 @@
 """Entity's bullet declaration."""
 
-from danmaku.gameobject import GameObject
+from danmaku.game.gameobject import GameObject
 
 # from danmaku.database import ...
 

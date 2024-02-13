@@ -2,7 +2,7 @@
 
 import pygame
 
-from danmaku.gameobject import GameObject
+from danmaku.game.gameobject import GameObject
 
 
 class Animated(GameObject):

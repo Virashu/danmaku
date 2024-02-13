@@ -1,6 +1,6 @@
 """Base class for alive objects"""
 
-from danmaku.gameobject import GameObject
+from danmaku.game.gameobject import GameObject
 
 
 class Entity(GameObject):

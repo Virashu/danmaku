@@ -2,7 +2,7 @@
 
 import vgame
 
-from danmaku.animated import Animated
+from danmaku.game.animated import Animated
 
 
 class Background(Animated):
