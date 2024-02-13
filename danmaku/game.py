@@ -1,7 +1,5 @@
 """Game scene."""
 
-import random
-
 import vgame
 from vgame import Keys
 import pygame
@@ -21,7 +19,7 @@ from danmaku.database import (
 from danmaku.pause import Pause
 from danmaku.background import Background
 from danmaku.drop import Drop, PowerUp, Points
-from danmaku.level import Level, Stage
+from danmaku.level import Level, Stage, BossStage
 
 
 STAGE1 = Stage([Enemy((150, 15), "basic enemy")])
@@ -42,7 +40,7 @@ STAGE6 = Stage(
         Enemy((110, -35), "strong enemy"),
     ]
 )
-STAGE7 = Stage([Enemy((150, -40), "boss")])
+STAGE7 = BossStage(enemies=[], boss=Enemy((150, -40), "boss"), actions=[])
 
 
 STAGE8 = Stage(
@@ -59,12 +57,13 @@ STAGE9 = Stage(
         Enemy((300 - 50, -35), "strong enemy"),
     ]
 )
-STAGE10 = Stage(
-    [
+STAGE10 = BossStage(
+    enemies=[
         Enemy((50, -15), "strong enemy"),
-        Enemy((200, -50), "boss"),
         Enemy((300 - 50, -35), "strong enemy"),
-    ]
+    ],
+    boss=Enemy((200, -50), "boss"),
+    actions=[],
 )
 
 
@@ -107,6 +106,8 @@ class Game(vgame.Scene):
 
         self.bullets: list[Bullet] = []
         self.drops: list[Drop] = []
+
+        self.boss_hp: int | None = None
 
         if self.new_game:
             self.current_level: int = 0
@@ -184,6 +185,8 @@ class Game(vgame.Scene):
 
         self.player.update(self.delta)
         self.player.animate()
+
+        LEVELS[self.current_level].stage.update()
 
         for enemy in self.enemies:
             if self.player.collision(enemy):
@@ -294,6 +297,7 @@ class Game(vgame.Scene):
 
         self.graphics.text(f"HP: {self.player.health}", (0, 0))
         self.graphics.text(f"Score: {self.player.score}", (150, 0))
+        self.graphics.text(f"Score: {self.player.score}", (150, 0))
 
         if self.paused:
             self.pause_object.draw(self.graphics)
@@ -323,6 +327,8 @@ class Game(vgame.Scene):
             f"HP: {self.player.health}",
             f"Score: {self.player.score}",
             f"Level: {self.current_level}",
+            f"Power: {self.player.power}",
+            f"Boss: {self.boss_hp}",
             "",
             f"Enemies: {len(self.enemies)}",
             f"Bullets: {len(self.bullets)}",
