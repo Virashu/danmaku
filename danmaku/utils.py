@@ -51,3 +51,11 @@ class Direction(IntEnum):
     RIGHT = 1
     UP = 2
     DOWN = 3
+
+
+# def str_to_stage(stage_str: str) -> Stage: ...
+
+
+# def str_to_level(level_str: str) -> Level:
+#     """Convert level string to level object."""
+#     ...

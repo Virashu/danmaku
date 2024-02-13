@@ -61,8 +61,8 @@ class Player(Shooter, Animated):
         self.texture_size = args["texture_size"]
 
         self.my_type = object_type
-        self.score = 0
-        self.power = 1
+        self.score: int = 0
+        self.power: int = 1
 
         self.hitbox_radius = args["hitbox_radius"]
         self.slow = False

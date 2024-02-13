@@ -21,56 +21,68 @@ from danmaku.database import (
 from danmaku.pause import Pause
 from danmaku.background import Background
 from danmaku.drop import Drop, PowerUp, Points
+from danmaku.level import Level, Stage
 
 
-LEVEL1 = (Enemy((150, 15), "basic enemy"),)
-LEVEL2 = (
-    Enemy((50, -25), "basic enemy"),
-    Enemy((200, -50), "basic enemy"),
+STAGE1 = Stage([Enemy((150, 15), "basic enemy")])
+STAGE2 = Stage([Enemy((50, -25), "basic enemy"), Enemy((200, -50), "basic enemy")])
+STAGE3 = Stage([Enemy((110, 5), "strong enemy")])
+STAGE4 = Stage([Enemy((50, -25), "strong enemy"), Enemy((200, -50), "strong enemy")])
+STAGE5 = Stage(
+    [
+        Enemy((50, -20), "basic enemy"),
+        Enemy((200, -50), "basic enemy"),
+        Enemy((110, -35), "strong enemy"),
+    ]
 )
-LEVEL3 = (Enemy((110, 5), "strong enemy"),)
-LEVEL4 = (
-    Enemy((50, -25), "strong enemy"),
-    Enemy((200, -50), "strong enemy"),
+STAGE6 = Stage(
+    [
+        Enemy((50, -15), "strong enemy"),
+        Enemy((200, -50), "basic enemy"),
+        Enemy((110, -35), "strong enemy"),
+    ]
 )
-LEVEL5 = (
-    Enemy((50, -20), "basic enemy"),
-    Enemy((200, -50), "basic enemy"),
-    Enemy((110, -35), "strong enemy"),
+STAGE7 = Stage([Enemy((150, -40), "boss")])
+
+
+STAGE8 = Stage(
+    [
+        Enemy((50, -15), "strong enemy"),
+        Enemy((200, -50), "strong enemy"),
+        Enemy((300 - 50, -35), "strong enemy"),
+    ]
 )
-LEVEL6 = (
-    Enemy((50, -15), "strong enemy"),
-    Enemy((200, -50), "basic enemy"),
-    Enemy((110, -35), "strong enemy"),
+STAGE9 = Stage(
+    [
+        Enemy((50, -15), "strong enemy"),
+        Enemy((200, -50), "strong enemy"),
+        Enemy((300 - 50, -35), "strong enemy"),
+    ]
 )
-LEVEL7 = (Enemy((150, -40), "boss"),)
-LEVEL8 = (
-    Enemy((50, -15), "strong enemy"),
-    Enemy((200, -50), "strong enemy"),
-    Enemy((300 - 50, -35), "strong enemy"),
+STAGE10 = Stage(
+    [
+        Enemy((50, -15), "strong enemy"),
+        Enemy((200, -50), "boss"),
+        Enemy((300 - 50, -35), "strong enemy"),
+    ]
 )
-LEVEL9 = (
-    Enemy((50, -15), "strong enemy"),
-    Enemy((200, -50), "strong enemy"),
-    Enemy((300 - 50, -35), "strong enemy"),
+
+
+LEVEL1 = Level(
+    stages=[
+        STAGE1,
+        STAGE2,
+        STAGE3,
+        STAGE4,
+        STAGE5,
+        STAGE6,
+        STAGE7,
+    ]
 )
-LEVEL10 = (
-    Enemy((50, -15), "strong enemy"),
-    Enemy((200, -50), "boss"),
-    Enemy((300 - 50, -35), "strong enemy"),
-)
-LEVELS = (
-    LEVEL1,
-    LEVEL2,
-    LEVEL3,
-    LEVEL4,
-    LEVEL5,
-    LEVEL6,
-    LEVEL7,
-    LEVEL8,
-    LEVEL9,
-    LEVEL10,
-)
+
+LEVEL2 = Level(stages=[STAGE8, STAGE9, STAGE10])
+
+LEVELS = LEVEL1, LEVEL2
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
@@ -97,8 +109,8 @@ class Game(vgame.Scene):
         self.drops: list[Drop] = []
 
         if self.new_game:
-            self.cur_level = 0
-            self.enemies: list[Enemy] = list(LEVELS[self.cur_level])
+            self.current_level: int = 0
+            self.enemies: list[Enemy] = list(LEVELS[self.current_level].enemies)
             self.player = Player((self.width // 2, self.height - 50), "player")
 
         else:
@@ -129,7 +141,7 @@ class Game(vgame.Scene):
                         )
 
             saved_game = get_saved_game()
-            self.cur_level = saved_game["level"]
+            self.current_level: int = saved_game["level"]
             self.player.score = saved_game["score"]
             self.player.power = saved_game["power"]
             delete_saved_objects()
@@ -150,7 +162,7 @@ class Game(vgame.Scene):
                 set_saved_objects("enemy", self.enemies)
                 set_saved_objects("bullet", self.bullets)
                 set_saved_objects("player", [self.player])
-                set_saved_game(self.cur_level, self.player.score, self.player.power)
+                set_saved_game(self.current_level, self.player.score, self.player.power)
                 self.stop()
 
     def update_game(self):
@@ -232,7 +244,7 @@ class Game(vgame.Scene):
             self.next_level()
 
         if self.player.health <= 0:
-            set_saved_game(self.cur_level, self.player.score, self.player.power)
+            set_saved_game(self.current_level, self.player.score, self.player.power)
             self.exit_status = "lose"
             death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
             death_sfx.set_volume(self.settings["sfx_volume"]["value"] / 100)
@@ -243,11 +255,13 @@ class Game(vgame.Scene):
 
     def next_level(self) -> None:
         """Start next level if possible"""
-        if len(LEVELS) > self.cur_level + 1:
-            self.cur_level += 1
-            self.enemies = list(LEVELS[self.cur_level])
+        if LEVELS[self.current_level].next_stage():
+            self.enemies = list(LEVELS[self.current_level].enemies)
+        elif len(LEVELS) > self.current_level + 1:
+            self.current_level += 1
+            self.enemies = list(LEVELS[self.current_level].enemies)
         else:
-            set_saved_game(self.cur_level, self.player.score, self.player.power)
+            set_saved_game(self.current_level, self.player.score, self.player.power)
             self.exit_status = "win"
             self.stop()
 
@@ -308,7 +322,7 @@ class Game(vgame.Scene):
         print(
             f"HP: {self.player.health}",
             f"Score: {self.player.score}",
-            f"Level: {self.cur_level}",
+            f"Level: {self.current_level}",
             "",
             f"Enemies: {len(self.enemies)}",
             f"Bullets: {len(self.bullets)}",
