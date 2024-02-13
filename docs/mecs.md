@@ -8,8 +8,8 @@
     - Player
     - Enemies
 
-
 ## Player movement
+
 ```
      -1
       ^
@@ -19,10 +19,10 @@
       v
       1
 ```
+
 Player has two axis (x, y) which vary from -1 to 1.
 Player also has speed module (pixels / second).
-Player's move distance calculation is (speed module) * (axis) * (time delta)
-
+Player's move distance calculation is (speed module) _ (axis) _ (time delta)
 
 ## Scenes
 
@@ -45,14 +45,12 @@ graph LR
 
 As we can see, all other scenes return to the main menu
 
-
-
 ## Position, hitboxes
-
 
 Position of an object is a position of it's center point
 
-*placement:*
+_placement:_
+
 ```
 /-----\
 |     |
@@ -60,11 +58,13 @@ Position of an object is a position of it's center point
 |     |
 \-----/
 ```
+
 (where the star is at)
 
 **NOT** coordinates of left top corner
 
-*wrong placement:*
+_wrong placement:_
+
 ```
 *-----\
 |     |
@@ -125,15 +125,15 @@ classDiagram
     animate()
   }
   class Bullet {
-    
+
   }
   class Background {
 
   }
 ```
 
-
 ## Enemies' actions processing
+
 ```mermaid
 graph TB
 
@@ -169,6 +169,9 @@ H --> |No| Z
 ```
 
 ## File hierarchy (import diagram)
+
+<details>
+<summary>Old</summary>
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis"}} }%%
@@ -250,5 +253,91 @@ end
 
 ```
 
+</details>
 
+---
 
+<details open>
+<summary>New</summary>
+
+```mermaid
+graph TB
+
+  main --> game
+  main --> menu
+  main --> settings
+  main --> history
+
+  animated --> gameobject
+
+  background --> animated
+
+  bullet --> entity
+  bullet --> database
+
+  drop --> gameobject
+
+  enemy --> animated
+  enemy --> bullet
+  enemy --> drop
+  enemy --> shooter
+  enemy --> database
+
+  entity --> gameobject
+
+  game --> background
+  game --> bullet
+  game --> database
+  game --> drop
+  game --> enemy
+  game --> level
+  game --> pause
+  game --> player
+  game --> utils
+
+  player --> animated
+  player --> database
+  player --> bullet
+  player --> shooter
+  player --> utils
+
+  shooter --> bullet
+  shooter --> entity
+
+  level --> enemy
+
+  history --> database
+
+  settings --> database
+  settings --> button
+
+  menu --> database
+  menu --> button
+  menu --> utils
+
+  subgraph S_UI
+  direction TB
+    button
+    history
+    menu
+    settings
+  end
+
+  subgraph S_GAME
+  direction TB
+    animated
+    background
+    bullet
+    drop
+    enemy
+    entity
+    game
+    pause
+    player
+    shooter
+    level
+    gameobject
+  end
+```
+
+</details>
