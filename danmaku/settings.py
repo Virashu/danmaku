@@ -15,9 +15,10 @@ class Settings(vgame.Scene):
 
         settings_dict = get_settings()
 
-        self.buttons: list[object] = [
+        self.buttons: list[object] = []
+        """= [
             SettingsValue("music_volume", "Music Volume", (0, 25, 50, 75, 100), 50),
-        ]
+        ]"""
 
         for key, value in settings_dict.items():
             self.buttons.append(

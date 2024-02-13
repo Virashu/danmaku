@@ -13,11 +13,11 @@ class Player(Shooter, Animated):
     """Player object."""
 
     def __init__(
-        self, xy: tuple[int | float, int | float], object_type: str, updated_hp=0
+        self, xy: tuple[int | float, int | float], object_type: str, bombs=0, lives=1, updated_hp=0
     ) -> None:
         args = get_player_type(object_type)
 
-        health = updated_hp or args["hp"]
+        health = updated_hp or args["hp"] * lives
 
         super().__init__(
             xy,
@@ -63,6 +63,7 @@ class Player(Shooter, Animated):
         self.my_type = object_type
         self.score: int = 0
         self.power: int = 1
+        self.bombs = bombs
 
         self.hitbox_radius = args["hitbox_radius"]
         self.slow = False
@@ -108,13 +109,15 @@ class Player(Shooter, Animated):
     def bomb(self) -> list[Bullet]:
         """Spawn bomb, AKA super-bullet"""
         res: list[Bullet] = []
-        if self.can_shoot():
-            bullet = Bullet(
-                (self.x, self.y),
-                self.damage + self.power + 50,
-                "player bomb",
-            )
-            res.append(bullet)
+        if self.bombs != 0:
+            if self.can_shoot():
+                bullet = Bullet(
+                    (self.x, self.y),
+                    self.damage + self.power + 50,
+                    "player bomb",
+                )
+                res.append(bullet)
+                self.bombs -= 1
         return res
 
     def set_bounds(
