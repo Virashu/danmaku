@@ -1,0 +1,26 @@
+{
+  "levels": [
+    {
+      "stages": [
+        {
+          "type": "stage",
+          "enemies": [
+            {
+              "type": "basic enemy",
+              "scheme": [
+                [1000, "appear", null],
+                [1500, "shoot", null]
+              ]
+            },
+            {
+              "type": "basic enemy",
+              "scheme": [
+                [1000, "appear", null]
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

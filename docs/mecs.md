@@ -138,7 +138,7 @@ classDiagram
 graph TB
 
 A([Start])
-B[Merge all actions]
+B["Merge all actions (with links to objects)"]
 C[Sort by timing]
 E{Is it time yet?}
 F[Execute action]
