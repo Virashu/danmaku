@@ -8,8 +8,8 @@
     - Player
     - Enemies
 
-
 ## Player movement
+
 ```
      -1
       ^
@@ -19,10 +19,10 @@
       v
       1
 ```
+
 Player has two axis (x, y) which vary from -1 to 1.
 Player also has speed module (pixels / second).
-Player's move distance calculation is (speed module) * (axis) * (time delta)
-
+Player's move distance calculation is (speed module) _ (axis) _ (time delta)
 
 ## Scenes
 
@@ -45,14 +45,12 @@ graph LR
 
 As we can see, all other scenes return to the main menu
 
-
-
 ## Position, hitboxes
-
 
 Position of an object is a position of it's center point
 
-*placement:*
+_placement:_
+
 ```
 /-----\
 |     |
@@ -60,11 +58,13 @@ Position of an object is a position of it's center point
 |     |
 \-----/
 ```
+
 (where the star is at)
 
 **NOT** coordinates of left top corner
 
-*wrong placement:*
+_wrong placement:_
+
 ```
 *-----\
 |     |
@@ -125,15 +125,15 @@ classDiagram
     animate()
   }
   class Bullet {
-    
+
   }
   class Background {
 
   }
 ```
 
-
 ## Enemies' actions processing
+
 ```mermaid
 graph TB
 
@@ -170,85 +170,174 @@ H --> |No| Z
 
 ## File hierarchy (import diagram)
 
+<details>
+  <summary>Old</summary>
+
+  ```mermaid
+  %%{init: {"flowchart": {"curve": "basis"}} }%%
+  graph TB
+
+  GAME("game.py")
+  MAIN("main.py")
+
+
+  animated --> gameobject
+
+  background --> animated
+
+  bullet --> entity
+  bullet --> database
+
+  button
+
+  drop --> gameobject
+
+  enemy --> shooter
+  enemy --> database
+  enemy --> animated
+  enemy --> bullet
+  enemy --> drop
+
+  entity --> gameobject
+
+  GAME --> enemy
+  GAME --> player
+  GAME --> level
+  GAME --> database
+  GAME --> drop
+  GAME --> background
+  GAME --> pause
+  GAME --> utils
+  GAME --> bullet
+
+  gameobject
+
+  history --> database
+
+  level --> enemy
+
+  MAIN --> GAME
+  MAIN --> menu
+  MAIN --> settings
+  MAIN --> history
+
+  menu --> background
+  menu --> button
+  menu --> database
+  menu --> utils
+
+  pause
+
+  player --> shooter
+  player --> database
+  player --> animated
+  player --> bullet
+  player --> utils
+
+  settings --> button
+  settings --> database
+
+
+  shooter --> entity
+  shooter --> bullet
+
+  utils
+
+  subgraph S_UI
+  direction TB
+  end
+
+  subgraph S_GAME
+  direction TB
+  end
+
+  ```
+
+</details>
+
+---
+
+<details open>
+<summary>New</summary>
+
 ```mermaid
-%%{init: {"flowchart": {"curve": "basis"}} }%%
 graph TB
 
-GAME("game.py")
-MAIN("main.py")
+  main --> game
+  main --> menu
+  main --> settings
+  main --> history
 
+  animated --> gameobject
 
-animated --> gameobject
+  background --> animated
 
-background --> animated
+  bullet --> entity
+  bullet --> database
 
-bullet --> entity
-bullet --> database
+  drop --> gameobject
 
-button
+  enemy --> animated
+  enemy --> bullet
+  enemy --> drop
+  enemy --> shooter
+  enemy --> database
 
-drop --> gameobject
+  entity --> gameobject
 
-enemy --> shooter
-enemy --> database
-enemy --> animated
-enemy --> bullet
-enemy --> drop
+  game --> background
+  game --> bullet
+  game --> database
+  game --> drop
+  game --> enemy
+  game --> level
+  game --> pause
+  game --> player
+  game --> utils
 
-entity --> gameobject
+  player --> animated
+  player --> database
+  player --> bullet
+  player --> shooter
+  player --> utils
 
-GAME --> enemy
-GAME --> player
-GAME --> level
-GAME --> database
-GAME --> drop
-GAME --> background
-GAME --> pause
-GAME --> utils
-GAME --> bullet
+  shooter --> bullet
+  shooter --> entity
 
-gameobject
+  level --> enemy
 
-history --> database
+  history --> database
 
-level --> enemy
+  settings --> database
+  settings --> button
 
-MAIN --> GAME
-MAIN --> menu
-MAIN --> settings
-MAIN --> history
+  menu --> database
+  menu --> button
+  menu --> utils
 
-menu --> background
-menu --> button
-menu --> database
-menu --> utils
+  subgraph S_UI
+  direction TB
+    button
+    history
+    menu
+    settings
+  end
 
-pause
-
-player --> shooter
-player --> database
-player --> animated
-player --> bullet
-player --> utils
-
-settings --> button
-settings --> database
-
-
-shooter --> entity
-shooter --> bullet
-
-utils
-
-subgraph S_UI
-direction TB
-end
-
-subgraph S_GAME
-direction TB
-end
-
+  subgraph S_GAME
+  direction TB
+    animated
+    background
+    bullet
+    drop
+    enemy
+    entity
+    game
+    pause
+    player
+    shooter
+    level
+    gameobject
+  end
 ```
 
-
-
+</details>
