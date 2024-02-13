@@ -13,7 +13,12 @@ class Player(Shooter, Animated):
     """Player object."""
 
     def __init__(
-        self, xy: tuple[int | float, int | float], object_type: str, bombs=0, lives=1, updated_hp=0
+        self,
+        xy: tuple[int | float, int | float],
+        object_type: str,
+        bombs=0,
+        lives=1,
+        updated_hp=0,
     ) -> None:
         args = get_player_type(object_type)
 

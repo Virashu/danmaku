@@ -32,7 +32,7 @@ class Pause:
 
     def draw(self, graphics: vgame.graphics.Graphics):
         """Draw pause menu."""
-        graphics.rectangle((0, 0), (self.width, self.height), (0, 0, 180)) #, alpha=1)
+        graphics.rectangle((0, 0), (self.width, self.height), (0, 0, 0, 180))
         graphics.text("Danmaku", (0, 10), (255, 255, 180))
 
         for i, button in enumerate(self.buttons):

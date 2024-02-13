@@ -6,7 +6,7 @@ from peewee import (
     CharField,
     IntegerField,
     BooleanField,
-    FloatField
+    FloatField,
 )
 from danmaku.utils import resource_path
 

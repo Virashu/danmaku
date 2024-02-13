@@ -101,11 +101,7 @@ def get_game_history() -> list:
     games = tuple(iter(SavedGame.select()))
     res = []
     for i in games:
-        objects = {
-            "score": i.score,
-            "level": i.level,
-            "time": i.time
-        }
+        objects = {"score": i.score, "level": i.level, "time": i.time}
         res.append(objects)
     return res
 
@@ -135,9 +131,13 @@ def set_saved_objects(name: str, objects: Iterable) -> None:
         n.save()
 
 
-def set_saved_game(cur_level: int, score: int, power: int, bombs: int, time: float) -> None:
+def set_saved_game(
+    cur_level: int, score: int, power: int, bombs: int, time: float
+) -> None:
     """Set saved game to database"""
-    n = SavedGame.create(score=score, level=cur_level, power=power, bombs=bombs, time=time)
+    n = SavedGame.create(
+        score=score, level=cur_level, power=power, bombs=bombs, time=time
+    )
     n.save()
 
 

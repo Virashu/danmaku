@@ -22,73 +22,74 @@ from danmaku.drop import Drop, PowerUp, Points
 from danmaku.level import Level, Stage, BossStage
 
 
-STAGE1 = Stage([Enemy((150, 15), "basic enemy")])
-STAGE2 = Stage([Enemy((50, -25), "basic enemy"), Enemy((200, -50), "basic enemy")])
-STAGE3 = Stage([Enemy((110, 5), "strong enemy")])
-STAGE4 = Stage([Enemy((50, -25), "strong enemy"), Enemy((200, -50), "strong enemy")])
-STAGE5 = Stage(
-    [
-        Enemy((50, -20), "basic enemy"),
-        Enemy((200, -50), "basic enemy"),
-        Enemy((110, -35), "strong enemy"),
-    ]
-)
-STAGE6 = Stage(
-    [
-        Enemy((50, -15), "strong enemy"),
-        Enemy((200, -50), "basic enemy"),
-        Enemy((110, -35), "strong enemy"),
-    ]
-)
-STAGE7 = BossStage(enemies=[], boss=Enemy((150, -40), "boss"), actions=[])
-
-
-STAGE8 = Stage(
-    [
-        Enemy((50, -15), "strong enemy"),
-        Enemy((200, -50), "strong enemy"),
-        Enemy((300 - 50, -35), "strong enemy"),
-    ]
-)
-STAGE9 = Stage(
-    [
-        Enemy((50, -15), "strong enemy"),
-        Enemy((200, -50), "strong enemy"),
-        Enemy((300 - 50, -35), "strong enemy"),
-    ]
-)
-STAGE10 = BossStage(
-    enemies=[
-        Enemy((50, -15), "strong enemy"),
-        Enemy((300 - 50, -35), "strong enemy"),
-    ],
-    boss=Enemy((200, -50), "boss"),
-    actions=[],
-)
-
-
-LEVEL1 = Level(
-    stages=[
-        STAGE1,
-        STAGE2,
-        STAGE3,
-        STAGE4,
-        STAGE5,
-        STAGE6,
-        STAGE7,
-    ]
-)
-
-LEVEL2 = Level(stages=[STAGE8, STAGE9, STAGE10])
-
-LEVELS = LEVEL1, LEVEL2
-
-
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Game(vgame.Scene):
     new_game: bool = True
 
     def load(self):
+        STAGE1 = Stage([Enemy((150, 15), "basic enemy")])
+        STAGE2 = Stage(
+            [Enemy((50, -25), "basic enemy"), Enemy((200, -50), "basic enemy")]
+        )
+        STAGE3 = Stage([Enemy((110, 5), "strong enemy")])
+        STAGE4 = Stage(
+            [Enemy((50, -25), "strong enemy"), Enemy((200, -50), "strong enemy")]
+        )
+        STAGE5 = Stage(
+            [
+                Enemy((50, -20), "basic enemy"),
+                Enemy((200, -50), "basic enemy"),
+                Enemy((110, -35), "strong enemy"),
+            ]
+        )
+        STAGE6 = Stage(
+            [
+                Enemy((50, -15), "strong enemy"),
+                Enemy((200, -50), "basic enemy"),
+                Enemy((110, -35), "strong enemy"),
+            ]
+        )
+        STAGE7 = BossStage(enemies=[], boss=Enemy((150, -40), "boss"), actions=[])
+
+        STAGE8 = Stage(
+            [
+                Enemy((50, -15), "strong enemy"),
+                Enemy((200, -50), "strong enemy"),
+                Enemy((300 - 50, -35), "strong enemy"),
+            ]
+        )
+        STAGE9 = Stage(
+            [
+                Enemy((50, -15), "strong enemy"),
+                Enemy((200, -50), "strong enemy"),
+                Enemy((300 - 50, -35), "strong enemy"),
+            ]
+        )
+        STAGE10 = BossStage(
+            enemies=[
+                Enemy((50, -15), "strong enemy"),
+                Enemy((300 - 50, -35), "strong enemy"),
+            ],
+            boss=Enemy((200, -50), "boss"),
+            actions=[],
+        )
+
+        LEVEL1 = Level(
+            stages=[
+                STAGE1,
+                STAGE2,
+                STAGE3,
+                STAGE4,
+                STAGE5,
+                STAGE6,
+                STAGE7,
+            ]
+        )
+
+        LEVEL2 = Level(stages=[STAGE8, STAGE9, STAGE10])
+
+        self.levels = LEVEL1, LEVEL2
+
         self.graphics.library.path = resource_path("textures")
 
         self.settings = get_settings()
@@ -115,7 +116,7 @@ class Game(vgame.Scene):
         if self.new_game:
             self.current_level: int = 0
             self.last_time = 0
-            self.enemies: list[Enemy] = list(LEVELS[self.current_level].enemies)
+            self.enemies: list[Enemy] = list(self.levels[self.current_level].enemies)
             self.player = Player(
                 (self.width // 4, self.height - 50),
                 "player",
@@ -150,18 +151,9 @@ class Game(vgame.Scene):
                             updated_hp=entity["object_hp"],
                         )
                     case "powerup":
-                        self.drops.append(
-                            PowerUp(
-                                entity["object_position"]
-                            )
-                        )
+                        self.drops.append(PowerUp(entity["object_position"]))
                     case "points":
-                        self.drops.append(
-                            Points(
-                                entity["object_position"]
-                            )
-                        )
-
+                        self.drops.append(Points(entity["object_position"]))
 
             saved_game = get_saved_game()
             self.current_level: int = saved_game["level"]
@@ -188,14 +180,18 @@ class Game(vgame.Scene):
                 set_saved_objects("enemy", self.enemies)
                 set_saved_objects("bullet", self.bullets)
                 set_saved_objects("player", [self.player])
-                set_saved_objects("points", [x for x in self.drops if isinstance(x, Points)])
-                set_saved_objects("powerup", [x for x in self.drops if isinstance(x, PowerUp)])
+                set_saved_objects(
+                    "points", [x for x in self.drops if isinstance(x, Points)]
+                )
+                set_saved_objects(
+                    "powerup", [x for x in self.drops if isinstance(x, PowerUp)]
+                )
                 set_saved_game(
                     self.current_level,
                     self.player.score,
                     self.player.power,
                     self.player.bombs,
-                    self.current_time
+                    self.current_time,
                 )
                 self.stop()
 
@@ -219,7 +215,7 @@ class Game(vgame.Scene):
         self.player.update(self.delta)
         self.player.animate()
 
-        stage = LEVELS[self.current_level].stage
+        stage = self.levels[self.current_level].stage
         stage.update()
         if isinstance(stage, BossStage):
             self.boss_hp = stage.boss.health
@@ -290,7 +286,7 @@ class Game(vgame.Scene):
                 self.player.score,
                 self.player.power,
                 self.player.bombs,
-                self.current_time
+                self.current_time,
             )
             self.exit_status = "lose"
             death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
@@ -302,18 +298,18 @@ class Game(vgame.Scene):
 
     def next_level(self) -> None:
         """Start next level if possible"""
-        if LEVELS[self.current_level].next_stage():
-            self.enemies = list(LEVELS[self.current_level].enemies)
-        elif len(LEVELS) > self.current_level + 1:
+        if self.levels[self.current_level].next_stage():
+            self.enemies = list(self.levels[self.current_level].enemies)
+        elif len(self.levels) > self.current_level + 1:
             self.current_level += 1
-            self.enemies = list(LEVELS[self.current_level].enemies)
+            self.enemies = list(self.levels[self.current_level].enemies)
         else:
             set_saved_game(
                 self.current_level,
                 self.player.score,
                 self.player.power,
                 self.player.bombs,
-                self.current_time
+                self.current_time,
             )
             self.exit_status = "win"
             self.stop()
@@ -329,7 +325,10 @@ class Game(vgame.Scene):
         if self.paused:
             self.update_pause()
         else:
-            self.current_time = round((pygame.time.get_ticks() - self.start_time) / 1000, 1) + self.last_time
+            self.current_time = (
+                round((pygame.time.get_ticks() - self.start_time) / 1000, 1)
+                + self.last_time
+            )
             self.update_game()
 
     def draw(self):
@@ -348,8 +347,9 @@ class Game(vgame.Scene):
 
         self.graphics.text(f"HP: {self.player.health}", (self.width // 1.7, 0))
         self.graphics.text(f"Score: {self.player.score}", (self.width // 1.7, 50))
-        self.graphics.text(f"Time: {round(self.current_time, 1)}",
-                           (self.width // 1.7, 100))
+        self.graphics.text(
+            f"Time: {round(self.current_time, 1)}", (self.width // 1.7, 100)
+        )
         self.graphics.text(f"Bombs: {self.player.bombs}", (self.width // 1.7, 150))
         if self.boss_hp is not None:
             self.graphics.text(f"BOSS: {self.boss_hp}", (self.width // 1.7, 200))
