@@ -171,87 +171,87 @@ H --> |No| Z
 ## File hierarchy (import diagram)
 
 <details>
-<summary>Old</summary>
+  <summary>Old</summary>
 
-```mermaid
-%%{init: {"flowchart": {"curve": "basis"}} }%%
-graph TB
+  ```mermaid
+  %%{init: {"flowchart": {"curve": "basis"}} }%%
+  graph TB
 
-GAME("game.py")
-MAIN("main.py")
-
-
-animated --> gameobject
-
-background --> animated
-
-bullet --> entity
-bullet --> database
-
-button
-
-drop --> gameobject
-
-enemy --> shooter
-enemy --> database
-enemy --> animated
-enemy --> bullet
-enemy --> drop
-
-entity --> gameobject
-
-GAME --> enemy
-GAME --> player
-GAME --> level
-GAME --> database
-GAME --> drop
-GAME --> background
-GAME --> pause
-GAME --> utils
-GAME --> bullet
-
-gameobject
-
-history --> database
-
-level --> enemy
-
-MAIN --> GAME
-MAIN --> menu
-MAIN --> settings
-MAIN --> history
-
-menu --> background
-menu --> button
-menu --> database
-menu --> utils
-
-pause
-
-player --> shooter
-player --> database
-player --> animated
-player --> bullet
-player --> utils
-
-settings --> button
-settings --> database
+  GAME("game.py")
+  MAIN("main.py")
 
 
-shooter --> entity
-shooter --> bullet
+  animated --> gameobject
 
-utils
+  background --> animated
 
-subgraph S_UI
-direction TB
-end
+  bullet --> entity
+  bullet --> database
 
-subgraph S_GAME
-direction TB
-end
+  button
 
-```
+  drop --> gameobject
+
+  enemy --> shooter
+  enemy --> database
+  enemy --> animated
+  enemy --> bullet
+  enemy --> drop
+
+  entity --> gameobject
+
+  GAME --> enemy
+  GAME --> player
+  GAME --> level
+  GAME --> database
+  GAME --> drop
+  GAME --> background
+  GAME --> pause
+  GAME --> utils
+  GAME --> bullet
+
+  gameobject
+
+  history --> database
+
+  level --> enemy
+
+  MAIN --> GAME
+  MAIN --> menu
+  MAIN --> settings
+  MAIN --> history
+
+  menu --> background
+  menu --> button
+  menu --> database
+  menu --> utils
+
+  pause
+
+  player --> shooter
+  player --> database
+  player --> animated
+  player --> bullet
+  player --> utils
+
+  settings --> button
+  settings --> database
+
+
+  shooter --> entity
+  shooter --> bullet
+
+  utils
+
+  subgraph S_UI
+  direction TB
+  end
+
+  subgraph S_GAME
+  direction TB
+  end
+
+  ```
 
 </details>
 
