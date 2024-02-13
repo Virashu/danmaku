@@ -107,13 +107,17 @@ class Game(vgame.Scene):
         self.bullets: list[Bullet] = []
         self.drops: list[Drop] = []
 
-        self.boss_hp: int | None = None
+        self.boss_hp: int | float | None = None
 
         if self.new_game:
             self.current_level: int = 0
             self.enemies: list[Enemy] = list(LEVELS[self.current_level].enemies)
-            self.player = Player((self.width // 2, self.height - 50), "player",
-                                 bombs=get_settings()["bombs"]["value"], lives=get_settings()["lives"]["value"])
+            self.player = Player(
+                (self.width // 2, self.height - 50),
+                "player",
+                bombs=get_settings()["bombs"]["value"],
+                lives=get_settings()["lives"]["value"],
+            )
 
         else:
             self.enemies: list[Enemy] = []
@@ -165,7 +169,12 @@ class Game(vgame.Scene):
                 set_saved_objects("enemy", self.enemies)
                 set_saved_objects("bullet", self.bullets)
                 set_saved_objects("player", [self.player])
-                set_saved_game(self.current_level, self.player.score, self.player.power, self.player.bombs)
+                set_saved_game(
+                    self.current_level,
+                    self.player.score,
+                    self.player.power,
+                    self.player.bombs,
+                )
                 self.stop()
 
     def update_game(self):
@@ -188,7 +197,12 @@ class Game(vgame.Scene):
         self.player.update(self.delta)
         self.player.animate()
 
-        LEVELS[self.current_level].stage.update()
+        stage = LEVELS[self.current_level].stage
+        stage.update()
+        if isinstance(stage, BossStage):
+            self.boss_hp = stage.boss.health
+        else:
+            self.boss_hp = None
 
         for enemy in self.enemies:
             if self.player.collision(enemy):
@@ -249,7 +263,12 @@ class Game(vgame.Scene):
             self.next_level()
 
         if self.player.health <= 0:
-            set_saved_game(self.current_level, self.player.score, self.player.power, self.player.bombs)
+            set_saved_game(
+                self.current_level,
+                self.player.score,
+                self.player.power,
+                self.player.bombs,
+            )
             self.exit_status = "lose"
             death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
             death_sfx.set_volume(self.settings["sfx_volume"]["value"] / 100)
@@ -266,7 +285,12 @@ class Game(vgame.Scene):
             self.current_level += 1
             self.enemies = list(LEVELS[self.current_level].enemies)
         else:
-            set_saved_game(self.current_level, self.player.score, self.player.power, self.player.bombs)
+            set_saved_game(
+                self.current_level,
+                self.player.score,
+                self.player.power,
+                self.player.bombs,
+            )
             self.exit_status = "win"
             self.stop()
 
@@ -300,7 +324,8 @@ class Game(vgame.Scene):
         self.graphics.text(f"HP: {self.player.health}", (0, 0))
         self.graphics.text(f"Score: {self.player.score}", (150, 0))
         # self.graphics.text(f"Bombs: {self.player.bombs}", (100, 0))
-        self.graphics.text(f"Score: {self.player.score}", (150, 0))
+        if self.boss_hp is not None:
+            self.graphics.text(f"BOSS: {self.boss_hp}", (0, 40))
 
         if self.paused:
             self.pause_object.draw(self.graphics)
