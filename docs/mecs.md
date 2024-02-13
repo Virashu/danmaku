@@ -131,3 +131,39 @@ classDiagram
 
   }
 ```
+
+
+## Enemies' actions processing
+```mermaid
+graph TB
+
+A([Start])
+B[Merge all actions]
+C[Sort by timing]
+E{Is it time yet?}
+F[Execute action]
+G[Remove from queue]
+H{While actions left}
+Z([End])
+
+A --> B
+B --> C
+C --> H
+
+subgraph LOOP
+  direction TB
+
+  D[Pick first]
+
+  D --> E
+  E --> |Yes| F
+  E --> |No| D
+  F --> G
+end
+
+
+LOOP --> H
+H --> |Yes| LOOP
+H --> |No| Z
+
+```
