@@ -7,7 +7,7 @@ from danmaku.game import Game
 from danmaku.history import History
 from danmaku.settings import Settings
 
-WIDTH, HEIGHT = 300, 500
+WIDTH, HEIGHT = 500, 500
 TICKRATE = 120
 
 
