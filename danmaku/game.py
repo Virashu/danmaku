@@ -229,13 +229,7 @@ class Game(vgame.Scene):
         self.background_object.animate()
 
         if len(self.enemies) == 0:
-            if len(LEVELS) > self.cur_level + 1:
-                self.cur_level += 1
-                self.enemies = list(LEVELS[self.cur_level])
-            else:
-                set_saved_game(self.cur_level, self.player.score, self.player.power)
-                self.exit_status = "win"
-                self.stop()
+            self.next_level()
 
         if self.player.health <= 0:
             set_saved_game(self.cur_level, self.player.score, self.player.power)
@@ -245,6 +239,16 @@ class Game(vgame.Scene):
             channel = death_sfx.play()
             while channel.get_busy():
                 pygame.time.wait(10)
+            self.stop()
+
+    def next_level(self) -> None:
+        """Start next level if possible"""
+        if len(LEVELS) > self.cur_level + 1:
+            self.cur_level += 1
+            self.enemies = list(LEVELS[self.cur_level])
+        else:
+            set_saved_game(self.cur_level, self.player.score, self.player.power)
+            self.exit_status = "win"
             self.stop()
 
     def update(self):
