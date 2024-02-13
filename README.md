@@ -5,6 +5,23 @@
 ## Goal
 To create a bullet hell game similar to TouHou Project, Undertale, etc.
 
+## How to build
+
+```
+poetry shell
+poetry install
+```
+or
+```
+python3 -m venv .venv
+.\.venv\Scripts\activate
+pip install --upgrade -r .\requirements.txt
+```
+Then,
+```
+.\build
+```
+
 ## Refactoring
 - [x] main.py
 - [x] bullet.py
