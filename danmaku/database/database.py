@@ -104,6 +104,7 @@ def get_game_history() -> list:
         objects = {
             "score": i.score,
             "level": i.level,
+            "time": i.time
         }
         res.append(objects)
     return res
@@ -112,19 +113,31 @@ def get_game_history() -> list:
 def set_saved_objects(name: str, objects: Iterable) -> None:
     """Set saved objects to database"""
     for e in objects:
+        if hasattr(e, "my_type"):
+            my_type = e.my_type
+        else:
+            my_type = ""
+        if hasattr(e, "health"):
+            health = e.health
+        else:
+            health = 0
+        if hasattr(e, "damage"):
+            damage = e.damage
+        else:
+            damage = 0
         n = SavedObjects.create(
             object=name,
-            object_type=e.my_type,
+            object_type=my_type,
             object_position=f"{e.x}, {e.y}",
-            object_hp=e.health,
-            object_damage=e.damage,
+            object_hp=health,
+            object_damage=damage,
         )
         n.save()
 
 
-def set_saved_game(cur_level: int, score: int, power: int, bombs: int) -> None:
+def set_saved_game(cur_level: int, score: int, power: int, bombs: int, time: float) -> None:
     """Set saved game to database"""
-    n = SavedGame.create(score=score, level=cur_level, power=power, bombs=bombs)
+    n = SavedGame.create(score=score, level=cur_level, power=power, bombs=bombs, time=time)
     n.save()
 
 

@@ -93,6 +93,9 @@ class Game(vgame.Scene):
 
         self.settings = get_settings()
 
+        self.start_time = pygame.time.get_ticks()
+        self.current_time = 0
+
         pygame.mixer.init()
         pygame.mixer.music.set_volume(self.settings["music_volume"]["value"] / 100)
         pygame.mixer.music.load(resource_path("sounds/bgm.wav"))
@@ -102,7 +105,7 @@ class Game(vgame.Scene):
         self.pause_object = Pause()
         self.exit_status = ""
 
-        self.background_object = Background(0, 0, self.width, self.height)
+        self.background_object = Background(0, 0, self.width // 2, self.height)
 
         self.bullets: list[Bullet] = []
         self.drops: list[Drop] = []
@@ -111,9 +114,10 @@ class Game(vgame.Scene):
 
         if self.new_game:
             self.current_level: int = 0
+            self.last_time = 0
             self.enemies: list[Enemy] = list(LEVELS[self.current_level].enemies)
             self.player = Player(
-                (self.width // 2, self.height - 50),
+                (self.width // 4, self.height - 50),
                 "player",
                 bombs=get_settings()["bombs"]["value"],
                 lives=get_settings()["lives"]["value"],
@@ -145,15 +149,30 @@ class Game(vgame.Scene):
                             entity["object_type"],
                             updated_hp=entity["object_hp"],
                         )
+                    case "powerup":
+                        self.drops.append(
+                            PowerUp(
+                                entity["object_position"]
+                            )
+                        )
+                    case "points":
+                        self.drops.append(
+                            Points(
+                                entity["object_position"]
+                            )
+                        )
+
 
             saved_game = get_saved_game()
             self.current_level: int = saved_game["level"]
             self.player.score = saved_game["score"]
             self.player.power = saved_game["power"]
             self.player.bombs = saved_game["bombs"]
+            self.last_time = saved_game["time"]
+            self.start_time = pygame.time.get_ticks()
             delete_saved_objects()
 
-        self.player.set_bounds(0, 0, self.width, self.height)
+        self.player.set_bounds(0, 0, self.width // 2, self.height)
 
     def update_pause(self):
         """Called from update loop if paused"""
@@ -169,11 +188,14 @@ class Game(vgame.Scene):
                 set_saved_objects("enemy", self.enemies)
                 set_saved_objects("bullet", self.bullets)
                 set_saved_objects("player", [self.player])
+                set_saved_objects("points", [x for x in self.drops if isinstance(x, Points)])
+                set_saved_objects("powerup", [x for x in self.drops if isinstance(x, PowerUp)])
                 set_saved_game(
                     self.current_level,
                     self.player.score,
                     self.player.power,
                     self.player.bombs,
+                    self.current_time
                 )
                 self.stop()
 
@@ -211,7 +233,7 @@ class Game(vgame.Scene):
             enemy.animate()
             enemy.update(self.delta)
             if (
-                enemy.y > self.height / 2 and not 0 <= enemy.x < self.width
+                enemy.y > self.height / 2 and not 0 <= enemy.x < self.width // 2
             ) or enemy.y > self.height + enemy.height / 2:
                 self.enemies.remove(enemy)
 
@@ -237,7 +259,7 @@ class Game(vgame.Scene):
             bullet.update(self.delta)
 
             if not not_in_border(
-                bullet.x, bullet.y, bullet.vx, bullet.vy, self.width, self.height
+                bullet.x, bullet.y, bullet.vx, bullet.vy, self.width // 2, self.height
             ):
                 self.bullets.remove(bullet)
 
@@ -253,7 +275,7 @@ class Game(vgame.Scene):
             drop.update(self.delta)
 
             if not not_in_border(
-                drop.x, drop.y, drop.vx, drop.vy, self.width, self.height
+                drop.x, drop.y, drop.vx, drop.vy, self.width // 2, self.height
             ):
                 self.drops.remove(drop)
 
@@ -268,6 +290,7 @@ class Game(vgame.Scene):
                 self.player.score,
                 self.player.power,
                 self.player.bombs,
+                self.current_time
             )
             self.exit_status = "lose"
             death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
@@ -290,6 +313,7 @@ class Game(vgame.Scene):
                 self.player.score,
                 self.player.power,
                 self.player.bombs,
+                self.current_time
             )
             self.exit_status = "win"
             self.stop()
@@ -305,6 +329,7 @@ class Game(vgame.Scene):
         if self.paused:
             self.update_pause()
         else:
+            self.current_time = round((pygame.time.get_ticks() - self.start_time) / 1000, 1) + self.last_time
             self.update_game()
 
     def draw(self):
@@ -321,11 +346,13 @@ class Game(vgame.Scene):
         for drop in self.drops:
             self.graphics.draw_sprite(drop)
 
-        self.graphics.text(f"HP: {self.player.health}", (0, 0))
-        self.graphics.text(f"Score: {self.player.score}", (150, 0))
-        # self.graphics.text(f"Bombs: {self.player.bombs}", (100, 0))
+        self.graphics.text(f"HP: {self.player.health}", (self.width // 1.7, 0))
+        self.graphics.text(f"Score: {self.player.score}", (self.width // 1.7, 50))
+        self.graphics.text(f"Time: {round(self.current_time, 1)}",
+                           (self.width // 1.7, 100))
+        self.graphics.text(f"Bombs: {self.player.bombs}", (self.width // 1.7, 150))
         if self.boss_hp is not None:
-            self.graphics.text(f"BOSS: {self.boss_hp}", (0, 40))
+            self.graphics.text(f"BOSS: {self.boss_hp}", (self.width // 1.7, 200))
 
         if self.paused:
             self.pause_object.draw(self.graphics)

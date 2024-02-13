@@ -6,6 +6,7 @@ from peewee import (
     CharField,
     IntegerField,
     BooleanField,
+    FloatField
 )
 from danmaku.utils import resource_path
 
@@ -72,6 +73,7 @@ class SavedGame(BaseModel):
     score = IntegerField()
     power = IntegerField()
     bombs = IntegerField()
+    time = FloatField()
 
 
 class Settings(BaseModel):
