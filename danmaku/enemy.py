@@ -60,7 +60,7 @@ class Enemy(Shooter, Animated):
                     bullet.vy = (1 - bullet.vx**2) ** 0.5
                     return [bullet]
                 case "strong enemy":
-                    return self.shoot_radial(waves=3, n=5)
+                    return self.shoot_radial(waves=3, n=5, base_angle=randint(0, 359))
         return []
 
     def shoot_radial(self, base_angle=0, angle_step=0, waves=1, n=6) -> list[Bullet]:
