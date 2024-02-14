@@ -15,7 +15,7 @@ from danmaku.database import (
     set_saved_game,
     delete_saved_objects,
     get_settings,
-    delete_last_game
+    delete_last_game,
 )
 from danmaku.game.pause import Pause
 from danmaku.game.background import Background
@@ -156,7 +156,6 @@ class Game(vgame.Scene):
                         self.drops.append(PowerUp(entity["object_position"]))
                     case "points":
                         self.drops.append(Points(entity["object_position"]))
-
 
             saved_game = get_saved_game()
             self.current_level: int = saved_game["level"]

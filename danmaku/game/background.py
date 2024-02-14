@@ -14,7 +14,7 @@ class Background(Animated):
         y: int | float,
         width: int | float,
         height: int | float,
-        frames: list[str]
+        frames: list[str],
     ):
         if not frames:
             self.frame_count = 48
