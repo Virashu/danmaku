@@ -3,7 +3,7 @@
 import pygame
 import vgame
 
-from danmaku.database import get_saved_objects
+from danmaku.database import get_saved_objects, get_settings
 from danmaku.ui.button import Button, Cursor
 from danmaku.utils import resource_path
 from danmaku.game.background import Background
@@ -13,6 +13,11 @@ from danmaku.game.background import Background
 class Menu(vgame.Scene):
     def load(self):
         self.graphics.library.path = resource_path("textures")
+
+        pygame.mixer.init()
+        pygame.mixer.music.set_volume(get_settings()["music_volume"]["value"] / 100)
+        pygame.mixer.music.load(resource_path("sounds/menu.wav"))
+        pygame.mixer.music.play(loops=-1)
 
         self.selection_index = 0
 

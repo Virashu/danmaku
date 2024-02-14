@@ -101,7 +101,7 @@ class Game(vgame.Scene):
 
         pygame.mixer.init()
         pygame.mixer.music.set_volume(self.settings["music_volume"]["value"] / 100)
-        pygame.mixer.music.load(resource_path("sounds/bgm.wav"))
+        pygame.mixer.music.load(resource_path("sounds/game.wav"))
         pygame.mixer.music.play(loops=-1)
 
         self.paused = False
