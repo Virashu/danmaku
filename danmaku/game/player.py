@@ -78,6 +78,7 @@ class Player(Shooter, Animated):
         self.right = self.bottom = 10e6
 
     def shoot(self) -> list[Bullet]:
+        self.shoot_sound(1)
         res: list[Bullet] = []
 
         if self.can_shoot():
@@ -113,6 +114,7 @@ class Player(Shooter, Animated):
 
     def bomb(self) -> list[Bullet]:
         """Spawn bomb, AKA super-bullet"""
+        self.shoot_sound(1)
         res: list[Bullet] = []
         if self.bombs != 0:
             if self.can_shoot():

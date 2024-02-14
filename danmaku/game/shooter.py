@@ -6,6 +6,8 @@ import pygame
 
 from danmaku.game.entity import Entity
 from danmaku.game.bullet import Bullet
+from danmaku.database import get_settings
+from danmaku.utils import resource_path
 
 
 class Shooter(Entity):
@@ -58,6 +60,12 @@ class Shooter(Entity):
             self.last_shot = time
             return True
         return False
+
+    def shoot_sound(self, channel):
+        pygame.mixer.init()
+        sound = pygame.mixer.Sound(resource_path("sounds/shoot.wav"))
+        sound.set_volume(get_settings()["sfx_volume"]["value"] / 100)
+        pygame.mixer.Channel(channel).play(sound)
 
     @abstractmethod
     def shoot(self) -> list[Bullet]:

@@ -1,6 +1,9 @@
 """Base class for alive objects"""
 
 from danmaku.game.gameobject import GameObject
+import pygame
+from danmaku.database import get_settings
+from danmaku.utils import resource_path
 
 
 class Entity(GameObject):
@@ -25,3 +28,10 @@ class Entity(GameObject):
     def get_damage(self, damage: int | float):
         """Decrease health point."""
         self.health -= damage / self.endurance
+        self.damage_sound(3)
+
+    def damage_sound(self, channel):
+        pygame.mixer.init()
+        sound = pygame.mixer.Sound(resource_path("sounds/hit.wav"))
+        sound.set_volume(get_settings()["sfx_volume"]["value"] / 100)
+        pygame.mixer.Channel(channel).play(sound)

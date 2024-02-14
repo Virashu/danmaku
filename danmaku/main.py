@@ -6,6 +6,7 @@ from danmaku.ui.menu import Menu
 from danmaku.game.game import Game
 from danmaku.ui.history import History
 from danmaku.ui.settings import Settings
+from danmaku.ui.game_end import GameEnd
 
 WIDTH, HEIGHT = 500, 500
 TICKRATE = 120
@@ -22,11 +23,23 @@ def run_game(is_new: bool):
 
     match game.exit_status:
         case "win":
-            # show win screen
-            ...
+            end = GameEnd(
+                width=WIDTH,
+                height=HEIGHT,
+                title="Danmaku | Game Over",
+                tickrate=TICKRATE,
+            )
+            end.set("You win", (30, 157, 214), "sounds/win.wav")
+            runner.run(end)
         case "lose":
-            # show lose screen
-            ...
+            end = GameEnd(
+                width=WIDTH,
+                height=HEIGHT,
+                title="Danmaku | Game Over",
+                tickrate=TICKRATE,
+            )
+            end.set("Game over", (30, 157, 214), "sounds/lose.wav")
+            runner.run(end)
 
 
 while runner.running:

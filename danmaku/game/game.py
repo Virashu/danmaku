@@ -15,7 +15,7 @@ from danmaku.database import (
     set_saved_game,
     delete_saved_objects,
     get_settings,
-    delete_last_game
+    delete_last_game,
 )
 from danmaku.game.pause import Pause
 from danmaku.game.background import Background
@@ -157,7 +157,6 @@ class Game(vgame.Scene):
                     case "points":
                         self.drops.append(Points(entity["object_position"]))
 
-
             saved_game = get_saved_game()
             self.current_level: int = saved_game["level"]
             self.player.score = saved_game["score"]
@@ -293,11 +292,11 @@ class Game(vgame.Scene):
                 self.current_time,
             )
             self.exit_status = "lose"
-            death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
-            death_sfx.set_volume(self.settings["sfx_volume"]["value"] / 100)
-            channel = death_sfx.play()
-            while channel.get_busy():
-                pygame.time.wait(10)
+            # death_sfx = pygame.mixer.Sound(resource_path("sounds/death.wav"))
+            # death_sfx.set_volume(self.settings["sfx_volume"]["value"] / 100)
+            # channel = death_sfx.play()
+            # while channel.get_busy():
+            # pygame.time.wait(10)
             self.stop()
 
     def next_level(self) -> None:

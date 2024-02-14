@@ -17,10 +17,7 @@ class Pause:
         self.width, self.height = width, height
         self.background_object = Background(0, 0, self.width, self.height, ["menu.png"])
 
-        self.buttons = (
-            Button("Continue", "continue"),
-            Button("Main menu", "menu")
-        )
+        self.buttons = (Button("Continue", "continue"), Button("Main menu", "menu"))
 
         self.exit_status: str = ""
 

@@ -55,6 +55,7 @@ class Enemy(Shooter, Animated):
                         return self.shoot_cluster()
                     return self.shoot_radial(waves=2, base_angle=randint(0, 359))
                 case "basic enemy":
+                    self.shoot_sound(2)
                     bullet = Bullet((self.x, self.y), self.damage, self.bullet_type)
                     bullet.vx = randint(-100, 100) / 100
                     bullet.vy = (1 - bullet.vx**2) ** 0.5
