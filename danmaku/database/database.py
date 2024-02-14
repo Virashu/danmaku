@@ -96,7 +96,7 @@ def get_saved_game() -> dict:
 
 def get_game_history() -> list:
     """Get game history from database
-    Returns list: [{"score", "level"}]
+    Returns list: [{"score", "level", "time"}]
     """
     games = tuple(iter(SavedGame.select()))
     res = []
@@ -104,6 +104,12 @@ def get_game_history() -> list:
         objects = {"score": i.score, "level": i.level, "time": i.time}
         res.append(objects)
     return res
+
+
+def delete_last_game():
+    games = list(iter(SavedGame.select()))
+    SavedGame.delete_by_id(games[-1])
+    SavedGame.update()
 
 
 def set_saved_objects(name: str, objects: Iterable) -> None:

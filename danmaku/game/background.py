@@ -14,9 +14,14 @@ class Background(Animated):
         y: int | float,
         width: int | float,
         height: int | float,
+        frames: list[str]
     ):
-        self.frame_count = 48
-        frames = [f"background/background_{i}.png" for i in range(self.frame_count)]
+        if not frames:
+            self.frame_count = 48
+            frames = [f"background/background_{i}.png" for i in range(self.frame_count)]
+        else:
+            pass
+
         super().__init__((x, y), (width, height), 0, frames, 0, period=0.1)
         self.texture_size = self.width, self.height
 

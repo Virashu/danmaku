@@ -15,6 +15,7 @@ from danmaku.database import (
     set_saved_game,
     delete_saved_objects,
     get_settings,
+    delete_last_game
 )
 from danmaku.game.pause import Pause
 from danmaku.game.background import Background
@@ -27,6 +28,7 @@ class Game(vgame.Scene):
     new_game: bool = True
 
     def load(self):
+        self.game_border = self.width * 2 // 3
         STAGE1 = Stage([Enemy((150, 15), "basic enemy")])
         STAGE2 = Stage(
             [Enemy((50, -25), "basic enemy"), Enemy((200, -50), "basic enemy")]
@@ -106,7 +108,7 @@ class Game(vgame.Scene):
         self.pause_object = Pause()
         self.exit_status = ""
 
-        self.background_object = Background(0, 0, self.width // 2, self.height)
+        self.background_object = Background(0, 0, self.game_border, self.height, [])
 
         self.bullets: list[Bullet] = []
         self.drops: list[Drop] = []
@@ -118,7 +120,7 @@ class Game(vgame.Scene):
             self.last_time = 0
             self.enemies: list[Enemy] = list(self.levels[self.current_level].enemies)
             self.player = Player(
-                (self.width // 4, self.height - 50),
+                (self.game_border // 2, self.height - 50),
                 "player",
                 bombs=get_settings()["bombs"]["value"],
                 lives=get_settings()["lives"]["value"],
@@ -155,6 +157,7 @@ class Game(vgame.Scene):
                     case "points":
                         self.drops.append(Points(entity["object_position"]))
 
+
             saved_game = get_saved_game()
             self.current_level: int = saved_game["level"]
             self.player.score = saved_game["score"]
@@ -163,8 +166,9 @@ class Game(vgame.Scene):
             self.last_time = saved_game["time"]
             self.start_time = pygame.time.get_ticks()
             delete_saved_objects()
+            delete_last_game()
 
-        self.player.set_bounds(0, 0, self.width // 2, self.height)
+        self.player.set_bounds(0, 0, self.game_border, self.height)
 
     def update_pause(self):
         """Called from update loop if paused"""
@@ -173,8 +177,6 @@ class Game(vgame.Scene):
         match status:
             case "continue":
                 self.paused = False
-            case "settings":
-                raise NotImplementedError()
             case "menu":
                 delete_saved_objects()
                 set_saved_objects("enemy", self.enemies)
@@ -219,6 +221,8 @@ class Game(vgame.Scene):
         stage.update()
         if isinstance(stage, BossStage):
             self.boss_hp = stage.boss.health
+            if stage.boss.health < 0:
+                self.boss_hp = None
         else:
             self.boss_hp = None
 
@@ -229,7 +233,7 @@ class Game(vgame.Scene):
             enemy.animate()
             enemy.update(self.delta)
             if (
-                enemy.y > self.height / 2 and not 0 <= enemy.x < self.width // 2
+                enemy.y > self.height / 2 and not 0 <= enemy.x < self.game_border
             ) or enemy.y > self.height + enemy.height / 2:
                 self.enemies.remove(enemy)
 
@@ -255,7 +259,7 @@ class Game(vgame.Scene):
             bullet.update(self.delta)
 
             if not not_in_border(
-                bullet.x, bullet.y, bullet.vx, bullet.vy, self.width // 2, self.height
+                bullet.x, bullet.y, bullet.vx, bullet.vy, self.game_border, self.height
             ):
                 self.bullets.remove(bullet)
 
@@ -271,7 +275,7 @@ class Game(vgame.Scene):
             drop.update(self.delta)
 
             if not not_in_border(
-                drop.x, drop.y, drop.vx, drop.vy, self.width // 2, self.height
+                drop.x, drop.y, drop.vx, drop.vy, self.game_border, self.height
             ):
                 self.drops.remove(drop)
 
@@ -320,7 +324,7 @@ class Game(vgame.Scene):
             self.pressed_keys.remove(Keys.ESCAPE)
             self.paused = not self.paused
             if self.paused:
-                self.pause_object.load(self.width, self.height)
+                self.pause_object.load(self.width, self.height, self.delta)
 
         if self.paused:
             self.update_pause()
@@ -332,6 +336,7 @@ class Game(vgame.Scene):
             self.update_game()
 
     def draw(self):
+        self.graphics.rectangle((0, 0), (self.width, self.height), (30, 157, 214, 180))
         self.graphics.draw_sprite(self.background_object)
 
         self.player.draw(self.graphics)
@@ -345,14 +350,14 @@ class Game(vgame.Scene):
         for drop in self.drops:
             self.graphics.draw_sprite(drop)
 
-        self.graphics.text(f"HP: {self.player.health}", (self.width // 1.7, 0))
-        self.graphics.text(f"Score: {self.player.score}", (self.width // 1.7, 50))
+        self.graphics.text(f"HP: {self.player.health}", (self.game_border + 10, 0))
+        self.graphics.text(f"Score: {self.player.score}", (self.game_border + 10, 50))
         self.graphics.text(
-            f"Time: {round(self.current_time, 1)}", (self.width // 1.7, 100)
+            f"Time: {round(self.current_time, 1)}", (self.game_border + 10, 100)
         )
-        self.graphics.text(f"Bombs: {self.player.bombs}", (self.width // 1.7, 150))
+        self.graphics.text(f"Bombs: {self.player.bombs}", (self.game_border + 10, 150))
         if self.boss_hp is not None:
-            self.graphics.text(f"BOSS: {self.boss_hp}", (self.width // 1.7, 200))
+            self.graphics.text(f"BOSS: {self.boss_hp}", (self.game_border + 10, 200))
 
         if self.paused:
             self.pause_object.draw(self.graphics)

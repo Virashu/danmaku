@@ -27,12 +27,14 @@ class History(vgame.Scene):
             self.stop()
 
     def draw(self):
-        self.graphics.text("History", (0, 0), (255, 255, 180))
+        self.graphics.rectangle((0, 0), (self.width, self.height), (30, 157, 214, 180))
+
+        self.graphics.text("History", (self.width // 2 - 30, 0), (0, 74, 127))
 
         for i, game in enumerate(self.history[self.selection_index :]):
             self.graphics.text(
                 f"Level: {game['level'] + 1}, Score: {game['score']}, Time: {game['time']}",
-                (0, 100 + 50 * i),
+                (20, 50 + 50 * i),
                 (255, 255, 255),
             )
 

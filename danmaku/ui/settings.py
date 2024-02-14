@@ -50,23 +50,25 @@ class Settings(vgame.Scene):
                     self.stop()
 
     def draw(self):
-        self.graphics.text("Danmaku", (0, 10), (255, 255, 180))
+        self.graphics.rectangle((0, 0), (self.width, self.height), (30, 157, 214, 180))
+
+        self.graphics.text("Settings", (self.width // 2 - 40, 0), (0, 74, 127))
 
         for i, button in enumerate(self.buttons):
 
-            color = (255, 200, 180) if i == self.selection_index else (255, 255, 255)
+            color = (0, 74, 127) if i == self.selection_index else (255, 255, 255)
 
             if isinstance(button, Button):
                 self.graphics.text(
                     button.text,
-                    (0, 100 + i * 50),
+                    (20, 100 + i * 50),
                     color,
                 )
 
             if isinstance(button, SettingsValue):
                 self.graphics.text(
                     f"{button.text}:  < {button.value} >",
-                    (0, 100 + i * 50),
+                    (20, 100 + i * 50),
                     color,
                 )
 

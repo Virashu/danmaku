@@ -118,7 +118,7 @@ class Player(Shooter, Animated):
             if self.can_shoot():
                 bullet = Bullet(
                     (self.x, self.y),
-                    self.damage + self.power + 50,
+                    (self.damage + self.power) * 30,
                     "player bomb",
                 )
                 res.append(bullet)

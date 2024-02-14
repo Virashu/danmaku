@@ -6,6 +6,7 @@ import vgame
 from danmaku.database import get_saved_objects
 from danmaku.ui.button import Button, Cursor
 from danmaku.utils import resource_path
+from danmaku.game.background import Background
 
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
@@ -14,6 +15,8 @@ class Menu(vgame.Scene):
         self.graphics.library.path = resource_path("textures")
 
         self.selection_index = 0
+
+        self.background_object = Background(0, 0, self.width, self.height, ["menu.png"])
 
         self.buttons = (
             Button("New game", "new_game"),
@@ -60,12 +63,14 @@ class Menu(vgame.Scene):
         self.cursor.update(self.delta)
 
     def draw(self):
-        self.graphics.text("Danmaku", (0, 10), (255, 255, 180))
+        self.graphics.draw_sprite(self.background_object)
+
+        self.graphics.text("Danmaku", (self.width // 2 - 70, 10), (0, 74, 127))
 
         self.cursor.draw(self.graphics)
 
         for i, button in enumerate(self.buttons):
-            selected_color = (180, 255, 255)
+            selected_color = (0, 74, 127)
             if button.codename == "continue":
                 if not get_saved_objects():
                     selected_color = (255, 100, 100)
