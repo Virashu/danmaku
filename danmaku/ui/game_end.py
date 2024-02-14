@@ -7,6 +7,7 @@ from danmaku.database import get_settings
 from danmaku.utils import resource_path
 
 
+# pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class GameEnd(vgame.Scene):
     def load(self):
         self.graphics.library.path = resource_path("textures")
@@ -47,6 +48,6 @@ class GameEnd(vgame.Scene):
             pygame.font.init()
         font = pygame.font.SysFont("Segoe UI", 90)
         text_surface = font.render(self.text, True, tuple(self.text_color))
-        self.graphics._surface.blit(text_surface, (30, self.height // 3))
+        self.graphics.surface.blit(text_surface, (30, self.height // 3))
 
     def exit(self): ...
