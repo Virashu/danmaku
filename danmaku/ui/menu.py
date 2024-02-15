@@ -64,6 +64,8 @@ class Menu(vgame.Scene):
                 case "quit":
                     # Maybe rework to quit through exit status
                     pygame.event.post(pygame.event.Event(pygame.constants.QUIT))
+                case _:
+                    pass
         self.cursor.y = 100 + self.selection_index * 50
         self.cursor.update(self.delta)
 

@@ -94,7 +94,7 @@ def get_saved_game() -> dict:
     return game
 
 
-def get_game_history() -> list:
+def get_game_history() -> list[dict[str, int]]:
     """Get game history from database
     Returns list: [{"score", "level", "time"}]
     """

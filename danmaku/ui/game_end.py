@@ -18,14 +18,15 @@ class GameEnd(vgame.Scene):
         pygame.mixer.music.play()
 
     def set(self, text: str, background: tuple[int, int, int], music: str):
+        """Set end screen attributes"""
         self.text = text
         if "win" in text:
             self.delta_color = 2
         else:
             self.delta_color = 0
         self.background_color = background
-        self.text_color = list(background)
-        self.v = (255 - self.text_color[self.delta_color]) / 500
+        self.text_color: list[int] = list(background)
+        self.v = (255 - self.text_color[self.delta_color]) // 500
         self.music = music
 
     def update(self):

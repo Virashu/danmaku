@@ -10,7 +10,7 @@ class History(vgame.Scene):
     def load(self):
         self.selection_index = 0
 
-        self.history = get_game_history()
+        self.history: list[dict[str, int]] = get_game_history()
         self.record_count = len(self.history)
 
     def update(self):
