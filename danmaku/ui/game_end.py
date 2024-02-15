@@ -39,15 +39,14 @@ class GameEnd(vgame.Scene):
             pygame.time.wait(1000)
             self.stop()
 
-    def draw(self):
+    def draw(self) -> None:
         self.graphics.rectangle(
             (0, 0), (self.width, self.height), self.background_color
         )
 
-        if not pygame.font.get_init():
-            pygame.font.init()
-        font = pygame.font.SysFont("Segoe UI", 90)
-        text_surface = font.render(self.text, True, tuple(self.text_color))
-        self.graphics.surface.blit(text_surface, (30, self.height // 3))
+        #  NOTE: update vgame to version 1.6.4
+        self.graphics.text(
+            self.text, (30, self.height // 3), tuple(self.text_color), font_size=90
+        )
 
     def exit(self): ...
