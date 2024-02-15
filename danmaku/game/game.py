@@ -122,8 +122,8 @@ class Game(vgame.Scene):
             self.player = Player(
                 (self.game_border // 2, self.height - 50),
                 "player",
-                bombs=get_settings()["bombs"]["value"],
-                lives=get_settings()["lives"]["value"],
+                bombs=self.settings["bombs"]["value"],
+                lives=self.settings["lives"]["value"],
             )
 
         else:
@@ -323,7 +323,7 @@ class Game(vgame.Scene):
             self.pressed_keys.remove(Keys.ESCAPE)
             self.paused = not self.paused
             if self.paused:
-                self.pause_object.load(self.width, self.height, self.delta)
+                self.pause_object.load(self.width, self.height)
 
         if self.paused:
             self.update_pause()

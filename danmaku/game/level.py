@@ -6,6 +6,7 @@ Stage contains enemies and/or boss
 
 """
 
+from typing import Any
 import pygame
 
 from danmaku.game.enemy import Enemy
@@ -41,7 +42,12 @@ class BossStage(Stage):
     # ( 1000, "move_to", (10, 20) )
     # ( 2000, "shoot_radial", () )
 
-    def __init__(self, enemies: list[Enemy], boss: Enemy, actions: list) -> None:
+    def __init__(
+        self,
+        enemies: list[Enemy],
+        boss: Enemy,
+        actions: list[tuple[int, str, tuple[Any]]],
+    ) -> None:
         super().__init__(enemies)
         self._boss = boss
         self._actions = list(actions)
@@ -65,7 +71,7 @@ class Level:
     stages: list[Stage]
     current_stage: int
 
-    enemies: list  # enemies from current stage
+    enemies: list[Enemy]  # enemies from current stage
 
     def __init__(self, stages: list[Stage]) -> None:
         self.stages = list(stages)

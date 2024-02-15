@@ -16,13 +16,13 @@ class Player(Shooter, Animated):
         self,
         xy: tuple[int | float, int | float],
         object_type: str,
-        bombs=0,
-        lives=1,
-        updated_hp=0,
+        bombs:int=0,
+        lives:int=1,
+        updated_hp:int=0,
     ) -> None:
         args = get_player_type(object_type)
 
-        health = updated_hp or args["hp"] * lives
+        health:int|float = updated_hp or args["hp"] * lives
 
         super().__init__(
             xy,
@@ -37,7 +37,7 @@ class Player(Shooter, Animated):
         )
 
         # Animation
-        files = args["texture_file"].split(";")
+        files:list[str] = args["texture_file"].split(";")
         self.animation_frames = {
             Direction.LEFT: [],
             Direction.RIGHT: [],

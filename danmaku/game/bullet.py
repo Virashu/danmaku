@@ -8,7 +8,7 @@ class Bullet(Entity):
     """Bullet object."""
 
     def __init__(
-        self, xy: tuple[int | float, int | float], damage: int | float, object_type
+        self, xy: tuple[int | float, int | float], damage: int | float, object_type: str
     ):
         args = get_bullet_type(object_type)
         super().__init__(
@@ -18,7 +18,7 @@ class Bullet(Entity):
             0,
             damage,
         )
-        self.enemy = args["enemy"]
+        self.enemy: bool = args["enemy"]
         self.vx, self.vy = args["vx_vy"]
         self.hitbox_radius = args["hitbox_radius"]
 

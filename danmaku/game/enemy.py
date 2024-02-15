@@ -7,7 +7,7 @@ from danmaku.game.animated import Animated
 from danmaku.game.bullet import Bullet
 from danmaku.database import get_enemy_type
 from danmaku.game.shooter import Shooter
-from danmaku.game.drop import PowerUp, Points
+from danmaku.game.drop import PowerUp, Points, Drop
 
 
 class Enemy(Shooter, Animated):
@@ -21,7 +21,7 @@ class Enemy(Shooter, Animated):
     ):
         args = get_enemy_type(object_type)
 
-        health = start_hp or args["hp"]
+        health: int | float = start_hp or args["hp"]
 
         super().__init__(
             xy,
@@ -43,7 +43,7 @@ class Enemy(Shooter, Animated):
         )
         self.texture_size = args["texture_size"]
         self.my_type = object_type
-        self.cost = args["cost"]
+        self.cost: int = args["cost"]
 
         self.vx, self.vy = 0, 1
 
@@ -62,12 +62,16 @@ class Enemy(Shooter, Animated):
                     return [bullet]
                 case "strong enemy":
                     return self.shoot_radial(waves=3, n=5, base_angle=randint(0, 359))
+                case _:
+                    pass
         return []
 
-    def shoot_radial(self, base_angle=0, angle_step=0, waves=1, n=6) -> list[Bullet]:
+    def shoot_radial(
+        self, base_angle: int = 0, angle_step: int = 0, waves: int = 1, n: int = 6
+    ) -> list[Bullet]:
         """Shoot circle of bullets"""
 
-        bullets = []
+        bullets: list[Bullet] = []
 
         for wave in range(waves):
             first_angle = base_angle + wave * angle_step
@@ -81,8 +85,10 @@ class Enemy(Shooter, Animated):
                 bullets.append(bullet)
         return bullets
 
-    def shoot_cluster(self, waves=1, n=10, base_angle=0, arc=180):
-        bullets = []
+    def shoot_cluster(
+        self, waves: int = 1, n: int = 10, base_angle: int = 0, arc: int = 180
+    ) -> list[Bullet]:
+        bullets: list[Bullet] = []
         for wave in range(waves):
             for i, a in enumerate(range(0, arc, arc // n)):
                 angle = pi * ((base_angle + a) % 360) / 180
@@ -94,8 +100,8 @@ class Enemy(Shooter, Animated):
                 bullets.append(bullet)
         return bullets
 
-    def generate_drops(self) -> list:
-        drops = []
+    def generate_drops(self) -> list[Drop]:
+        drops: list[Drop] = []
         count = 1
         if self.my_type == "boss":
             count = 5
@@ -106,5 +112,7 @@ class Enemy(Shooter, Animated):
                     drops.append(PowerUp(pos))
                 case "points":
                     drops.append(Points(pos))
+                case _:
+                    pass
 
         return drops

@@ -25,7 +25,7 @@ def not_in_border(
     return True
 
 
-def resource_path(relative_path) -> str:
+def resource_path(relative_path: str) -> str:
     """Get absolute path to resource, works for dev and for PyInstaller"""
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS

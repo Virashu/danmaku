@@ -11,6 +11,8 @@ class GameObject(Sprite):
     """
 
     hitbox_radius: int
+    vx: int | float
+    vy: int | float
 
     def __init__(
         self,
@@ -38,7 +40,7 @@ class GameObject(Sprite):
             int(self.height),
         )
 
-    def collision(self, other) -> bool:
+    def collision(self, other: "GameObject") -> bool:
         """Check collision."""
         return (
             math.hypot(self.x - other.x, self.y - other.y)

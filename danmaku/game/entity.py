@@ -30,7 +30,7 @@ class Entity(GameObject):
         self.health -= damage / self.endurance
         self.damage_sound(3)
 
-    def damage_sound(self, channel):
+    def damage_sound(self, channel: int):
         pygame.mixer.init()
         sound = pygame.mixer.Sound(resource_path("sounds/hit.wav"))
         sound.set_volume(get_settings()["sfx_volume"]["value"] / 100)

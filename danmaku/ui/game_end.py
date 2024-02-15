@@ -17,7 +17,7 @@ class GameEnd(vgame.Scene):
         pygame.mixer.music.load(resource_path(self.music))
         pygame.mixer.music.play()
 
-    def set(self, text, background, music):
+    def set(self, text: str, background: tuple[int, int, int], music: str):
         self.text = text
         if "win" in text:
             self.delta_color = 2

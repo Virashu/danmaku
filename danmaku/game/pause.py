@@ -7,10 +7,9 @@ from danmaku.ui.button import Button, Cursor
 
 # pylint: disable=attribute-defined-outside-init, missing-class-docstring
 class Pause:
-    def load(self, width, height, delta):
+    def load(self, width: int, height: int):
         """Load pause menu."""
         self.selection_index = 0
-        self.delta = delta
 
         self.cursor = Cursor((10, 100))
 
@@ -21,7 +20,7 @@ class Pause:
 
         self.exit_status: str = ""
 
-    def update(self, pressed_keys):
+    def update(self, pressed_keys: set[int]):
         """Update pause menu."""
         if vgame.Keys.UP in pressed_keys:
             pressed_keys.discard(vgame.Keys.UP)
@@ -32,7 +31,7 @@ class Pause:
         if {vgame.Keys.RETURN, vgame.Keys.Z, vgame.Keys.SPACE} & pressed_keys:
             self.exit_status = self.buttons[self.selection_index].codename
         self.cursor.y = 100 + self.selection_index * 50
-        self.cursor.update(self.delta)
+        self.cursor.update(0)
 
     def draw(self, graphics: vgame.graphics.Graphics):
         """Draw pause menu."""

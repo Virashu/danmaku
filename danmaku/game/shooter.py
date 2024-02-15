@@ -61,7 +61,7 @@ class Shooter(Entity):
             return True
         return False
 
-    def shoot_sound(self, channel):
+    def shoot_sound(self, channel: int):
         pygame.mixer.init()
         sound = pygame.mixer.Sound(resource_path("sounds/shoot.wav"))
         sound.set_volume(get_settings()["sfx_volume"]["value"] / 100)
