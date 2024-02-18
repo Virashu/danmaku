@@ -94,8 +94,12 @@ classDiagram
     rect: Rect
   }
   class GameObject {
-    x: int
-    y: int
+    x, y: int
+    vx, vy: float [-1;1]
+    width, height: int
+    hitbox_radius: int
+    speed: int
+
     update()
     draw()
     collision() -> bool
@@ -103,29 +107,36 @@ classDiagram
   class Entity {
     health: int
     damage: int
+    endurance: float
+
     get_damage()
   }
   class Shooter {
     shoot_freq: float
     last_shot: float
+
     can_shoot() -> bool
-    shoot()
+    shoot() -> list[Bullet]
   }
   class Player {
+    player_type: str
     score: int
     power: int
   }
   class Enemy {
+    enemy_type: str
     cost: int
   }
   class Animated {
     animation_frames: list[str]
     animation_current: int
     animation_period: float
+  
+    can_animate() -> bool
     animate()
   }
   class Bullet {
-
+    bullet_type: str
   }
   class Background {
 
