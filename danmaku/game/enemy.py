@@ -41,6 +41,7 @@ class Enemy(Shooter, Animated):
         Animated.__init__(
             self, xy, args["texture_size"], args["speed"], frames, 0, period=0.1
         )
+        self.frames_from_str(args["texture_file"], "enemy")
         self.texture_size = args["texture_size"]
         self.my_type = object_type
         self.cost: int = args["cost"]

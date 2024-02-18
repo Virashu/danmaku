@@ -51,6 +51,7 @@ class Direction(IntEnum):
     RIGHT = 1
     UP = 2
     DOWN = 3
+    STATIC = 4
 
 
 # def str_to_stage(stage_str: str) -> Stage: ...

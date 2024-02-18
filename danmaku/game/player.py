@@ -4,7 +4,7 @@ import math
 import vgame
 from danmaku.game.bullet import Bullet
 from danmaku.database import get_player_type
-from danmaku.utils import constrain, Direction
+from danmaku.utils import constrain
 from danmaku.game.shooter import Shooter
 from danmaku.game.animated import Animated
 
@@ -37,32 +37,12 @@ class Player(Shooter, Animated):
         )
 
         # Animation
-        files:list[str] = args["texture_file"].split(";")
-        self.animation_frames = {
-            Direction.LEFT: [],
-            Direction.RIGHT: [],
-            Direction.UP: [],
-            Direction.DOWN: [],
-        }
-
-        for i in files:
-            path = f"/player/{i}"
-            if "left" in i:
-                self.animation_frames[Direction.LEFT].append(path)
-            if "right" in i:
-                self.animation_frames[Direction.RIGHT].append(path)
-            if "up" in i:
-                self.animation_frames[Direction.UP].append(path)
-            if "down" in i:
-                self.animation_frames[Direction.DOWN].append(path)
 
         Animated.__init__(
             self, xy, args["texture_size"], args["speed"], [], 0, period=0.1
         )
+        self.frames_from_str(args["texture_file"], "player")
 
-        self.texture_file = self.animation_frames[Direction.LEFT][
-            self.animation_current
-        ]
         self.texture_size = args["texture_size"]
 
         self.my_type = object_type
@@ -159,26 +139,6 @@ class Player(Shooter, Animated):
             int(self.width),
             int(self.height),
         )
-
-    def animate(self) -> None:
-        """Animate one frame."""
-        if self.can_animate():
-            direction = None
-            if self.vx > 0:
-                direction = Direction.RIGHT
-            elif self.vy > 0:
-                direction = Direction.DOWN
-            elif self.vx < 0:
-                direction = Direction.LEFT
-            elif self.vy < 0:
-                direction = Direction.UP
-            if direction is not None:
-                self.animation_current = (self.animation_current + 1) % len(
-                    self.animation_frames[direction]
-                )
-                self.texture_file = self.animation_frames[direction][
-                    self.animation_current
-                ]
 
     def draw(self, graphics: vgame.graphics.Graphics) -> None:
         graphics.draw_sprite(self)

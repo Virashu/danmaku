@@ -214,7 +214,7 @@ class Game(vgame.Scene):
         self.player.vx, self.player.vy = vx, vy
 
         self.player.update(self.delta)
-        self.player.animate()
+        self.player.animate((self.player.vx, self.player.vy))
 
         stage = self.levels[self.current_level].stage
         stage.update()
@@ -229,7 +229,7 @@ class Game(vgame.Scene):
             if self.player.collision(enemy):
                 self.player.get_damage(enemy.damage / 100)
             self.bullets += enemy.shoot()
-            enemy.animate()
+            enemy.animate((enemy.vx, enemy.vy))
             enemy.update(self.delta)
             if (
                 enemy.y > self.height / 2 and not 0 <= enemy.x < self.game_border
