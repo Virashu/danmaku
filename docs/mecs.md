@@ -87,6 +87,9 @@ classDiagram
   GameObject <-- Animated
   Animated <-- Background
   Entity <-- Shooter
+  GameObject <-- Drop
+  Drop <-- Points
+  Drop <-- PowerUp
 
   class Sprite {
     texture_file: str
@@ -141,6 +144,13 @@ classDiagram
   class Background {
 
   }
+  class Drop {
+
+  }
+  class PowerUp {
+
+  }
+  class Points
 ```
 
 ## Enemies' actions processing

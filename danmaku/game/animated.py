@@ -26,7 +26,7 @@ class Animated(GameObject):
         xy: tuple[int | float, int | float],
         width_height: tuple[int | float, int | float],
         speed: int | float,
-        frames,
+        frames: dict[Direction, list[str]],
         freq: int | float,
         period: int | float | None = None,
     ) -> None:
@@ -45,8 +45,9 @@ class Animated(GameObject):
         self.last_direction = 0
 
         if len(frames):
-            self.texture_file = self.animation_frames[
-                self.animation_current]
+            self.texture_file = self.animation_frames[Direction.STATIC][
+                self.animation_current
+            ]
 
     def can_animate(self) -> bool:
         """Check if possible to animate"""
@@ -57,13 +58,15 @@ class Animated(GameObject):
             return True
         return False
 
-    def animate(self, direction_vector: tuple[int | float, int | float] = (0, 0)) -> None:
-        """Animate one frame if possible
-        if self.can_animate():
-            self.animation_current = (self.animation_current + 1) % len(
-                self.animation_frames
-            )
-            self.texture_file = self.animation_frames[self.animation_current]"""
+    def animate(
+        self, direction_vector: tuple[int | float, int | float] = (0, 0)
+    ) -> None:
+        """Animate one frame if possible"""
+        # if self.can_animate():
+        #     self.animation_current = (self.animation_current + 1) % len(
+        #         self.animation_frames
+        #     )
+        #     self.texture_file = self.animation_frames[self.animation_current]
 
         if self.can_animate():
             direction = None
@@ -106,7 +109,7 @@ class Animated(GameObject):
             Direction.RIGHT: [],
             Direction.UP: [],
             Direction.DOWN: [],
-            Direction.STATIC: []
+            Direction.STATIC: [],
         }
 
         for i in files:

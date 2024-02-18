@@ -31,7 +31,9 @@ class Background(Animated):
     def update(self, delta: int | float):
         self.animate()
 
-    def animate(self, direction_vector: tuple[int | float, int | float] = (0, 0)) -> None:
+    def animate(
+        self, direction_vector: tuple[int | float, int | float] = (0, 0)
+    ) -> None:
         if self.can_animate():
             self.animation_current = (self.animation_current + 1) % len(
                 self.animation_frames
