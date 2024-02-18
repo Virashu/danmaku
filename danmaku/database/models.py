@@ -14,7 +14,7 @@ from danmaku.utils import resource_path
 db = SqliteDatabase(resource_path("DataBase.db"))
 
 
-# pylint: disable=missing-class-docstring
+# pylint: disable=missing-class-docstring,too-few-public-methods
 
 
 class BaseModel(Model):

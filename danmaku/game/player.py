@@ -6,23 +6,23 @@ from danmaku.game.bullet import Bullet
 from danmaku.database import get_player_type
 from danmaku.utils import constrain
 from danmaku.game.shooter import Shooter
-from danmaku.game.animated import Animated
+from danmaku.game.animated import AnimatedDirectional
 
 
-class Player(Shooter, Animated):
+class Player(Shooter, AnimatedDirectional):
     """Player object."""
 
     def __init__(
         self,
         xy: tuple[int | float, int | float],
         object_type: str,
-        bombs:int=0,
-        lives:int=1,
-        updated_hp:int=0,
+        bombs: int = 0,
+        lives: int = 1,
+        updated_hp: int = 0,
     ) -> None:
         args = get_player_type(object_type)
 
-        health:int|float = updated_hp or args["hp"] * lives
+        health: int | float = updated_hp or args["hp"] * lives
 
         super().__init__(
             xy,
@@ -38,10 +38,16 @@ class Player(Shooter, Animated):
 
         # Animation
 
-        Animated.__init__(
-            self, xy, args["texture_size"], args["speed"], [], 0, period=0.1
+        address = "player"
+
+        AnimatedDirectional.__init__(
+            self,
+            xy,
+            args["texture_size"],
+            args["speed"],
+            [f"{address}/{i}" for i in args["texture_file"].split(";")],
+            period=0.1,
         )
-        self.frames_from_str(args["texture_file"], "player")
 
         self.texture_size = args["texture_size"]
 
@@ -133,12 +139,7 @@ class Player(Shooter, Animated):
             self.y, self.top + self.height / 2, self.bottom - self.height / 2
         )
 
-        self.rect.centerx, self.rect.centery, self.rect.w, self.rect.h = (
-            int(self.x),
-            int(self.y),
-            int(self.width),
-            int(self.height),
-        )
+        super().update(0)
 
     def draw(self, graphics: vgame.graphics.Graphics) -> None:
         graphics.draw_sprite(self)

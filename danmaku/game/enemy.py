@@ -3,14 +3,14 @@
 from random import randint, choices
 from math import sin, cos, pi
 
-from danmaku.game.animated import Animated
+from danmaku.game.animated import AnimatedDirectional
 from danmaku.game.bullet import Bullet
 from danmaku.database import get_enemy_type
 from danmaku.game.shooter import Shooter
 from danmaku.game.drop import PowerUp, Points, Drop
 
 
-class Enemy(Shooter, Animated):
+class Enemy(Shooter, AnimatedDirectional):
     """Enemy object."""
 
     def __init__(
@@ -38,10 +38,14 @@ class Enemy(Shooter, Animated):
         )
 
         frames = list(map(lambda x: f"/enemy/{x}", args["texture_file"].split(";")))
-        Animated.__init__(
-            self, xy, args["texture_size"], args["speed"], frames, 0, period=0.1
+        AnimatedDirectional.__init__(
+            self,
+            xy,
+            args["texture_size"],
+            args["speed"],
+            frames,
+            period=0.1,
         )
-        self.frames_from_str(args["texture_file"], "enemy")
         self.texture_size = args["texture_size"]
         self.my_type = object_type
         self.cost: int = args["cost"]
@@ -89,6 +93,7 @@ class Enemy(Shooter, Animated):
     def shoot_cluster(
         self, waves: int = 1, n: int = 10, base_angle: int = 0, arc: int = 180
     ) -> list[Bullet]:
+        """Shoot spiral wave of bullets"""
         bullets: list[Bullet] = []
         for wave in range(waves):
             for i, a in enumerate(range(0, arc, arc // n)):
@@ -102,6 +107,7 @@ class Enemy(Shooter, Animated):
         return bullets
 
     def generate_drops(self) -> list[Drop]:
+        """Generate drops"""
         drops: list[Drop] = []
         count = 1
         if self.my_type == "boss":

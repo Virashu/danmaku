@@ -23,17 +23,10 @@ class Background(Animated):
             pass
 
         super().__init__((x, y), (width, height), 0, frames, 0, period=0.1)
-        self.texture_size = self.width, self.height
+        self.texture_size = int(self.width), int(self.height)
 
     def draw(self, graphics: vgame.graphics.Graphics):
         graphics.draw_sprite(self)
 
     def update(self, delta: int | float):
         self.animate()
-
-    def animate(self, direction_vector: tuple[int | float, int | float] = (0, 0)) -> None:
-        if self.can_animate():
-            self.animation_current = (self.animation_current + 1) % len(
-                self.animation_frames
-            )
-            self.texture_file = self.animation_frames[self.animation_current]
