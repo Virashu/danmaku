@@ -13,6 +13,10 @@ from danmaku.game.enemy import Enemy
 
 
 class Stage:
+    """Base stage
+
+    Contains enemies"""
+
     _enemies: list[Enemy]
 
     _start_time: int
@@ -23,14 +27,20 @@ class Stage:
 
         self._start_time = pygame.time.get_ticks()
 
-    def update(self) -> None: ...
+    def update(self) -> None:
+        """WIP
+
+        Update all enemies on the stage"""
 
     @property
     def enemies(self) -> list[Enemy]:
+        """Enemies on the stage"""
         return self._enemies
 
 
 class BossStage(Stage):
+    """Stage centered on boss"""
+
     # +enemies: list[Enemy]
     _boss: Enemy
 
@@ -60,6 +70,7 @@ class BossStage(Stage):
 
     @property
     def boss(self) -> Enemy:
+        """Boss property"""
         return self._boss
 
     @property
@@ -68,6 +79,12 @@ class BossStage(Stage):
 
 
 class Level:
+    """Game level
+
+    Contains stages
+    For chapter separation by theme
+    (can contain only one boss, but with multiple boss stages)"""
+
     stages: list[Stage]
     current_stage: int
 
@@ -86,9 +103,13 @@ class Level:
 
     @property
     def stage(self) -> Stage:
+        """Current stage"""
         return self.stages[self.current_stage]
 
     def next_stage(self) -> bool:
+        """Switch stage to next if possible
+
+        Returns: bool - success"""
         if len(self.stages) > self.current_stage + 1:
             self.current_stage += 1
             self.enemies = list(self.stages[self.current_stage].enemies)
@@ -96,5 +117,6 @@ class Level:
         return False
 
     def set_stage(self, index: int) -> None:
+        """Set stage by index"""
         self.current_stage = index
         self.enemies = list(self.stages[self.current_stage].enemies)

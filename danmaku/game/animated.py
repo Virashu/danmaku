@@ -68,6 +68,8 @@ class Animated(GameObject):
 
 
 class AnimatedDirectional(Animated):
+    """Base class for animated objects, that change animations based on direction"""
+
     def __init__(
         self,
         xy: tuple[int | float, int | float],
@@ -121,6 +123,7 @@ class AnimatedDirectional(Animated):
                 direction = Direction.LEFT
             elif direction_vector[1] < 0:
                 direction = Direction.UP
+
             if direction == Direction.STATIC:
                 a = ""
                 if self.last_direction == Direction.UP:

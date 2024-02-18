@@ -107,6 +107,7 @@ def get_game_history() -> list[dict[str, int]]:
 
 
 def delete_last_game():
+    """Remove last game record from database"""
     games = list(iter(SavedGame.select()))
     SavedGame.delete_by_id(games[-1])
     SavedGame.update()
@@ -155,6 +156,7 @@ def delete_saved_objects() -> None:
 
 
 def get_settings() -> dict:
+    """Get all settings"""
     settings = {}
     for setting in Settings.select():
         match setting.type:
@@ -178,12 +180,14 @@ def get_settings() -> dict:
 
 
 def delete_settings():
+    """Delete all settings"""
     for setting in Settings.select():
         Settings.delete_by_id(setting)
         Settings.update()
 
 
 def set_settings(settings: dict) -> None:
+    """Set settings from dictionary"""
     for key, value in settings.items():
         s = Settings.get(Settings.name == key)
         s.value = value

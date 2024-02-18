@@ -93,6 +93,7 @@ class Enemy(Shooter, AnimatedDirectional):
     def shoot_cluster(
         self, waves: int = 1, n: int = 10, base_angle: int = 0, arc: int = 180
     ) -> list[Bullet]:
+        """Shoot spiral wave of bullets"""
         bullets: list[Bullet] = []
         for wave in range(waves):
             for i, a in enumerate(range(0, arc, arc // n)):
@@ -106,6 +107,7 @@ class Enemy(Shooter, AnimatedDirectional):
         return bullets
 
     def generate_drops(self) -> list[Drop]:
+        """Generate drops"""
         drops: list[Drop] = []
         count = 1
         if self.my_type == "boss":

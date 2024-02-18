@@ -139,12 +139,7 @@ class Player(Shooter, AnimatedDirectional):
             self.y, self.top + self.height / 2, self.bottom - self.height / 2
         )
 
-        self.rect.centerx, self.rect.centery, self.rect.w, self.rect.h = (
-            int(self.x),
-            int(self.y),
-            int(self.width),
-            int(self.height),
-        )
+        super().update(0)
 
     def draw(self, graphics: vgame.graphics.Graphics) -> None:
         graphics.draw_sprite(self)
