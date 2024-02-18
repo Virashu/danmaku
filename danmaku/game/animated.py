@@ -14,7 +14,7 @@ class Animated(GameObject):
         width_height (tuple[int | float, int | float]): Width and height of the object.
         speed (int | float): Speed of the object.
         frames (list[str]): List of frames
-        freq (int | float): Frequency of animation
+        freq (int | float | None, optional): Frequency of animation
         period (int | float | None, optional): Period of animation. Defaults to None.
 
         You can pass freq as '0' and just use period
@@ -26,8 +26,8 @@ class Animated(GameObject):
         xy: tuple[int | float, int | float],
         width_height: tuple[int | float, int | float],
         speed: int | float,
-        frames: dict[Direction, list[str]],
-        freq: int | float,
+        frames: list[str],
+        freq: int | float | None = None,
         period: int | float | None = None,
     ) -> None:
         super().__init__(xy, width_height, speed)
@@ -37,17 +37,17 @@ class Animated(GameObject):
         if period is not None:
             self.animation_period = period
             self.animation_freq = 1 / period
-        else:
+        elif freq is not None:
             self.animation_freq = freq
             self.animation_period = 1 / freq
+        else:
+            raise ValueError("You must pass period or freq")
         self.animation_current = 0
         self.animation_last = 0
         self.last_direction = 0
 
         if len(frames):
-            self.texture_file = self.animation_frames[Direction.STATIC][
-                self.animation_current
-            ]
+            self.texture_file = self.animation_frames[self.animation_current]
 
     def can_animate(self) -> bool:
         """Check if possible to animate"""
@@ -58,15 +58,56 @@ class Animated(GameObject):
             return True
         return False
 
+    def animate(self) -> None:
+        """Animate one frame if possible"""
+        if self.can_animate():
+            self.animation_current = (self.animation_current + 1) % len(
+                self.animation_frames
+            )
+            self.texture_file = self.animation_frames[self.animation_current]
+
+
+class AnimatedDirectional(Animated):
+    def __init__(
+        self,
+        xy: tuple[int | float, int | float],
+        width_height: tuple[int | float, int | float],
+        speed: int | float,
+        frames: list[str],
+        freq: int | float | None = None,
+        period: int | float | None = None,
+    ) -> None:
+        super().__init__(xy, width_height, speed, [], freq, period)
+        self.last_direction = 0
+
+        self.animation_frames = {
+            Direction.LEFT: [],
+            Direction.RIGHT: [],
+            Direction.UP: [],
+            Direction.DOWN: [],
+            Direction.STATIC: [],
+        }
+
+        for file in frames:
+            if "left" in file:
+                self.animation_frames[Direction.LEFT].append(file)
+            if "right" in file:
+                self.animation_frames[Direction.RIGHT].append(file)
+            if "up" in file:
+                self.animation_frames[Direction.UP].append(file)
+            if "down" in file:
+                self.animation_frames[Direction.DOWN].append(file)
+            if "static" in file or "idle" in file:
+                self.animation_frames[Direction.STATIC].append(file)
+
+        self.texture_file = self.animation_frames[Direction.STATIC][
+            self.animation_current
+        ]
+
     def animate(
         self, direction_vector: tuple[int | float, int | float] = (0, 0)
     ) -> None:
         """Animate one frame if possible"""
-        # if self.can_animate():
-        #     self.animation_current = (self.animation_current + 1) % len(
-        #         self.animation_frames
-        #     )
-        #     self.texture_file = self.animation_frames[self.animation_current]
 
         if self.can_animate():
             direction = None
@@ -101,30 +142,3 @@ class Animated(GameObject):
                     self.animation_current
                 ]
                 self.last_direction = direction
-
-    def frames_from_str(self, str_frames, adress):
-        files: list[str] = str_frames.split(";")
-        self.animation_frames = {
-            Direction.LEFT: [],
-            Direction.RIGHT: [],
-            Direction.UP: [],
-            Direction.DOWN: [],
-            Direction.STATIC: [],
-        }
-
-        for i in files:
-            path = f"/{adress}/{i}"
-            if "left" in i:
-                self.animation_frames[Direction.LEFT].append(path)
-            if "right" in i:
-                self.animation_frames[Direction.RIGHT].append(path)
-            if "up" in i:
-                self.animation_frames[Direction.UP].append(path)
-            if "down" in i:
-                self.animation_frames[Direction.DOWN].append(path)
-            if "static" in i or "idle" in i:
-                self.animation_frames[Direction.STATIC].append(path)
-
-        self.texture_file = self.animation_frames[Direction.STATIC][
-            self.animation_current
-        ]
