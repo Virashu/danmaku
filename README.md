@@ -39,7 +39,7 @@ Most important things is written down [here](./docs/mecs.md)
 
 - [x] Game mechanics
   - [x] Drops
-      - [ ] HP (?)
+    - [ ] HP (?)
     - [x] XP
     - [x] Powerups
     - [ ] Coins (?)
@@ -59,13 +59,13 @@ Most important things is written down [here](./docs/mecs.md)
   - [ ] Effects (particles)
   - [ ] Scaling
   - [ ] Fullscreen
-  - [ ] Boss HP bar
+  - [x] Boss HP bar
   - [x] Player HP/Bomb info
   - [x] Player points info
-  - [ ] UI
+  - [x] UI
     - [x] Main menu
       - [x] Main menu style
-      - [ ] Background
+      - [x] Background
     - [x] Leaderboard
     - [x] Settings
       - [x] DB
@@ -87,6 +87,6 @@ Most important things is written down [here](./docs/mecs.md)
   - [x] Replace resource path strings with constants from db
 - [x] Sounds
   - [x] Death
-  - [ ] Shoot
-  - [ ] Hit
+  - [x] Shoot
+  - [x] Hit
 - [x] Music
