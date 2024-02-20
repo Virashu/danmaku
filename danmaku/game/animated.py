@@ -66,6 +66,16 @@ class Animated(GameObject):
             )
             self.texture_file = self.animation_frames[self.animation_current]
 
+    def animate_absolute(self, time: int) -> None:
+        """Set frame according to time (milliseconds)"""
+        frame_duration = self.animation_period * 1000
+
+        self.animation_current = int(time // frame_duration) % len(
+            self.animation_frames
+        )
+
+        self.texture_file = self.animation_frames[self.animation_current]
+
 
 class AnimatedDirectional(Animated):
     """Base class for animated objects, that change animations based on direction"""
