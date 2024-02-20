@@ -26,7 +26,7 @@ class GameEnd(vgame.Scene):
             self.delta_color = 0
         self.background_color = background
         self.text_color: list[int] = list(background)
-        self.v = (255 - self.text_color[self.delta_color]) // 500
+        self.v = (255 - self.text_color[self.delta_color]) / 500
         self.music = music
 
     def update(self):
@@ -34,8 +34,8 @@ class GameEnd(vgame.Scene):
             if i == self.delta_color:
                 self.text_color[i] += self.v
             else:
-                if self.text_color[i] - 50 > 0:
-                    self.text_color[i] -= 50
+                if self.text_color[i] - self.v > 0:
+                    self.text_color[i] -= self.v
         if self.text_color[self.delta_color] + self.v >= 255:
             pygame.time.wait(1000)
             self.stop()

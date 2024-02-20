@@ -164,7 +164,7 @@ def get_settings() -> dict:
                 value = int(setting.value)
                 possible_values = list(map(int, setting.possible_values.split(";")))
             case "bool":
-                value = bool(setting.value)
+                value = setting.value == "True"
                 possible_values = [True, False]
             case "str":
                 value = setting.value

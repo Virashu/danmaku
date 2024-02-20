@@ -28,7 +28,7 @@ class Game(vgame.Scene):
     new_game: bool = True
 
     def load(self):
-        self.game_border = self.width * 2 // 3
+        self.game_border = self.width // 4 * 3
         STAGE1 = Stage([Enemy((150, 15), "basic enemy")])
         STAGE2 = Stage(
             [Enemy((50, -25), "basic enemy"), Enemy((200, -50), "basic enemy")]
