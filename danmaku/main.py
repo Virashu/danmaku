@@ -18,8 +18,13 @@ runner = Runner()
 
 def run_game(is_new: bool):
     "Game exit handling"
-    game = Game(width=WIDTH, height=HEIGHT, title="Danmaku | Game", tickrate=TICKRATE,
-                fullscreen=get_settings()["fullscreen"]["value"])
+    game = Game(
+        width=WIDTH,
+        height=HEIGHT,
+        title="Danmaku | Game",
+        tickrate=TICKRATE,
+        fullscreen=get_settings()["fullscreen"]["value"],
+    )
     game.new_game = is_new
     runner.run(game)
 
@@ -30,7 +35,7 @@ def run_game(is_new: bool):
                 height=HEIGHT,
                 title="Danmaku | Game Over",
                 tickrate=TICKRATE,
-                fullscreen=get_settings()["fullscreen"]["value"]
+                fullscreen=get_settings()["fullscreen"]["value"],
             )
             end.set("You win", (30, 157, 214), "sounds/win.wav")
             runner.run(end)
@@ -40,24 +45,36 @@ def run_game(is_new: bool):
                 height=HEIGHT,
                 title="Danmaku | Game Over",
                 tickrate=TICKRATE,
-                fullscreen=get_settings()["fullscreen"]["value"]
+                fullscreen=get_settings()["fullscreen"]["value"],
             )
             end.set("Game over", (30, 157, 214), "sounds/lose.wav")
             runner.run(end)
 
 
 while runner.running:
-    menu = Menu(width=WIDTH, height=HEIGHT, title="Danmaku | Menu",
-                fullscreen=get_settings()["fullscreen"]["value"])
+    menu = Menu(
+        width=WIDTH,
+        height=HEIGHT,
+        title="Danmaku | Menu",
+        fullscreen=get_settings()["fullscreen"]["value"],
+    )
     runner.run(menu)
     match menu.exit_status:
         case "game", new_game:
             run_game(new_game)
         case "settings":
-            settings = Settings(width=WIDTH, height=HEIGHT, title="Danmaku | Settings",
-                fullscreen=get_settings()["fullscreen"]["value"])
+            settings = Settings(
+                width=WIDTH,
+                height=HEIGHT,
+                title="Danmaku | Settings",
+                fullscreen=get_settings()["fullscreen"]["value"],
+            )
             runner.run(settings)
         case "history":
-            history = History(width=WIDTH, height=HEIGHT, title="Danmaku | History",
-                fullscreen=get_settings()["fullscreen"]["value"])
+            history = History(
+                width=WIDTH,
+                height=HEIGHT,
+                title="Danmaku | History",
+                fullscreen=get_settings()["fullscreen"]["value"],
+            )
             runner.run(history)
