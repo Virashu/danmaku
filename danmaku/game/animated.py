@@ -155,3 +155,43 @@ class AnimatedDirectional(Animated):
                     self.animation_current
                 ]
                 self.last_direction = direction
+
+    def animate_absolute(
+        self, time: int, direction_vector: tuple[int | float, int | float] = (0, 0)
+    ) -> None:
+        """Set frame according to time (milliseconds)"""
+
+        direction = None
+        if direction_vector[0] == direction_vector[1] and direction_vector[0] == 0:
+            direction = Direction.STATIC
+        elif direction_vector[0] > 0:
+            direction = Direction.RIGHT
+        elif direction_vector[1] > 0:
+            direction = Direction.DOWN
+        elif direction_vector[0] < 0:
+            direction = Direction.LEFT
+        elif direction_vector[1] < 0:
+            direction = Direction.UP
+
+        if direction == Direction.STATIC:
+            a = ""
+            if self.last_direction == Direction.UP:
+                a = "up"
+            elif self.last_direction == Direction.DOWN:
+                a = "down"
+            elif self.last_direction == Direction.RIGHT:
+                a = "right"
+            elif self.last_direction == Direction.LEFT:
+                a = "left"
+            for i in self.animation_frames[direction]:
+                if a in i:
+                    self.texture_file = i
+
+        elif direction is not None:
+            frame_duration = self.animation_period * 1000
+
+            self.animation_current = int(time // frame_duration) % len(
+                self.animation_frames[direction]
+            )
+            self.texture_file = self.animation_frames[direction][self.animation_current]
+            self.last_direction = direction
