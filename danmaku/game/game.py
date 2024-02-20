@@ -214,6 +214,7 @@ class Game(vgame.Scene):
         self.player.vx, self.player.vy = vx, vy
 
         self.player.update(self.delta)
+        self.player.animate((self.player.vx, self.player.vy))
 
         stage = self.levels[self.current_level].stage
         stage.update()
@@ -228,7 +229,7 @@ class Game(vgame.Scene):
             if self.player.collision(enemy):
                 self.player.get_damage(enemy.damage / 100)
             self.bullets += enemy.shoot()
-
+            enemy.animate((enemy.vx, enemy.vy))
             enemy.update(self.delta)
             if (
                 enemy.y > self.height / 2 and not 0 <= enemy.x < self.game_border
@@ -276,6 +277,8 @@ class Game(vgame.Scene):
                 drop.x, drop.y, drop.vx, drop.vy, self.game_border, self.height
             ):
                 self.drops.remove(drop)
+
+        self.background_object.animate()
 
         if len(self.enemies) == 0:
             self.next_level()
@@ -333,15 +336,11 @@ class Game(vgame.Scene):
 
     def draw(self):
         self.graphics.rectangle((0, 0), (self.width, self.height), (30, 157, 214, 180))
-
-        self.background_object.animate()
         self.graphics.draw_sprite(self.background_object)
 
-        self.player.animate((self.player.vx, self.player.vy))
         self.player.draw(self.graphics)
 
         for enemy in self.enemies:
-            enemy.animate((enemy.vx, enemy.vy))
             self.graphics.draw_sprite(enemy)
 
         for bullet in self.bullets:
