@@ -9,7 +9,7 @@ from danmaku.ui.settings import Settings
 from danmaku.ui.game_end import GameEnd
 from danmaku.database import get_settings
 
-WIDTH, HEIGHT = 500, 500
+WIDTH, HEIGHT = 640, 480
 TICKRATE = 120
 
 

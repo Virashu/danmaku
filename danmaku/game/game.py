@@ -28,69 +28,81 @@ class Game(vgame.Scene):
     new_game: bool = True
 
     def load(self):
-        self.game_border = self.width // 4 * 3
-        STAGE1 = Stage([Enemy((150, 15), "basic enemy")])
-        STAGE2 = Stage(
-            [Enemy((50, -25), "basic enemy"), Enemy((200, -50), "basic enemy")]
-        )
-        STAGE3 = Stage([Enemy((110, 5), "strong enemy")])
-        STAGE4 = Stage(
-            [Enemy((50, -25), "strong enemy"), Enemy((200, -50), "strong enemy")]
-        )
-        STAGE5 = Stage(
-            [
-                Enemy((50, -20), "basic enemy"),
-                Enemy((200, -50), "basic enemy"),
-                Enemy((110, -35), "strong enemy"),
-            ]
-        )
-        STAGE6 = Stage(
-            [
-                Enemy((50, -15), "strong enemy"),
-                Enemy((200, -50), "basic enemy"),
-                Enemy((110, -35), "strong enemy"),
-            ]
-        )
-        STAGE7 = BossStage(enemies=[], boss=Enemy((150, -40), "boss"), actions=[])
+        # self.game_border = self.width // 4 * 3
 
-        STAGE8 = Stage(
+        # game field aspect ratio is 3:4
+        self.game_border = self.height // 4 * 3
+
+        stage_1 = Stage([Enemy((self.game_border // 2, 15), "basic enemy")])
+        stage_2 = Stage(
             [
-                Enemy((50, -15), "strong enemy"),
-                Enemy((200, -50), "strong enemy"),
-                Enemy((300 - 50, -35), "strong enemy"),
+                Enemy((50, -25), "basic enemy"),
+                Enemy((self.game_border - 50, -50), "basic enemy"),
             ]
         )
-        STAGE9 = Stage(
+        stage_3 = Stage([Enemy((self.game_border // 2.5, 5), "strong enemy")])
+        stage_4 = Stage(
             [
-                Enemy((50, -15), "strong enemy"),
-                Enemy((200, -50), "strong enemy"),
-                Enemy((300 - 50, -35), "strong enemy"),
+                Enemy((50, -25), "strong enemy"),
+                Enemy((self.game_border - 50, -50), "strong enemy"),
             ]
         )
-        STAGE10 = BossStage(
+        stage_5 = Stage(
+            [
+                Enemy((50, -80), "basic enemy"),
+                Enemy((self.game_border // 2, -20), "strong enemy"),
+                Enemy((self.game_border - 50, -80), "basic enemy"),
+            ]
+        )
+        stage_6 = Stage(
+            [
+                Enemy((50, -15), "strong enemy"),
+                Enemy((self.game_border // 2, -35), "strong enemy"),
+                Enemy((self.game_border - 50, -50), "basic enemy"),
+            ]
+        )
+        stage_7 = BossStage(
+            enemies=[], boss=Enemy((self.game_border // 2, -40), "boss"), actions=[]
+        )
+
+        stage_8 = Stage(
+            [
+                Enemy((50, -15), "strong enemy"),
+                Enemy((self.game_border // 2, -50), "strong enemy"),
+                Enemy((self.game_border - 50, -35), "strong enemy"),
+            ]
+        )
+        stage_9 = Stage(
+            [
+                Enemy((50, -15), "strong enemy"),
+                Enemy((self.game_border // 2, -50), "strong enemy"),
+                Enemy((self.game_border - 50, -35), "strong enemy"),
+            ]
+        )
+        stage_10 = BossStage(
             enemies=[
                 Enemy((50, -15), "strong enemy"),
-                Enemy((300 - 50, -35), "strong enemy"),
+                Enemy((self.game_border - 50, -35), "strong enemy"),
             ],
-            boss=Enemy((200, -50), "boss"),
+            boss=Enemy((self.game_border // 2, -50), "boss"),
             actions=[],
         )
 
-        LEVEL1 = Level(
+        level_1 = Level(
             stages=[
-                STAGE1,
-                STAGE2,
-                STAGE3,
-                STAGE4,
-                STAGE5,
-                STAGE6,
-                STAGE7,
+                stage_1,
+                stage_2,
+                stage_3,
+                stage_4,
+                stage_5,
+                stage_6,
+                stage_7,
             ]
         )
 
-        LEVEL2 = Level(stages=[STAGE8, STAGE9, STAGE10])
+        level_2 = Level(stages=[stage_8, stage_9, stage_10])
 
-        self.levels = LEVEL1, LEVEL2
+        self.levels = level_1, level_2
 
         self.graphics.library.path = resource_path("textures")
 
