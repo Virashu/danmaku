@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "danmaku"
-version = "1.0.0"
+version = "1.0.1"
 description = ""
-authors = ["Vlad <89295404+Virashu@users.noreply.github.com>"]
+authors = ["Vlad <89295404+Virashu@users.noreply.github.com>", "ShelkovkinaM <mariyashelkovkina@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
