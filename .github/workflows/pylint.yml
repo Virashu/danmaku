@@ -31,7 +31,7 @@ jobs:
       uses: Silleellie/pylint-github-action@v2
       with:
         # The path, relative to the root of the repo, of the package(s) or pyton file(s) to lint
-        lint-path: danmaku
+        lint-path: danmaku/**/*.py
         # Python version which will install all dependencies and lint package(s)
         python-version: "3.10"
         # The path, relative to the root of the repo, of the requirements to install
