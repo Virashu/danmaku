@@ -25,7 +25,7 @@ def not_in_border(
     return True
 
 
-def resource_path(relative_path) -> str:
+def resource_path(relative_path: str) -> str:
     """Get absolute path to resource, works for dev and for PyInstaller"""
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
@@ -51,3 +51,12 @@ class Direction(IntEnum):
     RIGHT = 1
     UP = 2
     DOWN = 3
+    STATIC = 4
+
+
+# def str_to_stage(stage_str: str) -> Stage: ...
+
+
+# def str_to_level(level_str: str) -> Level:
+#     """Convert level string to level object."""
+#     ...

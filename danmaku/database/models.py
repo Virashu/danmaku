@@ -6,6 +6,7 @@ from peewee import (
     CharField,
     IntegerField,
     BooleanField,
+    FloatField,
 )
 from danmaku.utils import resource_path
 
@@ -13,7 +14,7 @@ from danmaku.utils import resource_path
 db = SqliteDatabase(resource_path("DataBase.db"))
 
 
-# pylint: disable=missing-class-docstring
+# pylint: disable=missing-class-docstring,too-few-public-methods
 
 
 class BaseModel(Model):
@@ -71,6 +72,8 @@ class SavedGame(BaseModel):
     level = IntegerField()
     score = IntegerField()
     power = IntegerField()
+    bombs = IntegerField()
+    time = FloatField()
 
 
 class Settings(BaseModel):

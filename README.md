@@ -1,9 +1,30 @@
 # 弾幕 (Danmaku)
-![pylint](https://img.shields.io/badge/PyLint-9.71-yellow?logo=python&logoColor=white)
+![pylint](https://img.shields.io/badge/PyLint-9.95-yellow?logo=python&logoColor=white)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Goal
 To create a bullet hell game similar to TouHou Project, Undertale, etc.
+
+## How to build
+
+```
+poetry shell
+poetry install
+```
+or
+```
+python3 -m venv .venv
+.\.venv\Scripts\activate
+pip install --upgrade -r .\requirements.txt
+```
+Then,
+```
+.\build
+```
+
+## For developers
+
+Most important things is written down [here](./docs/mecs.md)
 
 ## Refactoring
 - [x] main.py
@@ -18,7 +39,7 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
 
 - [x] Game mechanics
   - [x] Drops
-      - [ ] HP (?)
+    - [ ] HP (?)
     - [x] XP
     - [x] Powerups
     - [ ] Coins (?)
@@ -38,13 +59,13 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
   - [ ] Effects (particles)
   - [ ] Scaling
   - [ ] Fullscreen
-  - [ ] Boss HP bar
+  - [x] Boss HP bar
   - [x] Player HP/Bomb info
   - [x] Player points info
-  - [ ] UI
+  - [x] UI
     - [x] Main menu
       - [x] Main menu style
-      - [ ] Background
+      - [x] Background
     - [x] Leaderboard
     - [x] Settings
       - [x] DB
@@ -66,6 +87,6 @@ To create a bullet hell game similar to TouHou Project, Undertale, etc.
   - [x] Replace resource path strings with constants from db
 - [x] Sounds
   - [x] Death
-  - [ ] Shoot
-  - [ ] Hit
+  - [x] Shoot
+  - [x] Hit
 - [x] Music

@@ -88,43 +88,63 @@ def get_saved_objects() -> list:
 
 def get_saved_game() -> dict:
     """Get saved game from database
-    Returns dict: {"score", "level", "power"}
+    Returns dict: {"score", "level", "power", "bombs"}
     """
     game = tuple(iter(SavedGame.select().dicts()))[-1]
     return game
 
 
-def get_game_history() -> list:
+def get_game_history() -> list[dict[str, int]]:
     """Get game history from database
-    Returns list: [{"score", "level"}]
+    Returns list: [{"score", "level", "time"}]
     """
     games = tuple(iter(SavedGame.select()))
     res = []
     for i in games:
-        objects = {
-            "score": i.score,
-            "level": i.level,
-        }
+        objects = {"score": i.score, "level": i.level, "time": i.time}
         res.append(objects)
     return res
+
+
+def delete_last_game():
+    """Remove last game record from database"""
+    games = list(iter(SavedGame.select()))
+    SavedGame.delete_by_id(games[-1])
+    SavedGame.update()
 
 
 def set_saved_objects(name: str, objects: Iterable) -> None:
     """Set saved objects to database"""
     for e in objects:
+        if hasattr(e, "my_type"):
+            my_type = e.my_type
+        else:
+            my_type = ""
+        if hasattr(e, "health"):
+            health = e.health
+        else:
+            health = 0
+        if hasattr(e, "damage"):
+            damage = e.damage
+        else:
+            damage = 0
         n = SavedObjects.create(
             object=name,
-            object_type=e.my_type,
+            object_type=my_type,
             object_position=f"{e.x}, {e.y}",
-            object_hp=e.health,
-            object_damage=e.damage,
+            object_hp=health,
+            object_damage=damage,
         )
         n.save()
 
 
-def set_saved_game(cur_level: int, score: int, power: int) -> None:
+def set_saved_game(
+    cur_level: int, score: int, power: int, bombs: int, time: float
+) -> None:
     """Set saved game to database"""
-    n = SavedGame.create(score=score, level=cur_level, power=power)
+    n = SavedGame.create(
+        score=score, level=cur_level, power=power, bombs=bombs, time=time
+    )
     n.save()
 
 
@@ -136,6 +156,7 @@ def delete_saved_objects() -> None:
 
 
 def get_settings() -> dict:
+    """Get all settings"""
     settings = {}
     for setting in Settings.select():
         match setting.type:
@@ -143,7 +164,7 @@ def get_settings() -> dict:
                 value = int(setting.value)
                 possible_values = list(map(int, setting.possible_values.split(";")))
             case "bool":
-                value = bool(setting.value)
+                value = setting.value == "True"
                 possible_values = [True, False]
             case "str":
                 value = setting.value
@@ -159,17 +180,15 @@ def get_settings() -> dict:
 
 
 def delete_settings():
+    """Delete all settings"""
     for setting in Settings.select():
         Settings.delete_by_id(setting)
         Settings.update()
 
 
 def set_settings(settings: dict) -> None:
+    """Set settings from dictionary"""
     for key, value in settings.items():
         s = Settings.get(Settings.name == key)
         s.value = value
         s.save()
-
-
-if __name__ == "__main__":
-    print(get_saved_game())

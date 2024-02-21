@@ -16,8 +16,8 @@ db.create_tables([EnemyTypes])
 
 basic_enemy = EnemyTypes.create(
     name="basic enemy",
-    texture_file="basic_enemy_2.png;basic_enemy_1.png;"
-    "basic_enemy_2.png;basic_enemy_3.png",
+    texture_file="basic_enemy_down_static_2.png;basic_enemy_down_1.png;"
+    "basic_enemy_down_static_2.png;basic_enemy_down_3.png",
     texture_size_width=50,
     texture_size_height=65,
     speed=30,
@@ -31,8 +31,8 @@ basic_enemy.save()
 
 strong_enemy = EnemyTypes.create(
     name="strong enemy",
-    texture_file="strong_enemy_2.png;strong_enemy_1.png;"
-    "strong_enemy_2.png;strong_enemy_3.png",
+    texture_file="strong_enemy_down_static_2.png;strong_enemy_down_1.png;"
+    "strong_enemy_down_static_2.png;strong_enemy_down_3.png",
     texture_size_width=50,
     texture_size_height=65,
     speed=20,
@@ -46,8 +46,8 @@ strong_enemy.save()
 
 boss = EnemyTypes.create(
     name="boss",
-    texture_file="strong_enemy_2.png;strong_enemy_1.png;"
-    "strong_enemy_2.png;strong_enemy_3.png",
+    texture_file="strong_enemy_down_static_2.png;strong_enemy_down_1.png;"
+    "strong_enemy_down_static_2.png;strong_enemy_down_3.png",
     texture_size_width=60,
     texture_size_height=85,
     speed=10,
@@ -128,7 +128,7 @@ player = PlayerTypes.create(
     texture_size_height=50,
     speed=200,
     shoot_v=250,
-    hp=1300,
+    hp=500,
     dm=10,
     endurance=1,
     hitbox_radius=10,

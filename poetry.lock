@@ -201,7 +201,7 @@ testing-integration = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "jar
 
 [[package]]
 name = "vgame"
-version = "1.6.0"
+version = "1.6.4"
 description = ""
 optional = false
 python-versions = "^3.10"
@@ -215,7 +215,7 @@ pygame = "^2.5.2"
 type = "git"
 url = "https://github.com/virashu/pygametest"
 reference = "HEAD"
-resolved_reference = "e9093767c0f93afacae45c1be1d7cafe233483bc"
+resolved_reference = "aeeece542a60aa0594cab01f2a4a20489d93a585"
 
 [metadata]
 lock-version = "2.0"
